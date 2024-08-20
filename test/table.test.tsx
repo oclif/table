@@ -1,4 +1,5 @@
 /* eslint-disable perfectionist/sort-objects */
+import ansis from 'ansis'
 import {expect} from 'chai'
 import { Box, Text } from 'ink'
 import { render } from 'ink-testing-library'
@@ -22,9 +23,8 @@ function Custom({ children }: React.PropsWithChildren) {
 
 const custom = (v: string) => <Custom>{v}</Custom>
 
-// Tests ---------------------------------------------------------------------
 describe('Table', () => {
-  it('Renders table.', () => {
+  it('renders table', () => {
     const data = [{ name: 'Foo' }]
 
     const { lastFrame: actual } = render(<Table data={data} />)
@@ -61,7 +61,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with numbers.', () => {
+  it('renders table with numbers', () => {
     const data = [{ name: 'Foo', age: 12 }]
     const { lastFrame: actual } = render(<Table data={data} />)
 
@@ -108,7 +108,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with multiple rows.', () => {
+  it('renders table with multiple rows', () => {
     const data = [
       { name: 'Foo', age: 12 },
       { name: 'Bar', age: 0 },
@@ -172,7 +172,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with undefined value.', () => {
+  it('renders table with undefined value', () => {
     const data = [{ name: 'Foo' }, { age: 15, name: 'Bar' }]
     const { lastFrame: actual } = render(<Table data={data} />)
 
@@ -233,7 +233,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with custom padding.', () => {
+  it('renders table with custom padding', () => {
     const data = [
       { name: 'Foo', age: 12 },
       { name: 'Bar', age: 15 },
@@ -297,7 +297,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with custom header.', () => {
+  it('renders table with custom header', () => {
     const data = [
       { name: 'Foo', age: 12 },
       { name: 'Bar', age: 15 },
@@ -361,7 +361,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with custom cell.', () => {
+  it('renders table with custom cell', () => {
     const data = [
       { name: 'Foo', age: 12 },
       { name: 'Bar', age: 15 },
@@ -425,7 +425,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('Renders table with custom skeleton.', () => {
+  it('renders table with custom skeleton', () => {
     const data = [
       { name: 'Foo', age: 12 },
       { name: 'Bar', age: 15 },
@@ -489,6 +489,65 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
+  it('renders table with values containing ascii characters', () => {
+    const data = [{ name: ansis.bold('Foo'), age: 12 }, { name: ansis.bold('Bar'), age: 15 }]
+    const { lastFrame: actual } = render(<Table data={data} />)
+
+    const { lastFrame: expected } = render(
+      <>
+        <Box>
+          {skeleton('┌')}
+          {skeleton('──────')}
+          {skeleton('┬')}
+          {skeleton('─────')}
+          {skeleton('┐')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {header(' name ')}
+          {skeleton('│')}
+          {header(' age ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(` ${ansis.bold('Foo')}  `)}
+          {skeleton('│')}
+          {cell(' 12  ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(` ${ansis.bold('Bar')}  `)}
+          {skeleton('│')}
+          {cell(' 15  ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('└')}
+          {skeleton('──────')}
+          {skeleton('┴')}
+          {skeleton('─────')}
+          {skeleton('┘')}
+        </Box>
+      </>,
+    )
+
+    expect(actual()).to.equal(expected())
+  })
 })
 
-// ---------------------------------------------------------------------------
