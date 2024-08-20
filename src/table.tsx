@@ -11,11 +11,12 @@ import stripAnsi from 'strip-ansi'
  * Features to implement:
  * - [x] properly render cells with ascii characters
  * - [x] refactor
- * - [ ] never render a table that exceeds the width of the terminal
- *       - this will require truncating the content of the cells
- *       - question: how do we know which columns take priority?
- *         - tty-table lets you specify the width of each column, e.g. 50%
- * - [ ] utilities for sorting, filtering, showing extended columns
+ * - [x] if table exceeds the width of the terminal, minimally truncate the largest column to fit
+ * - [ ] options for sorting, filtering, showing extended columns
+ * - [ ] add tests
+ * - [ ] make colors customizable
+ * - [ ] make borders customizable
+ * - [ ] make column headers customizable
  */
 
 
@@ -63,6 +64,15 @@ export type TableProps<T extends ScalarDict> = {
 }
 
 
+type Config<T> = {
+  cell: (props: CellProps) => React.ReactNode
+  columns: (keyof T | AllColumnProps<T>)[]
+  data: T[]
+  header: (props: React.PropsWithChildren<{}>) => React.ReactNode
+  padding: number
+  skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
+}
+
 const getDataKeys = <T extends ScalarDict>(data: T[]): (keyof T)[] => {
   const keys = new Set<keyof T>()
 
@@ -78,14 +88,6 @@ const getDataKeys = <T extends ScalarDict>(data: T[]): (keyof T)[] => {
   return [...keys]
 }
 
-type Config<T> = {
-  cell: (props: CellProps) => React.ReactNode
-  columns: (keyof T | AllColumnProps<T>)[]
-  data: T[]
-  header: (props: React.PropsWithChildren<{}>) => React.ReactNode
-  padding: number
-  skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
-}
 
 const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
   const {columns, padding} = config
@@ -106,7 +108,7 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
       return stripAnsi(String(value)).length
     })
 
-    const width = Math.max(...data, header) + padding * 2
+    const width = Math.max(...data, header) + (padding * 2)
 
     /* Construct a cell */
     return {
@@ -116,6 +118,25 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
       width,
     }
   })
+  console.log(widths)
+  console.log('window width', process.stdout.columns)
+  const numberOfBorders = widths.length + 1
+  const tableWidth = widths.map((w) => w.width).reduce((a, b) => a + b) + numberOfBorders
+  console.log('table width', tableWidth)
+  const shouldTruncate = tableWidth > process.stdout.columns
+  console.log('shouldTruncate', shouldTruncate)
+  if (shouldTruncate) {
+    // find the largest column
+    const largestColumn = widths.reduce((a, b) => a.width > b.width ? a : b)
+    console.log('largest column', largestColumn)
+    // find the difference
+    const difference = tableWidth - process.stdout.columns
+    console.log('difference', difference)
+    // subtract the difference from the largest column
+    const newWidth = largestColumn.width - difference
+    console.log('new width', newWidth)
+    largestColumn.width = newWidth
+  }
 
   return widths
 }
@@ -219,10 +240,8 @@ export function Table<T extends ScalarDict>(
 
   return (
     <Box flexDirection="column">
-      {/* Header */}
       {builder.header({ columns, data: {}, key: 'header' })}
       {builder.heading({ columns, data: headings, key: 'heading' })}
-      {/* Data */}
       {props.data.map((row, index) => {
         // Calculate the hash of the row based on its value and position
         const key = `row-${sha1(row)}-${index}`
@@ -235,7 +254,6 @@ export function Table<T extends ScalarDict>(
           </Box>
         )
       })}
-      {/* Footer */}
       {builder.footer({ columns, data: {}, key: 'footer' })}
     </Box>
   )
@@ -324,31 +342,31 @@ function row<T extends ScalarDict>(
             )
           }
 
-            const key = `${props.key}-cell-${column.key}`
+          const key = `${props.key}-cell-${column.key}`
 
-            // const shouldTruncate = stringWidth(String(value)) > column.width
+          const v = stripAnsi(String(value)).length >= column.width ? `${String(value).slice(0, column.width - (3 + padding * 2))}...` : String(value)
 
-            // margins
-            const spaces = column.width - stripAnsi(String(value)).length
-            let ml: number
-            let mr: number
-            if (column.align === 'left') {
-              ml = padding
-              mr = spaces - ml
-            } else if (column.align === 'center') {
-              ml = Math.floor(spaces / 2)
-              mr = Math.ceil(spaces / 2)
-            } else {
-              mr = padding
-              ml = spaces - mr
-            }
+          // margins
+          const spaces = column.width - stripAnsi(v).length
 
-            return (
-              /* prettier-ignore */
-              <config.cell key={key} column={colI}>
-                {`${skeleton.line.repeat(ml)}${String(value)}${skeleton.line.repeat(mr)}`}
-              </config.cell>
-            )
+          let ml: number
+          let mr: number
+          if (column.align === 'left') {
+            ml = padding
+            mr = spaces - ml
+          } else if (column.align === 'center') {
+            ml = Math.floor(spaces / 2)
+            mr = Math.ceil(spaces / 2)
+          } else {
+            mr = padding
+            ml = spaces - mr
+          }
+
+          return (
+            <config.cell key={key} column={colI}>
+              {`${skeleton.line.repeat(ml)}${v}${skeleton.line.repeat(mr)}`}
+            </config.cell>
+          )
 
         }),
       )}
@@ -405,9 +423,9 @@ function intersperse<T, I>(
 
 export function makeTable<T extends ScalarDict>(
   data: T[],
-  // columns?: (keyof T | AllColumnProps<T>)[],
+  columns?: (keyof T | AllColumnProps<T>)[],
   // props?: Partial<TableProps<T>> = {},
 ): void{
-  const instance = render(<Table data={data} />)
+  const instance = render(<Table data={data} columns={columns} />)
   instance.unmount()
 }

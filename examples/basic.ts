@@ -3,30 +3,28 @@ import terminalLink from 'terminal-link'
 
 import {makeTable} from '../src/index.js'
 
-// Data
 const data = [
   {
-    aaa: 'a'.repeat(process.stdout.columns - 10),
     age: 20,
+    bigData: 'a'.repeat(process.stdout.columns - 43),
     employed: ansis.bold('true'),
+    id: terminalLink('12345', 'https://example.com/alice'),
     name: 'Alice',
-    website: terminalLink('example.com', 'https://example.com'),
   },
   {
-    aaa: 'b'.repeat(30),
     age: 21,
+    bigData: 'b'.repeat(30),
     employed: ansis.bold('true'),
+    id: terminalLink('56789', 'https://example.com/bob'),
     name: 'Bob',
-    website: terminalLink('example.com', 'https://example.com'),
   },
   {
-    aaa: 'c'.repeat(30),
     age: 22,
+    bigData: 'c'.repeat(30),
     employed: ansis.bold('true'),
+    id: terminalLink('31786', 'https://example.com/charlie'),
     name: 'Charlie',
-    website: terminalLink('example.com', 'https://example.com'),
   },
 ]
 
-// Table
-makeTable(data)
+makeTable(data, ['id', 'name', 'age', 'employed', 'bigData'])
