@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/prop-types */
-/* eslint-disable @typescript-eslint/ban-types */
 import {Box, Text, render} from 'ink'
 import {sha1} from 'object-hash'
 import React from 'react'
@@ -17,6 +16,10 @@ import stripAnsi from 'strip-ansi'
  * - [ ] make colors customizable
  * - [ ] make borders customizable
  * - [ ] make column headers customizable
+ * - [ ] title
+ * - [ ] newline overflow
+ * - [ ] side by side tables???
+ * - [ ] alt text for truncated cells???
  */
 
 type Scalar = string | number | boolean | null | undefined
@@ -51,18 +54,6 @@ export type TableProps<T extends ScalarDict> = {
    */
   padding: number
   /**
-   * Header component.
-   */
-  header: (props: React.PropsWithChildren<{}>) => React.ReactNode
-  /**
-   * Component used to render a cell in the table.
-   */
-  cell: (props: CellProps) => React.ReactNode
-  /**
-   * Component used to render the skeleton of the table.
-   */
-  skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
-  /**
    * Width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
    *
    * If not provided, it will default to the width of the terminal (determined by `process.stdout.columns`).
@@ -75,12 +66,9 @@ export type TableProps<T extends ScalarDict> = {
 }
 
 type Config<T> = {
-  cell: (props: CellProps) => React.ReactNode
   columns: (keyof T | AllColumnProps<T>)[]
   data: T[]
-  header: (props: React.PropsWithChildren<{}>) => React.ReactNode
   padding: number
-  skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
   maxWidth: number
 }
 
@@ -160,10 +148,10 @@ class Builder<T extends ScalarDict> {
 
   public data(props: RowProps<T>): React.ReactNode {
     return row<T>({
-      cell: this.config.cell,
+      cell: Cell,
       padding: this.config.padding,
       skeleton: {
-        component: this.config.skeleton,
+        component: Skeleton,
         cross: '│',
         left: '│',
         line: ' ',
@@ -174,10 +162,10 @@ class Builder<T extends ScalarDict> {
 
   public footer(props: RowProps<T>): React.ReactNode {
     return row<T>({
-      cell: this.config.skeleton,
+      cell: Skeleton,
       padding: this.config.padding,
       skeleton: {
-        component: this.config.skeleton,
+        component: Skeleton,
         cross: '┴',
         left: '└',
         line: '─',
@@ -188,10 +176,10 @@ class Builder<T extends ScalarDict> {
 
   public header(props: RowProps<T>): React.ReactNode {
     return row<T>({
-      cell: this.config.skeleton,
+      cell: Skeleton,
       padding: this.config.padding,
       skeleton: {
-        component: this.config.skeleton,
+        component: Skeleton,
         cross: '┬',
         left: '┌',
         line: '─',
@@ -202,10 +190,10 @@ class Builder<T extends ScalarDict> {
 
   public heading(props: RowProps<T>): React.ReactNode {
     return row<T>({
-      cell: this.config.header,
+      cell: Header,
       padding: this.config.padding,
       skeleton: {
-        component: this.config.skeleton,
+        component: Skeleton,
         cross: '│',
         left: '│',
         line: ' ',
@@ -216,10 +204,10 @@ class Builder<T extends ScalarDict> {
 
   public separator(props: RowProps<T>): React.ReactNode {
     return row<T>({
-      cell: this.config.skeleton,
+      cell: Skeleton,
       padding: this.config.padding,
       skeleton: {
-        component: this.config.skeleton,
+        component: Skeleton,
         cross: '┼',
         left: '├',
         line: '─',
@@ -258,13 +246,10 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 
 export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
   const config: Config<T> = {
-    cell: props.cell || Cell,
     columns: props.columns || getDataKeys(props.data),
     data: props.data,
-    header: props.header || Header,
     maxWidth: determineConfiguredWidth(props.maxWidth),
     padding: props.padding || 1,
-    skeleton: props.skeleton || Skeleton,
   }
   const columns = getColumns(config)
   const headings = getHeadings(config)
@@ -306,7 +291,7 @@ type RowConfig = {
    * Component used to render skeleton in the row.
    */
   skeleton: {
-    component: (props: React.PropsWithChildren<{}>) => React.ReactNode
+    component: (props: React.PropsWithChildren) => React.ReactNode
     /**
      * Characters used in skeleton.
      *    |             |
@@ -338,24 +323,21 @@ type Column<T> = {
  */
 function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   /* This is a component builder. We return a function. */
-
   const {padding, skeleton} = config
 
-  /* Row */
   return (props) => (
     <Box flexDirection="row">
       {/* Left */}
-      <skeleton.component>{skeleton.left}</skeleton.component>
+      <Skeleton>{skeleton.left}</Skeleton>
       {/* Data */}
       {...intersperse(
         (i) => {
           const key = `${props.key}-hseparator-${i}`
 
           // The horizontal separator.
-          return <skeleton.component key={key}>{skeleton.cross}</skeleton.component>
+          return <Skeleton key={key}>{skeleton.cross}</Skeleton>
         },
 
-        // Values.
         props.columns.map((column, colI) => {
           // content
           const value = props.data[column.column]
@@ -380,28 +362,28 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
           // margins
           const spaces = column.width - stripAnsi(v).length
 
-          let ml: number
-          let mr: number
+          let marginLeft: number
+          let marginRight: number
           if (column.align === 'left') {
-            ml = padding
-            mr = spaces - ml
+            marginLeft = padding
+            marginRight = spaces - marginLeft
           } else if (column.align === 'center') {
-            ml = Math.floor(spaces / 2)
-            mr = Math.ceil(spaces / 2)
+            marginLeft = Math.floor(spaces / 2)
+            marginRight = Math.ceil(spaces / 2)
           } else {
-            mr = padding
-            ml = spaces - mr
+            marginRight = padding
+            marginLeft = spaces - marginRight
           }
 
           return (
             <config.cell key={key} column={colI}>
-              {`${skeleton.line.repeat(ml)}${v}${skeleton.line.repeat(mr)}`}
+              {`${skeleton.line.repeat(marginLeft)}${v}${skeleton.line.repeat(marginRight)}`}
             </config.cell>
           )
         }),
       )}
       {/* Right */}
-      <skeleton.component>{skeleton.right}</skeleton.component>
+      <Skeleton>{skeleton.right}</Skeleton>
     </Box>
   )
 }
@@ -409,7 +391,7 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
 /**
  * Renders the header of a table.
  */
-export function Header(props: React.PropsWithChildren<{}>) {
+export function Header(props: React.PropsWithChildren) {
   return (
     <Text bold color="blue">
       {props.children}
@@ -425,9 +407,9 @@ export function Cell(props: CellProps) {
 }
 
 /**
- * Redners the scaffold of the table.
+ * Renders the scaffold of the table.
  */
-export function Skeleton(props: React.PropsWithChildren<{}>) {
+export function Skeleton(props: React.PropsWithChildren) {
   return <Text bold>{props.children}</Text>
 }
 
@@ -437,12 +419,12 @@ export function Skeleton(props: React.PropsWithChildren<{}>) {
  * Intersperses a list of elements with another element.
  */
 function intersperse<T, I>(intersperser: (index: number) => I, elements: T[]): (T | I)[] {
-  // Intersparse by reducing from left.
+  // Intersperse by reducing from left.
   const interspersed: (T | I)[] = elements.reduce(
     (acc, element, index) => {
       // Only add element if it's the first one.
       if (acc.length === 0) return [element]
-      // Add the intersparser as well otherwise.
+      // Add the intersperser as well otherwise.
       return [...acc, intersperser(index), element]
     },
     [] as (T | I)[],
