@@ -549,5 +549,70 @@ describe('Table', () => {
 
     expect(actual()).to.equal(expected())
   })
+
+  it('renders table with maxWidth', () => {
+    const data = [
+      { name: 'Foo', id: 'i'.repeat(30) },
+      { name: 'Bar', id: 'i'.repeat(30) },
+    ]
+
+    const { lastFrame: actual } = render(<Table data={data} maxWidth={30}/>)
+
+    const { lastFrame: expected } = render(
+      <>
+        <Box>
+          {skeleton('┌')}
+          {skeleton('──────')}
+          {skeleton('┬')}
+          {skeleton('─────────────────────')}
+          {skeleton('┐')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {header(' name ')}
+          {skeleton('│')}
+          {header(' id                  ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────────────────────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(' Foo  ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiii... ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────────────────────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(' Bar  ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiii... ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('└')}
+          {skeleton('──────')}
+          {skeleton('┴')}
+          {skeleton('─────────────────────')}
+          {skeleton('┘')}
+        </Box>
+      </>,
+    )
+
+    expect(actual()).to.equal(expected())
+  })
 })
 

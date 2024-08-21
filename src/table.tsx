@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/ban-types */
-import { Box, Text, render } from 'ink'
-import { sha1 } from 'object-hash'
+import {Box, Text, render} from 'ink'
+import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
 
@@ -19,14 +19,13 @@ import stripAnsi from 'strip-ansi'
  * - [ ] make column headers customizable
  */
 
-
 type Scalar = string | number | boolean | null | undefined
 
 type ScalarDict = {
   [key: string]: Scalar
 }
 
-export type CellProps = React.PropsWithChildren<{ readonly column: number }>
+export type CellProps = React.PropsWithChildren<{readonly column: number}>
 
 export type ColumnAlignment = 'left' | 'right' | 'center'
 
@@ -34,7 +33,9 @@ export interface ColumnProps<T> {
   align?: ColumnAlignment
   key: T
 }
-export type AllColumnProps<T> = { [K in keyof T]: ColumnProps<K> }[keyof T]
+export type AllColumnProps<T> = {[K in keyof T]: ColumnProps<K>}[keyof T]
+
+type Percentage = `${number}%`;
 
 export type TableProps<T extends ScalarDict> = {
   /**
@@ -61,8 +62,17 @@ export type TableProps<T extends ScalarDict> = {
    * Component used to render the skeleton of the table.
    */
   skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
+  /**
+   * Width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
+   *
+   * If not provided, it will default to the width of the terminal (determined by `process.stdout.columns`).
+   *
+   * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
+   *
+   * If you provide a number or percentage that is too small to fit the table, it will default to the width of the table.
+   */
+  maxWidth?: Percentage | number
 }
-
 
 type Config<T> = {
   cell: (props: CellProps) => React.ReactNode
@@ -71,6 +81,7 @@ type Config<T> = {
   header: (props: React.PropsWithChildren<{}>) => React.ReactNode
   padding: number
   skeleton: (props: React.PropsWithChildren<{}>) => React.ReactNode
+  maxWidth: number
 }
 
 const getDataKeys = <T extends ScalarDict>(data: T[]): (keyof T)[] => {
@@ -88,15 +99,11 @@ const getDataKeys = <T extends ScalarDict>(data: T[]): (keyof T)[] => {
   return [...keys]
 }
 
-
 const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
-  const {columns, padding} = config
+  const {columns, maxWidth, padding} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
-    const props: ColumnProps<keyof T> =
-      typeof propsOrKey === 'object'
-        ? propsOrKey
-        : { align: 'left', key: propsOrKey }
+    const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {align: 'left', key: propsOrKey}
     const {align, key} = props
 
     const header = String(key).length
@@ -108,7 +115,7 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
       return stripAnsi(String(value)).length
     })
 
-    const width = Math.max(...data, header) + (padding * 2)
+    const width = Math.max(...data, header) + padding * 2
 
     /* Construct a cell */
     return {
@@ -118,38 +125,37 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
       width,
     }
   })
-  console.log(widths)
-  console.log('window width', process.stdout.columns)
+
   const numberOfBorders = widths.length + 1
-  const tableWidth = widths.map((w) => w.width).reduce((a, b) => a + b) + numberOfBorders
-  console.log('table width', tableWidth)
-  const shouldTruncate = tableWidth > process.stdout.columns
-  console.log('shouldTruncate', shouldTruncate)
-  if (shouldTruncate) {
-    // find the largest column
-    const largestColumn = widths.reduce((a, b) => a.width > b.width ? a : b)
-    console.log('largest column', largestColumn)
-    // find the difference
-    const difference = tableWidth - process.stdout.columns
-    console.log('difference', difference)
-    // subtract the difference from the largest column
-    const newWidth = largestColumn.width - difference
-    console.log('new width', newWidth)
+
+  const calculateTableWidth = (widths: Column<T>[]) =>
+    widths.map((w) => w.width).reduce((a, b) => a + b) + numberOfBorders
+
+  // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
+  // At most, it will reduce the width to the length of the column's header plus padding.
+  // If the table is still too wide, it will reduce the width of the next largest column and so on
+  let tableWidth = calculateTableWidth(widths)
+  const seen = new Set<string>()
+  while (tableWidth > maxWidth) {
+    const largestColumn = widths.reduce((a, b) => (a.width > b.width ? a : b))
+    const difference = tableWidth - maxWidth
+    const minWidth = largestColumn.key.length + padding * 2
+    const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
     largestColumn.width = newWidth
+    tableWidth = calculateTableWidth(widths)
+    if (seen.has(largestColumn.key)) break
+    seen.add(largestColumn.key)
   }
 
   return widths
 }
 
 const getHeadings = <T extends ScalarDict>(config: Config<T>): Partial<T> => {
-  const columns = config.columns.map((c) =>
-    typeof c === 'object' ? c.key : c,
-  )
+  const columns = config.columns.map((c) => (typeof c === 'object' ? c.key : c))
   return Object.fromEntries(columns.map((column) => [column, column])) as Partial<T>
 }
 
 class Builder<T extends ScalarDict> {
-
   constructor(private readonly config: Config<T>) {}
 
   public data(props: RowProps<T>): React.ReactNode {
@@ -223,14 +229,40 @@ class Builder<T extends ScalarDict> {
   }
 }
 
-export function Table<T extends ScalarDict>(
-  props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>,
-) {
+function determineConfiguredWidth(providedWidth: number | Percentage | undefined): number {
+  if (!providedWidth) return process.stdout.columns
+
+  const num =
+    typeof providedWidth === 'string' && providedWidth.endsWith('%')
+      ? Math.floor((Number.parseInt(providedWidth, 10) / 100) * process.stdout.columns)
+      : typeof providedWidth === 'string'
+        ? Number.parseInt(providedWidth, 10)
+        : providedWidth
+
+  if (num > process.stdout.columns) {
+    return process.stdout.columns
+  }
+
+  return num
+}
+
+/**
+ * Determine the width to use for the table.
+ *
+ * This allows us to use the minimum width required to display the table if the configured width is too small.
+ */
+function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): number {
+  const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b) + columns.length + 1
+  return tableWidth < configuredWidth ? configuredWidth : tableWidth
+}
+
+export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
   const config: Config<T> = {
     cell: props.cell || Cell,
     columns: props.columns || getDataKeys(props.data),
     data: props.data,
     header: props.header || Header,
+    maxWidth: determineConfiguredWidth(props.maxWidth),
     padding: props.padding || 1,
     skeleton: props.skeleton || Skeleton,
   }
@@ -239,9 +271,9 @@ export function Table<T extends ScalarDict>(
   const builder = new Builder<T>(config)
 
   return (
-    <Box flexDirection="column">
-      {builder.header({ columns, data: {}, key: 'header' })}
-      {builder.heading({ columns, data: headings, key: 'heading' })}
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+      {builder.header({columns, data: {}, key: 'header'})}
+      {builder.heading({columns, data: headings, key: 'heading'})}
       {props.data.map((row, index) => {
         // Calculate the hash of the row based on its value and position
         const key = `row-${sha1(row)}-${index}`
@@ -249,12 +281,12 @@ export function Table<T extends ScalarDict>(
         // Construct a row.
         return (
           <Box key={key} flexDirection="column">
-            {builder.separator({ columns, data: {}, key: `separator-${key}` })}
-            {builder.data({ columns, data: row, key: `data-${key}` })}
+            {builder.separator({columns, data: {}, key: `separator-${key}`})}
+            {builder.data({columns, data: row, key: `data-${key}`})}
           </Box>
         )
       })}
-      {builder.footer({ columns, data: {}, key: 'footer' })}
+      {builder.footer({columns, data: {}, key: 'footer'})}
     </Box>
   )
 }
@@ -304,9 +336,7 @@ type Column<T> = {
 /**
  * Constructs a Row element from the configuration.
  */
-function row<T extends ScalarDict>(
-  config: RowConfig,
-): (props: RowProps<T>) => React.ReactNode {
+function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   /* This is a component builder. We return a function. */
 
   const {padding, skeleton} = config
@@ -322,9 +352,7 @@ function row<T extends ScalarDict>(
           const key = `${props.key}-hseparator-${i}`
 
           // The horizontal separator.
-          return (
-            <skeleton.component key={key}>{skeleton.cross}</skeleton.component>
-          )
+          return <skeleton.component key={key}>{skeleton.cross}</skeleton.component>
         },
 
         // Values.
@@ -344,7 +372,10 @@ function row<T extends ScalarDict>(
 
           const key = `${props.key}-cell-${column.key}`
 
-          const v = stripAnsi(String(value)).length >= column.width ? `${String(value).slice(0, column.width - (3 + padding * 2))}...` : String(value)
+          const v =
+            stripAnsi(String(value)).length >= column.width
+              ? `${String(value).slice(0, column.width - (3 + padding * 2))}...`
+              : String(value)
 
           // margins
           const spaces = column.width - stripAnsi(v).length
@@ -367,7 +398,6 @@ function row<T extends ScalarDict>(
               {`${skeleton.line.repeat(ml)}${v}${skeleton.line.repeat(mr)}`}
             </config.cell>
           )
-
         }),
       )}
       {/* Right */}
@@ -406,17 +436,17 @@ export function Skeleton(props: React.PropsWithChildren<{}>) {
 /**
  * Intersperses a list of elements with another element.
  */
-function intersperse<T, I>(
-  intersperser: (index: number) => I,
-  elements: T[],
-): (T | I)[] {
+function intersperse<T, I>(intersperser: (index: number) => I, elements: T[]): (T | I)[] {
   // Intersparse by reducing from left.
-  const interspersed: (T | I)[] = elements.reduce((acc, element, index) => {
-    // Only add element if it's the first one.
-    if (acc.length === 0) return [element]
-    // Add the intersparser as well otherwise.
-    return [...acc, intersperser(index), element]
-  }, [] as (T | I)[])
+  const interspersed: (T | I)[] = elements.reduce(
+    (acc, element, index) => {
+      // Only add element if it's the first one.
+      if (acc.length === 0) return [element]
+      // Add the intersparser as well otherwise.
+      return [...acc, intersperser(index), element]
+    },
+    [] as (T | I)[],
+  )
 
   return interspersed
 }
@@ -424,8 +454,8 @@ function intersperse<T, I>(
 export function makeTable<T extends ScalarDict>(
   data: T[],
   columns?: (keyof T | AllColumnProps<T>)[],
-  // props?: Partial<TableProps<T>> = {},
-): void{
-  const instance = render(<Table data={data} columns={columns} />)
+  props?: Partial<TableProps<T>>,
+): void {
+  const instance = render(<Table data={data} columns={columns} {...props} />)
   instance.unmount()
 }
