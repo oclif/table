@@ -1,25 +1,31 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/prop-types */
+import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {Box, Text, render} from 'ink'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
 
-/* Table */
+import { BORDER_SKELETONS, BorderStyle } from './skeletons.js'
+
 /**
  * Features to implement:
  * - [x] properly render cells with ascii characters
  * - [x] refactor
  * - [x] if table exceeds the width of the terminal, minimally truncate the largest column to fit
+ * - [x] wrap or truncate overflow
+ * - [x] builtin column header formatters (e.g. capitalize, uppercase, etc.)
+ * - [x] make column headers customizable
+ * - [x] make borders removable
+ * - [ ] add tests (variable height, header formatter, header options, border styles)
+ *
+ * Features to consider:
  * - [ ] options for sorting, filtering, showing extended columns
- * - [ ] add tests
- * - [ ] make colors customizable
- * - [ ] make borders customizable
- * - [ ] make column headers customizable
- * - [ ] title
- * - [ ] newline overflow
- * - [ ] side by side tables???
- * - [ ] alt text for truncated cells???
+ * - [ ] alt text for truncated cells
+ * - [ ] side by side tables
+ *
+ * NOPE
+ * - [ ] title - Can implement this in sf-plugins-core
  */
 
 type Scalar = string | number | boolean | null | undefined
@@ -35,10 +41,48 @@ export type ColumnAlignment = 'left' | 'right' | 'center'
 export interface ColumnProps<T> {
   align?: ColumnAlignment
   key: T
+  name?: string;
 }
 export type AllColumnProps<T> = {[K in keyof T]: ColumnProps<K>}[keyof T]
 
 type Percentage = `${number}%`;
+
+type HeaderFormatter = ((header: string) => string) | 'pascalCase' | 'capitalCase' | 'camelCase' | 'snakeCase' | 'kebabCase' | 'constantCase' | 'sentenceCase'
+
+type SupportedColors =
+  'black' |
+  'red' |
+  'green' |
+  'yellow' |
+  'blue' |
+  'magenta' |
+  'cyan' |
+  'white' |
+  'gray' |
+  'grey' |
+  'blackBright' |
+  'redBright' |
+  'greenBright' |
+  'yellowBright' |
+  'blueBright' |
+  'magentaBright' |
+  'cyanBright' |
+  'whiteBright' |
+  `#${string}` |
+  `rgb(${number},${number},${number})`
+
+type HeaderOptions = {
+  color?: SupportedColors
+  backgroundColor?: SupportedColors
+  bold?: boolean
+  dimColor?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  inverse?: boolean
+}
+
+
 
 export type TableProps<T extends ScalarDict> = {
   /**
@@ -63,6 +107,24 @@ export type TableProps<T extends ScalarDict> = {
    * If you provide a number or percentage that is too small to fit the table, it will default to the width of the table.
    */
   maxWidth?: Percentage | number
+  /**
+   * Overflow behavior for cells. Defaults to 'truncate'.
+   */
+  overflow?: 'wrap' | 'truncate'
+  /**
+   * Column header formatter. Can either be a function or a method name on the `change-case` library.
+   *
+   * See https://www.npmjs.com/package/change-case for more information.
+   */
+  headerFormatter?: HeaderFormatter
+  /**
+   * Styling options for the column headers
+   */
+  headerOptions?: HeaderOptions
+  /**
+   * Border style for the table. Defaults to 'all'.
+   */
+  borderStyle?: BorderStyle
 }
 
 type Config<T> = {
@@ -70,12 +132,15 @@ type Config<T> = {
   data: T[]
   padding: number
   maxWidth: number
+  overflow: 'wrap' | 'truncate'
+  headerFormatter: HeaderFormatter | undefined
+  headerOptions: HeaderOptions
+  borderStyle: BorderStyle
 }
 
 const getDataKeys = <T extends ScalarDict>(data: T[]): (keyof T)[] => {
   const keys = new Set<keyof T>()
 
-  // Collect all the keys.
   for (const row of data) {
     for (const key in row) {
       if (key in row) {
@@ -92,10 +157,10 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {align: 'left', key: propsOrKey}
-    const {align, key} = props
+    const {align, key, name} = props
 
-    const header = String(key).length
-    /* Get the width of each cell in the column */
+    const header = String(name ?? key).length
+    // Get the width of each cell in the column
     const data = config.data.map((data) => {
       const value = data[key]
 
@@ -105,7 +170,6 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
 
     const width = Math.max(...data, header) + padding * 2
 
-    /* Construct a cell */
     return {
       align: align ?? 'left',
       column: key,
@@ -139,9 +203,56 @@ const getColumns = <T extends ScalarDict>(config: Config<T>): Column<T>[] => {
 }
 
 const getHeadings = <T extends ScalarDict>(config: Config<T>): Partial<T> => {
-  const columns = config.columns.map((c) => (typeof c === 'object' ? c.key : c))
-  return Object.fromEntries(columns.map((column) => [column, column])) as Partial<T>
+  const {columns, headerFormatter} = config
+  const format = (header: string | number | symbol) => {
+    if (typeof header !== 'string') return header
+    if (!headerFormatter) return header
+
+    if (typeof headerFormatter === 'function') return headerFormatter(header)
+
+    switch (headerFormatter) {
+      case 'pascalCase': {
+        return pascalCase(header)
+      }
+
+      case 'capitalCase': {
+        return capitalCase(header)
+      }
+
+      case 'camelCase': {
+        return camelCase(header)
+      }
+
+      case 'snakeCase': {
+        return snakeCase(header)
+      }
+
+      case 'kebabCase': {
+        return kebabCase(header)
+      }
+
+      case 'constantCase': {
+        return constantCase(header)
+      }
+
+      case 'sentenceCase': {
+        return sentenceCase(header)
+      }
+
+      default: {
+        return header
+      }
+    }
+  }
+
+  return Object.fromEntries(columns.map((c) => {
+    const key = typeof c === 'object' ? c.key : c
+    const name = typeof c === 'object' ? c.name ?? key : c
+    return [key, format(name)]
+  })) as Partial<T>
 }
+
+
 
 class Builder<T extends ScalarDict> {
   constructor(private readonly config: Config<T>) {}
@@ -149,70 +260,46 @@ class Builder<T extends ScalarDict> {
   public data(props: RowProps<T>): React.ReactNode {
     return row<T>({
       cell: Cell,
+      overflow: this.config.overflow,
       padding: this.config.padding,
-      skeleton: {
-        component: Skeleton,
-        cross: '│',
-        left: '│',
-        line: ' ',
-        right: '│',
-      },
+      skeleton: BORDER_SKELETONS[this.config.borderStyle].data,
     })(props)
   }
 
   public footer(props: RowProps<T>): React.ReactNode {
     return row<T>({
       cell: Skeleton,
+      overflow: this.config.overflow,
       padding: this.config.padding,
-      skeleton: {
-        component: Skeleton,
-        cross: '┴',
-        left: '└',
-        line: '─',
-        right: '┘',
-      },
+      skeleton: BORDER_SKELETONS[this.config.borderStyle].footer,
     })(props)
   }
 
   public header(props: RowProps<T>): React.ReactNode {
     return row<T>({
       cell: Skeleton,
+      overflow: this.config.overflow,
       padding: this.config.padding,
-      skeleton: {
-        component: Skeleton,
-        cross: '┬',
-        left: '┌',
-        line: '─',
-        right: '┐',
-      },
+      skeleton: BORDER_SKELETONS[this.config.borderStyle].header,
     })(props)
   }
 
   public heading(props: RowProps<T>): React.ReactNode {
     return row<T>({
       cell: Header,
+      overflow: this.config.overflow,
       padding: this.config.padding,
-      skeleton: {
-        component: Skeleton,
-        cross: '│',
-        left: '│',
-        line: ' ',
-        right: '│',
-      },
+      props: this.config.headerOptions,
+      skeleton: BORDER_SKELETONS[this.config.borderStyle].heading,
     })(props)
   }
 
   public separator(props: RowProps<T>): React.ReactNode {
     return row<T>({
       cell: Skeleton,
+      overflow: this.config.overflow,
       padding: this.config.padding,
-      skeleton: {
-        component: Skeleton,
-        cross: '┼',
-        left: '├',
-        line: '─',
-        right: '┤',
-      },
+      skeleton: BORDER_SKELETONS[this.config.borderStyle].separator,
     })(props)
   }
 }
@@ -246,9 +333,16 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 
 export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
   const config: Config<T> = {
+    borderStyle: props.borderStyle || 'all',
     columns: props.columns || getDataKeys(props.data),
     data: props.data,
+    headerFormatter: props.headerFormatter,
+    headerOptions: props.headerOptions || {
+      bold: true,
+      color: 'blue'
+    },
     maxWidth: determineConfiguredWidth(props.maxWidth),
+    overflow: props.overflow || 'truncate',
     padding: props.padding || 1,
   }
   const columns = getColumns(config)
@@ -276,8 +370,6 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
   )
 }
 
-/* Helper components */
-
 type RowConfig = {
   /**
    * Component used to render cells.
@@ -291,7 +383,6 @@ type RowConfig = {
    * Component used to render skeleton in the row.
    */
   skeleton: {
-    component: (props: React.PropsWithChildren) => React.ReactNode
     /**
      * Characters used in skeleton.
      *    |             |
@@ -303,12 +394,14 @@ type RowConfig = {
     cross: string
     line: string
   }
+  overflow?: 'wrap' | 'truncate'
+  props?: Record<string, unknown>
 }
 
 type RowProps<T extends ScalarDict> = {
-  key: string
-  data: Partial<T>
-  columns: Column<T>[]
+  readonly key: string
+  readonly data: Partial<T>
+  readonly columns: Column<T>[]
 }
 
 type Column<T> = {
@@ -318,83 +411,114 @@ type Column<T> = {
   align: ColumnAlignment
 }
 
+const truncate = (value: string, length: number) => `${value.slice(0, length)}...`
+
+// insert new line every x characters
+const wrap = (value: string, position: number, padding: number) => {
+  const chars = [...value]
+  const lines = []
+  let line = ''
+  let count = 0
+  for (const char of chars) {
+    if (count === position) {
+      lines.push(line)
+      line = ''
+      count = 0
+    }
+
+    line += char
+    count++
+  }
+
+  lines.push(line)
+  return lines.join(`${' '.repeat(padding)}\n${' '.repeat(padding)}`)
+}
+
 /**
  * Constructs a Row element from the configuration.
  */
 function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
-  /* This is a component builder. We return a function. */
-  const {padding, skeleton} = config
+  // This is a component builder. We return a function.
+  const {overflow, padding, skeleton} = config
 
-  return (props) => (
-    <Box flexDirection="row">
-      {/* Left */}
-      <Skeleton>{skeleton.left}</Skeleton>
-      {/* Data */}
-      {...intersperse(
-        (i) => {
-          const key = `${props.key}-hseparator-${i}`
+  return (props) => {
 
-          // The horizontal separator.
-          return <Skeleton key={key}>{skeleton.cross}</Skeleton>
-        },
+    const data = props.columns.map((column, colI) => {
+      // content
+      const value = props.data[column.column]
 
-        props.columns.map((column, colI) => {
-          // content
-          const value = props.data[column.column]
+      if (value === undefined || value === null) {
+        const key = `${props.key}-empty-${column.key}`
 
-          if (value === undefined || value === null) {
-            const key = `${props.key}-empty-${column.key}`
+        return (
+          <config.cell key={key} column={colI} {...config.props}>
+            {skeleton.line.repeat(column.width)}
+          </config.cell>
+        )
+      }
 
-            return (
-              <config.cell key={key} column={colI}>
-                {skeleton.line.repeat(column.width)}
-              </config.cell>
-            )
-          }
+      const key = `${props.key}-cell-${column.key}`
+      const v =
+        stripAnsi(String(value)).length >= column.width
+          ? overflow === 'wrap'
+            ? wrap(String(value), column.width - (padding * 2), padding)
+            : truncate(String(value), column.width - (3 + padding * 2))
+          : String(value)
 
-          const key = `${props.key}-cell-${column.key}`
 
-          const v =
-            stripAnsi(String(value)).length >= column.width
-              ? `${String(value).slice(0, column.width - (3 + padding * 2))}...`
-              : String(value)
+      // margins
+      const spaces = overflow === 'wrap' ? column.width - stripAnsi(v).split('\n')[0].length : column.width - stripAnsi(v).length
+      let marginLeft: number
+      let marginRight: number
+      if (column.align === 'left') {
+        marginLeft = padding
+        marginRight = spaces - marginLeft
+      } else if (column.align === 'center') {
+        marginLeft = Math.floor(spaces / 2)
+        marginRight = Math.ceil(spaces / 2)
+      } else {
+        marginRight = padding
+        marginLeft = spaces - marginRight
+      }
 
-          // margins
-          const spaces = column.width - stripAnsi(v).length
+      return (
+        <config.cell key={key} column={colI} {...config.props}>
+          {`${skeleton.line.repeat(marginLeft)}${v}${skeleton.line.repeat(marginRight)}`}
+        </config.cell>
+      )
+    })
 
-          let marginLeft: number
-          let marginRight: number
-          if (column.align === 'left') {
-            marginLeft = padding
-            marginRight = spaces - marginLeft
-          } else if (column.align === 'center') {
-            marginLeft = Math.floor(spaces / 2)
-            marginRight = Math.ceil(spaces / 2)
-          } else {
-            marginRight = padding
-            marginLeft = spaces - marginRight
-          }
+    const height = data.map((d) => d.props.children.split('\n').length).reduce((a, b) => Math.max(a, b), 0)
 
-          return (
-            <config.cell key={key} column={colI}>
-              {`${skeleton.line.repeat(marginLeft)}${v}${skeleton.line.repeat(marginRight)}`}
-            </config.cell>
-          )
-        }),
-      )}
-      {/* Right */}
-      <Skeleton>{skeleton.right}</Skeleton>
-    </Box>
-  )
+    return (
+      <Box flexDirection="row">
+        {/* Left */}
+        <Skeleton height={height}>{skeleton.left}</Skeleton>
+        {/* Data */}
+        {...intersperse(
+          (i) => {
+            const key = `${props.key}-hseparator-${i}`
+
+            // The horizontal separator.
+            return <Skeleton key={key} height={height}>{skeleton.cross}</Skeleton>
+          },
+          data
+        )}
+        {/* Right */}
+        <Skeleton height={height}>{skeleton.right}</Skeleton>
+      </Box>
+    )
+  }
 }
 
 /**
  * Renders the header of a table.
  */
 export function Header(props: React.PropsWithChildren) {
+  const {children, ...rest} = props
   return (
-    <Text bold color="blue">
-      {props.children}
+    <Text {...rest}>
+      {children}
     </Text>
   )
 }
@@ -409,8 +533,17 @@ export function Cell(props: CellProps) {
 /**
  * Renders the scaffold of the table.
  */
-export function Skeleton(props: React.PropsWithChildren) {
-  return <Text bold>{props.children}</Text>
+export function Skeleton(props: React.PropsWithChildren & {readonly height?: number}) {
+  const {children, ...rest} = props
+  // repeat Text component height times
+  const texts = Array.from({length: props.height ?? 1}, (_, i) => (
+    <Text key={i} {...rest}>{children}</Text>
+  ))
+  return (
+    <Box flexDirection='column'>
+      {texts}
+    </Box>
+  )
 }
 
 /* Utility functions */

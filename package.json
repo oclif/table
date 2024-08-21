@@ -7,6 +7,7 @@
   "dependencies": {
     "@oclif/core": "^4",
     "@types/react": "^18.3.3",
+    "change-case": "^5.4.4",
     "ink": "^5.0.1",
     "object-hash": "^3.0.0",
     "react": "^18.3.1",

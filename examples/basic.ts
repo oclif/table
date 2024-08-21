@@ -6,7 +6,7 @@ import {makeTable} from '../src/index.js'
 const data = [
   {
     age: 20,
-    bigData: 'a'.repeat(98),
+    bigData: 'a'.repeat(200),
     employed: ansis.bold('true'),
     evenMoreBigData: 'a'.repeat(130),
     id: terminalLink('36329', 'https://example.com/alice'),
@@ -35,12 +35,20 @@ makeTable(
   data,
   [
     'id',
-    'name',
+    {align: 'center', key: 'name', name: 'First Name'},
     'age',
     'employed',
     'bigData',
-    'moreBigData',
+    // 'moreBigData',
     // 'evenMoreBigData',
   ],
-  {maxWidth: '50%'},
+  {
+    borderStyle: 'outline',
+    headerFormatter: 'capitalCase',
+    headerOptions: {
+      bold: true,
+      color: '#905de8',
+    },
+    overflow: 'wrap',
+  },
 )
