@@ -19,12 +19,12 @@ const data = [
     employed: ansis.bold('true'),
     id: terminalLink('49032', 'https://example.com/bob'),
     moreBigData: 'b'.repeat(30),
-    name: 'Bob',
+    name: ansis.dim('Bob'),
   },
   {
     age: 22,
     bigData: 'c'.repeat(30),
-    employed: ansis.bold('true'),
+    employed: ansis.bold('false'),
     id: terminalLink('51786', 'https://example.com/charlie'),
     moreBigData: 'c'.repeat(30),
     name: 'Charlie',
@@ -873,13 +873,13 @@ const deployResult = [
   {
     filePath: 'force-app/main/default/classes/FileUtilities.cls',
     fullName: 'FileUtilities',
-    state: 'Unchanged',
+    state: 'Changed',
     type: 'ApexClass',
   },
   {
     filePath: 'force-app/main/default/classes/FileUtilities.cls-meta.xml',
     fullName: 'FileUtilities',
-    state: 'Unchanged',
+    state: 'Changed',
     type: 'ApexClass',
   },
   {
@@ -1822,7 +1822,10 @@ const deployResult = [
 //     // 'evenMoreBigData',
 //   ],
 //   data,
-//   headerFormatter: 'capitalCase',
+//   filter: {
+//     employed: false,
+//     // name: /^B/,
+//   },
 //   headerOptions: {
 //     bold: true,
 //     color: '#905de8',
@@ -1856,10 +1859,18 @@ makeTable({
   borderStyle: 'headers-only-with-underline',
   columns: ['state', 'fullName', 'type'],
   data: deployResult,
+  // filter: {
+  //   state: 'Changed',
+  //   type: /^Apex/,
+  // },
   headerOptions: {
     bold: true,
     color: 'blueBright',
     formatter: 'capitalCase',
   },
   overflow: 'wrap',
+  sort: {
+    fullName: 'asc',
+    type: 'asc',
+  },
 })

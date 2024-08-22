@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {Box, Text, render} from 'ink'
+import { orderBy } from 'natural-orderby';
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -17,11 +18,11 @@ import {BORDER_SKELETONS, BorderStyle} from './skeletons.js'
  * - [x] builtin column header formatters (e.g. capitalize, uppercase, etc.)
  * - [x] make column headers customizable
  * - [x] make borders removable
- * - [ ] add tests (variable height, header formatter, header options, border styles)
+ * - [x] more border styles
+ * - [x] options for sorting, filtering
+ * - [ ] add tests (variable height, header formatter, header options, border styles, filtering, sorting)
  *
  * Features to consider:
- * - [ ] more border styles
- * - [ ] options for sorting, filtering, showing extended columns
  * - [ ] alt text for truncated cells
  * - [ ] side by side tables
  *
@@ -135,6 +136,53 @@ export type TableProps<T extends ScalarDict> = {
    * Align data in columns. Defaults to 'left'.
    */
   align?: ColumnAlignment
+  /**
+   * Filter the data in the table.
+   *
+   * Each key in the object should correspond to a column in the table. The value can be a string or a regular expression.
+   *
+   * @example
+   * ```js
+   *
+   * const data = [
+   *  {name: 'Alice', age: 30},
+   *  {name: 'Bob', age: 25},
+   *  {name: 'Charlie', age: 35},
+   * ]
+   *
+   * // filter the name column with a string
+   * makeTable({data, filter: {name: 'Alice'}})
+   *
+   * // filter the name column with a regular expression
+   * makeTable({data, filter: {name: /^A/}})
+   * ```
+   */
+  filter?: Partial<Record<keyof T, boolean | string | RegExp>>
+  /**
+   * Sort the data in the table.
+   *
+   * Each key in the object should correspond to a column in the table. The value can be 'asc' or 'desc'.
+   *
+   * @example
+   * ```js
+   *
+   * const data = [
+   * {name: 'Alice', age: 30},
+   * {name: 'Bob', age: 25},
+   * {name: 'Charlie', age: 35},
+   * ]
+   *
+   * // sort the name column in ascending order
+   * makeTable({data, sort: {name: 'asc'}})
+   *
+   * // sort the name column in descending order
+   * makeTable({data, sort: {name: 'desc'}})
+   *
+   * // sort by name in ascending order and age in descending order
+   * makeTable({data, sort: {name: 'asc', age: 'desc'}})
+   * ```
+   */
+  sort?: Partial<Record<keyof T, 'asc' | 'desc'>>
 }
 
 type Config<T> = {
@@ -358,6 +406,34 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
 }
 
+function filterData<T extends ScalarDict>(data: T[], filter: Partial<Record<keyof T, boolean | string | RegExp>>): T[] {
+  return data.filter((row) => {
+    for (const key in row) {
+      if (key in row) {
+        const f = filter[key]
+        const value = stripAnsi(String(row[key]))
+        if (f !== undefined && typeof f === 'boolean') {
+          const convertedBoolean = value === 'true' ? true : value === 'false' ? false : value
+          return f === convertedBoolean
+        }
+
+        if (!f) continue
+        if (typeof f === 'string' && !value.includes(f)) return false
+        if (f instanceof RegExp && !f.test(value)) return false
+      }
+    }
+
+    return true
+  })
+}
+
+function sortData<T extends ScalarDict>(data: T[], sort?: Partial<Record<keyof T, 'asc' | 'desc'>> | undefined): T[] {
+  if (!sort) return data
+  const identifiers = Object.keys(sort)
+  const orders = identifiers.map((i) => sort[i]) as ['asc' | 'desc']
+  return orderBy(data, identifiers, orders)
+}
+
 export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
   const config: Config<T> = {
     align: props.align ?? 'left',
@@ -376,12 +452,16 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
   const headings = getHeadings(config)
   const builder = new Builder<T>(config)
 
+
+  const data = sortData(filterData(props.data, props.filter ?? {}), props.sort)
+
+
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
       {builder.header({columns, data: {}, key: 'header'})}
       {builder.heading({columns, data: headings, key: 'heading'})}
       {builder.headerFooter({columns, data: {}, key: 'footer'})}
-      {props.data.map((row, index) => {
+      {data.map((row, index) => {
         // Calculate the hash of the row based on its value and position
         const key = `row-${sha1(row)}-${index}`
 
