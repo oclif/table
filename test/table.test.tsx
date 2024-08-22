@@ -5,7 +5,7 @@ import { Box } from 'ink'
 import { render } from 'ink-testing-library'
 import React from 'react'
 
-import { Cell, Header, Skeleton, Table } from '../src/table.js'
+import {Cell, Header, Skeleton, Table} from '../src/table.js'
 
 config.truncateThreshold = 0
 
@@ -290,7 +290,7 @@ describe('Table', () => {
     expect(actual()).to.equal(expected())
   })
 
-  it('renders table with values containing ascii characters', () => {
+  it('renders table with values containing ansi characters', () => {
     const data = [{ name: ansis.bold('Foo'), age: 12 }, { name: ansis.bold('Bar'), age: 15 }]
     const { lastFrame: actual } = render(<Table data={data} />)
 
@@ -401,6 +401,113 @@ describe('Table', () => {
           {cell(' Bar  ')}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiiiiii... ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('└')}
+          {skeleton('──────')}
+          {skeleton('┴')}
+          {skeleton('─────────────────────')}
+          {skeleton('┘')}
+        </Box>
+      </>,
+    )
+
+    expect(actual()).to.equal(expected())
+  })
+
+  it('renders a table with wrapped content', () => {
+    const data = [
+      { name: 'Foo', id: 'i'.repeat(70) },
+      { name: 'Bar', id: 'i'.repeat(70) },
+    ]
+
+    const { lastFrame: actual } = render(<Table data={data} maxWidth={30} overflow="wrap" />)
+
+    const { lastFrame: expected } = render(
+      <>
+        <Box>
+          {skeleton('┌')}
+          {skeleton('──────')}
+          {skeleton('┬')}
+          {skeleton('─────────────────────')}
+          {skeleton('┐')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {header(' name ')}
+          {skeleton('│')}
+          {header(' id                  ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────────────────────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(' Foo  ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiii       ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('├')}
+          {skeleton('──────')}
+          {skeleton('┼')}
+          {skeleton('─────────────────────')}
+          {skeleton('┤')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell(' Bar  ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiiiiii       ')}
           {skeleton('│')}
         </Box>
         <Box>
