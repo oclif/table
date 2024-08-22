@@ -1,11 +1,14 @@
 export type BorderStyle =
   | 'all'
-  | 'vertical'
+  | 'headers-only-with-outline'
+  | 'headers-only-with-underline'
+  | 'headers-only'
+  | 'horizontal-with-outline'
   | 'horizontal'
   | 'none'
   | 'outline'
   | 'vertical-with-outline'
-  | 'horizontal-with-outline'
+  | 'vertical'
 
 type Skeleton = {
   cross: string
@@ -22,6 +25,7 @@ export const BORDER_SKELETONS: Record<
     header: Skeleton
     heading: Skeleton
     separator: Skeleton
+    headerFooter?: Skeleton
   }
 > = {
   all: {
@@ -54,6 +58,120 @@ export const BORDER_SKELETONS: Record<
       left: '├',
       line: '─',
       right: '┤',
+    },
+  },
+  'headers-only': {
+    data: {
+      cross: ' ',
+      left: ' ',
+      line: ' ',
+      right: ' ',
+    },
+    footer: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+    header: {
+      cross: '─',
+      left: '┌',
+      line: '─',
+      right: '┐',
+    },
+    headerFooter: {
+      cross: '─',
+      left: '└',
+      line: '─',
+      right: '┘',
+    },
+    heading: {
+      cross: ' ',
+      left: '│',
+      line: ' ',
+      right: '│',
+    },
+    separator: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+  },
+  'headers-only-with-outline': {
+    data: {
+      cross: ' ',
+      left: '│',
+      line: ' ',
+      right: '│',
+    },
+    footer: {
+      cross: '─',
+      left: '└',
+      line: '─',
+      right: '┘',
+    },
+    header: {
+      cross: '─',
+      left: '┌',
+      line: '─',
+      right: '┐',
+    },
+    headerFooter: {
+      cross: '─',
+      left: '├',
+      line: '─',
+      right: '┤',
+    },
+    heading: {
+      cross: ' ',
+      left: '│',
+      line: ' ',
+      right: '│',
+    },
+    separator: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+  },
+  'headers-only-with-underline': {
+    data: {
+      cross: ' ',
+      left: ' ',
+      line: ' ',
+      right: ' ',
+    },
+    footer: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+    header: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+    headerFooter: {
+      cross: '─',
+      left: ' ',
+      line: '─',
+      right: ' ',
+    },
+    heading: {
+      cross: ' ',
+      left: ' ',
+      line: ' ',
+      right: ' ',
+    },
+    separator: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
   },
   horizontal: {
@@ -146,10 +264,10 @@ export const BORDER_SKELETONS: Record<
       right: ' ',
     },
     separator: {
-      cross: ' ',
-      left: ' ',
-      line: ' ',
-      right: ' ',
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
   },
   outline: {
@@ -178,10 +296,10 @@ export const BORDER_SKELETONS: Record<
       right: '│',
     },
     separator: {
-      cross: ' ',
-      left: '│',
-      line: ' ',
-      right: '│',
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
   },
   vertical: {
@@ -192,10 +310,10 @@ export const BORDER_SKELETONS: Record<
       right: '│',
     },
     footer: {
-      cross: '│',
-      left: '│',
-      line: ' ',
-      right: '│',
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
     header: {
       cross: ' ',
@@ -204,16 +322,16 @@ export const BORDER_SKELETONS: Record<
       right: ' ',
     },
     heading: {
-      cross: ' ',
-      left: ' ',
-      line: ' ',
-      right: ' ',
-    },
-    separator: {
       cross: '│',
       left: '│',
       line: ' ',
       right: '│',
+    },
+    separator: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
   },
   'vertical-with-outline': {
@@ -235,6 +353,12 @@ export const BORDER_SKELETONS: Record<
       line: '─',
       right: '┐',
     },
+    headerFooter: {
+      cross: '┼',
+      left: '├',
+      line: '─',
+      right: '┤',
+    },
     heading: {
       cross: '│',
       left: '│',
@@ -242,10 +366,10 @@ export const BORDER_SKELETONS: Record<
       right: '│',
     },
     separator: {
-      cross: '│',
-      left: '│',
-      line: ' ',
-      right: '│',
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
     },
   },
 }
