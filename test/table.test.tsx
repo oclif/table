@@ -12,10 +12,9 @@ config.truncateThreshold = 0
 // Helpers -------------------------------------------------------------------
 
 const skeleton = (v: string) => <Skeleton>{v}</Skeleton>
-const header = (v: string) => <Header>{v}</Header>
+// @ts-expect-error - ignore
+const header = (v: string) => <Header bold color="blue">{v}</Header>
 const cell = (v: string) => <Cell column={0}>{v}</Cell>
-
-const defaultHeaderStyle = (v: string) => process.env.CI ? v : ansis.bold.blue(v)
 
 describe('Table', () => {
   it('renders table', () => {
@@ -31,7 +30,7 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -70,9 +69,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' age ')}`)}
+          {header(' age ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -120,9 +119,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' age ')}`)}
+          {header(' age ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -181,9 +180,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' age ')}`)}
+          {header(' age ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -245,9 +244,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle('   name   ')}`)}
+          {header('   name   ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle('   age   ')}`)}
+          {header('   age   ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -306,9 +305,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' age ')}`)}
+          {header(' age ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -371,9 +370,9 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' name ')}`)}
+          {header(' name ')}
           {skeleton('│')}
-          {header(`${defaultHeaderStyle(' id                  ')}`)}
+          {header(' id                  ')}
           {skeleton('│')}
         </Box>
         <Box>

@@ -315,70 +315,6 @@ const getHeadings = <T extends ScalarDict>(config: Config<T>): Partial<T> => {
   ) as Partial<T>
 }
 
-class Builder<T extends ScalarDict> {
-  constructor(private readonly config: Config<T>) {}
-
-  public data(props: RowProps<T>): React.ReactNode {
-    return row<T>({
-      cell: Cell,
-      overflow: this.config.overflow,
-      padding: this.config.padding,
-      skeleton: BORDER_SKELETONS[this.config.borderStyle].data,
-    })(props)
-  }
-
-  public footer(props: RowProps<T>): React.ReactNode {
-    return row<T>({
-      cell: Skeleton,
-      overflow: this.config.overflow,
-      padding: this.config.padding,
-      skeleton: BORDER_SKELETONS[this.config.borderStyle].footer,
-    })(props)
-  }
-
-  public header(props: RowProps<T>): React.ReactNode {
-    return row<T>({
-      cell: Skeleton,
-      overflow: this.config.overflow,
-      padding: this.config.padding,
-      skeleton: BORDER_SKELETONS[this.config.borderStyle].header,
-    })(props)
-  }
-
-  public headerFooter(props: RowProps<T>): React.ReactNode {
-    const {headerFooter} = BORDER_SKELETONS[this.config.borderStyle]
-    if (headerFooter) {
-      return row<T>({
-        cell: Skeleton,
-        overflow: this.config.overflow,
-        padding: this.config.padding,
-        skeleton: headerFooter,
-      })(props)
-    }
-
-    return false
-  }
-
-  public heading(props: RowProps<T>): React.ReactNode {
-    return row<T>({
-      cell: Header,
-      overflow: this.config.overflow,
-      padding: this.config.padding,
-      props: this.config.headerOptions,
-      skeleton: BORDER_SKELETONS[this.config.borderStyle].heading,
-    })(props)
-  }
-
-  public separator(props: RowProps<T>): React.ReactNode {
-    return row<T>({
-      cell: Skeleton,
-      overflow: this.config.overflow,
-      padding: this.config.padding,
-      skeleton: BORDER_SKELETONS[this.config.borderStyle].separator,
-    })(props)
-  }
-}
-
 function determineConfiguredWidth(providedWidth: number | Percentage | undefined): number {
   if (!providedWidth) return process.stdout.columns
 
@@ -450,17 +386,57 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
   }
   const columns = getColumns(config)
   const headings = getHeadings(config)
-  const builder = new Builder<T>(config)
-
-
   const data = sortData(filterData(props.data, props.filter ?? {}), props.sort)
 
+  const dataComponent = row<T>({
+    cell: Cell,
+    overflow: config.overflow,
+    padding: config.padding,
+    skeleton: BORDER_SKELETONS[config.borderStyle].data,
+  })
+
+  const footerComponent = row<T>({
+    cell: Skeleton,
+    overflow: config.overflow,
+    padding: config.padding,
+    skeleton: BORDER_SKELETONS[config.borderStyle].footer,
+  })
+
+  const headerComponent = row<T>({
+    cell: Skeleton,
+    overflow: config.overflow,
+    padding: config.padding,
+    skeleton: BORDER_SKELETONS[config.borderStyle].header,
+  })
+
+  const {headerFooter} = BORDER_SKELETONS[config.borderStyle]
+  const headerFooterComponent = headerFooter ? row<T>({
+    cell: Skeleton,
+    overflow: config.overflow,
+    padding: config.padding,
+    skeleton: headerFooter,
+  }) : () => false
+
+  const headingComponent = row<T>({
+    cell: Header,
+    overflow: config.overflow,
+    padding: config.padding,
+    props: config.headerOptions,
+    skeleton: BORDER_SKELETONS[config.borderStyle].heading,
+  })
+
+  const separatorComponent = row<T>({
+    cell: Skeleton,
+    overflow: config.overflow,
+    padding: config.padding,
+    skeleton: BORDER_SKELETONS[config.borderStyle].separator,
+  })
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
-      {builder.header({columns, data: {}, key: 'header'})}
-      {builder.heading({columns, data: headings, key: 'heading'})}
-      {builder.headerFooter({columns, data: {}, key: 'footer'})}
+      {headerComponent({columns, data: {}, key: 'header'})}
+      {headingComponent({columns, data: headings, key: 'heading'})}
+      {headerFooterComponent({columns, data: {}, key: 'footer'})}
       {data.map((row, index) => {
         // Calculate the hash of the row based on its value and position
         const key = `row-${sha1(row)}-${index}`
@@ -468,12 +444,12 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
         // Construct a row.
         return (
           <Box key={key} flexDirection="column">
-            {builder.separator({columns, data: {}, key: `separator-${key}`})}
-            {builder.data({columns, data: row, key: `data-${key}`})}
+            {separatorComponent({columns, data: {}, key: `separator-${key}`})}
+            {dataComponent({columns, data: row, key: `data-${key}`})}
           </Box>
         )
       })}
-      {builder.footer({columns, data: {}, key: 'footer'})}
+      {footerComponent({columns, data: {}, key: 'footer'})}
     </Box>
   )
 }

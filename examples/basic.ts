@@ -1823,7 +1823,7 @@ const deployResult = [
 //   ],
 //   data,
 //   filter: {
-//     employed: false,
+//     // employed: false,
 //     // name: /^B/,
 //   },
 //   headerOptions: {
@@ -1831,38 +1831,36 @@ const deployResult = [
 //     color: '#905de8',
 //   },
 //   overflow: 'wrap',
+//   sort: {
+//     id: 'desc',
+//   },
 // })
 
-// makeTable({
-//   align: 'center',
-//   // borderStyle: 'horizontal-with-outline',
-//   columns: [
-//     'id',
-//     {key: 'name', name: 'First Name'},
-//     'age',
-//     'employed',
-//     'bigData',
-//     // 'moreBigData',
-//     // 'evenMoreBigData',
-//   ],
-//   data,
-//   headerFormatter: 'capitalCase',
-//   headerOptions: {
-//     bold: true,
-//     color: '#905de8',
-//   },
-//   overflow: 'truncate',
-// })
+makeTable({
+  borderStyle: 'headers-only-with-underline',
+  columns: ['version', 'location', 'channel'],
+  data: versions,
+  filter: {
+    channel: /^.+$/,
+    // version: /^2.5\d/,
+  },
+  headerOptions: {
+    bold: true,
+    color: '#905de8',
+    formatter: 'capitalCase',
+  },
+  overflow: 'wrap',
+})
 
 makeTable({
   align: 'left',
   borderStyle: 'headers-only-with-underline',
   columns: ['state', 'fullName', 'type'],
   data: deployResult,
-  // filter: {
-  //   state: 'Changed',
-  //   type: /^Apex/,
-  // },
+  filter: {
+    state: 'Changed',
+    type: /^A/,
+  },
   headerOptions: {
     bold: true,
     color: 'blueBright',
