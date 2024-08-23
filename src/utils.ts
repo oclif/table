@@ -27,30 +27,6 @@ export function intersperse<T, I>(intersperser: (index: number) => I, elements: 
   return interspersed
 }
 
-export function filterData<T extends ScalarDict>(
-  data: T[],
-  filter: Partial<Record<keyof T, boolean | string | RegExp>>,
-): T[] {
-  return data.filter((row) => {
-    for (const key in row) {
-      if (key in row) {
-        const f = filter[key]
-        const value = stripAnsi(String(row[key]))
-        if (f !== undefined && typeof f === 'boolean') {
-          const convertedBoolean = value === 'true' ? true : value === 'false' ? false : value
-          return f === convertedBoolean
-        }
-
-        if (!f) continue
-        if (typeof f === 'string' && !value.includes(f)) return false
-        if (f instanceof RegExp && !f.test(value)) return false
-      }
-    }
-
-    return true
-  })
-}
-
 export function sortData<T extends ScalarDict>(
   data: T[],
   sort?: Partial<Record<keyof T, 'asc' | 'desc'>> | undefined,

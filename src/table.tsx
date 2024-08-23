@@ -8,7 +8,7 @@ import stripAnsi from 'strip-ansi'
 
 import {BORDER_SKELETONS} from './skeletons.js'
 import {CellProps, Column, Config, Percentage, RowConfig, RowProps, ScalarDict, TableProps} from './types.js';
-import {allKeysInCollection, filterData, getColumns, getHeadings, intersperse, sortData, truncate, wrap} from './utils.js';
+import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData, truncate, wrap} from './utils.js';
 
 function determineConfiguredWidth(providedWidth: number | Percentage | undefined): number {
   if (!providedWidth) return process.stdout.columns
@@ -38,22 +38,31 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 }
 
 export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
+  const {
+    align = 'left',
+    borderStyle = 'all',
+    data,
+    filter,
+    headerOptions = {bold: true, color: 'blue'},
+    maxWidth,
+    overflow = 'truncate',
+    padding = 1,
+    sort,
+  } = props
+
   const config: Config<T> = {
-    align: props.align ?? 'left',
-    borderStyle: props.borderStyle ?? 'all',
-    columns: props.columns ?? allKeysInCollection(props.data),
-    data: props.data,
-    headerOptions: props.headerOptions ?? {
-      bold: true,
-      color: 'blue',
-    },
-    maxWidth: determineConfiguredWidth(props.maxWidth),
-    overflow: props.overflow ?? 'truncate',
-    padding: props.padding ?? 1,
+    align,
+    borderStyle,
+    columns: props.columns ?? allKeysInCollection(data),
+    data,
+    headerOptions,
+    maxWidth: determineConfiguredWidth(maxWidth),
+    overflow,
+    padding,
   }
   const columns = getColumns(config)
   const headings = getHeadings(config)
-  const data = sortData(filterData(props.data, props.filter ?? {}), props.sort)
+  const processedData = sortData(filter ? data.filter((row) => filter(row)) : data, sort)
 
   const dataComponent = row<T>({
     cell: Cell,
@@ -100,11 +109,11 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
   })
 
   return (
-    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)} paddingBottom={1}>
       {headerComponent({columns, data: {}, key: 'header'})}
       {headingComponent({columns, data: headings, key: 'heading'})}
       {headerFooterComponent({columns, data: {}, key: 'footer'})}
-      {data.map((row, index) => {
+      {processedData.map((row, index) => {
         // Calculate the hash of the row based on its value and position
         const key = `row-${sha1(row)}-${index}`
 
@@ -188,11 +197,8 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
 
     return (
       <Box flexDirection="row">
-        {/* Left */}
         <Skeleton height={height}>{skeleton.left}</Skeleton>
-        {/* Data */}
         {...elements}
-        {/* Right */}
         <Skeleton height={height}>{skeleton.right}</Skeleton>
       </Box>
     )

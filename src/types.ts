@@ -108,30 +108,15 @@ export type TableProps<T extends ScalarDict> = {
    */
   align?: ColumnAlignment
   /**
-   * Filter the data in the table.
-   *
-   * Each key in the object should correspond to a column in the table. The value can be a string or a regular expression.
-   *
-   * @example
-   * ```js
-   * const data = [
-   *  {name: 'Alice', age: 30},
-   *  {name: 'Bob', age: 25},
-   *  {name: 'Charlie', age: 35},
-   * ]
-   *
-   * // filter the name column with a string
-   * makeTable({data, filter: {name: 'Alice'}})
-   *
-   * // filter the name column with a regular expression
-   * makeTable({data, filter: {name: /^A/}})
-   * ```
+   * Apply a filter to each row in the table.
    */
-  filter?: Partial<Record<keyof T, boolean | string | RegExp>>
+  filter?: (row: T) => boolean
   /**
    * Sort the data in the table.
    *
    * Each key in the object should correspond to a column in the table. The value can be 'asc' or 'desc'.
+   *
+   * The order of the keys determines the order of the sorting. The first key is the primary sort key, the second key is the secondary sort key, and so on.
    *
    * @example
    * ```js

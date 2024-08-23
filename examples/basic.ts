@@ -1,4 +1,5 @@
 import ansis from 'ansis'
+import {pathToFileURL} from 'node:url'
 import terminalLink from 'terminal-link'
 
 import {makeTable} from '../src/index.js'
@@ -867,7 +868,12 @@ const versions = [
       'https://developer.salesforce.com/media/salesforce-cli/sf/versions/2.38.6/1d0ec8e/sf-v2.38.6-1d0ec8e-darwin-arm64.tar.gz',
     version: '2.38.6',
   },
-]
+].map((v) => ({
+  ...v,
+  location: v.location.startsWith('http')
+    ? terminalLink(new URL(v.location).pathname.split('/').at(-1) ?? v.location, v.location)
+    : v.location,
+}))
 
 const deployResult = [
   {
@@ -1840,27 +1846,24 @@ makeTable({
   borderStyle: 'headers-only-with-underline',
   columns: ['version', 'location', 'channel'],
   data: versions,
-  filter: {
-    channel: /^.+$/,
-    // version: /^2.5\d/,
-  },
+  // filter: (row) => /^.+$/.test(row.channel),
   headerOptions: {
     bold: true,
     color: '#905de8',
     formatter: 'capitalCase',
   },
   overflow: 'wrap',
+  // sort: {
+  //   channel: 'desc',
+  // },
 })
-
+// console.log()
 makeTable({
   align: 'left',
   borderStyle: 'headers-only-with-underline',
   columns: ['state', 'fullName', 'type'],
   data: deployResult,
-  filter: {
-    state: 'Changed',
-    type: /^A/,
-  },
+  filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
   headerOptions: {
     bold: true,
     color: 'blueBright',

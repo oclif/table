@@ -1,6 +1,6 @@
 import {config, expect} from 'chai'
 
-import {filterData, intersperse, sortData, truncate, wrap} from '../src/utils.js'
+import {intersperse, sortData, truncate, wrap} from '../src/utils.js'
 
 config.truncateThreshold = 0
 
@@ -9,48 +9,6 @@ describe('intersperse', () => {
     const elements = [1, 2, 3]
     const expected = [1, 'foo', 2, 'foo', 3]
     expect(intersperse(() => 'foo', elements)).to.deep.equal(expected)
-  })
-})
-
-describe('filterData', () => {
-  it('should filter data using string', () => {
-    const data = [
-      {age: 30, name: 'Alice'},
-      {age: 25, name: 'Bob'},
-      {age: 35, name: 'Charlie'},
-    ]
-    const filter = {name: 'Alice'}
-    const expected = [{age: 30, name: 'Alice'}]
-    expect(filterData(data, filter)).to.deep.equal(expected)
-  })
-
-  it('should filter data using regular expression', () => {
-    const data = [
-      {age: 30, name: 'Alice'},
-      {age: 25, name: 'Bob'},
-      {age: 35, name: 'Charlie'},
-    ]
-    const filter = {name: /^A/}
-    const expected = [{age: 30, name: 'Alice'}]
-    expect(filterData(data, filter)).to.deep.equal(expected)
-  })
-
-  it('should filter data using boolean', () => {
-    const data = [
-      {age: 30, employed: true, name: 'Alice'},
-      {age: 25, employed: false, name: 'Bob'},
-      {age: 35, employed: false, name: 'Charlie'},
-    ]
-    const filter = {employed: true}
-    const expected = [{age: 30, employed: true, name: 'Alice'}]
-    expect(filterData(data, filter)).to.deep.equal(expected)
-  })
-
-  it('should filter despite ansi characters', () => {
-    const data = [{name: '\u001B[31mAlice\u001B[39m'}]
-    const filter = {name: 'Alice'}
-    const expected = data
-    expect(filterData(data, filter)).to.deep.equal(expected)
   })
 })
 
