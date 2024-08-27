@@ -68,6 +68,14 @@ export type HeaderOptions = {
   formatter?: HeaderFormatter
 }
 
+type Overflow = 'wrap' | 'truncate'
+
+type SortOrder<T> = 'asc' | 'desc' | ((valueA: T, valueB: T) => number)
+
+export type Sort<T> = {
+  [K in keyof T]?: SortOrder<T[K]>
+}
+
 export type TableProps<T extends ScalarDict> = {
   /**
    * List of values (rows).
@@ -94,7 +102,7 @@ export type TableProps<T extends ScalarDict> = {
   /**
    * Overflow behavior for cells. Defaults to 'truncate'.
    */
-  overflow?: 'wrap' | 'truncate'
+  overflow?: Overflow
   /**
    * Styling options for the column headers
    */
@@ -114,7 +122,7 @@ export type TableProps<T extends ScalarDict> = {
   /**
    * Sort the data in the table.
    *
-   * Each key in the object should correspond to a column in the table. The value can be 'asc' or 'desc'.
+   * Each key in the object should correspond to a column in the table. The value can be 'asc', 'desc', or a custom sort function.
    *
    * The order of the keys determines the order of the sorting. The first key is the primary sort key, the second key is the secondary sort key, and so on.
    *
@@ -134,18 +142,20 @@ export type TableProps<T extends ScalarDict> = {
    *
    * // sort by name in ascending order and age in descending order
    * makeTable({data, sort: {name: 'asc', age: 'desc'}})
+   *
+   * // sort by name in ascending order and age in descending order using a custom sort function
+   * makeTable({data, sort: {name: 'asc', age: (a, b) => b - a}})
    * ```
    */
-  sort?: Partial<Record<keyof T, 'asc' | 'desc'>>
+  sort?: Sort<T>
 }
 
 export type Config<T> = {
-  align: ColumnAlignment
   columns: (keyof T | AllColumnProps<T>)[]
   data: T[]
   padding: number
   maxWidth: number
-  overflow: 'wrap' | 'truncate'
+  overflow: Overflow
   headerOptions: HeaderOptions
   borderStyle: BorderStyle
 }
@@ -174,8 +184,9 @@ export type RowConfig = {
     cross: string
     line: string
   }
-  overflow?: 'wrap' | 'truncate'
+  overflow?: Overflow
   props?: Record<string, unknown>
+  align?: ColumnAlignment
 }
 
 export type RowProps<T extends ScalarDict> = {
@@ -188,5 +199,4 @@ export type Column<T> = {
   key: string
   column: keyof T
   width: number
-  align: ColumnAlignment
 }

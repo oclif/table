@@ -1,14 +1,17 @@
-export type BorderStyle =
-  | 'all'
-  | 'headers-only-with-outline'
-  | 'headers-only-with-underline'
-  | 'headers-only'
-  | 'horizontal-with-outline'
-  | 'horizontal'
-  | 'none'
-  | 'outline'
-  | 'vertical-with-outline'
-  | 'vertical'
+export const BORDER_STYLES = [
+  'all',
+  'headers-only-with-outline',
+  'headers-only-with-underline',
+  'headers-only',
+  'horizontal-with-outline',
+  'horizontal',
+  'none',
+  'outline',
+  'vertical-with-outline',
+  'vertical',
+] as const
+
+export type BorderStyle = (typeof BORDER_STYLES)[number]
 
 type Skeleton = {
   cross: string

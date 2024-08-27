@@ -1,5 +1,4 @@
 import ansis from 'ansis'
-import {pathToFileURL} from 'node:url'
 import terminalLink from 'terminal-link'
 
 import {makeTable} from '../src/index.js'
@@ -870,9 +869,10 @@ const versions = [
   },
 ].map((v) => ({
   ...v,
-  location: v.location.startsWith('http')
-    ? terminalLink(new URL(v.location).pathname.split('/').at(-1) ?? v.location, v.location)
-    : v.location,
+  // location: v.location.startsWith('http')
+  //   ? terminalLink(new URL(v.location).pathname.split('/').at(-1) ?? v.location, v.location)
+  //   : v.location,
+  num: 1,
 }))
 
 const deployResult = [
@@ -1844,7 +1844,7 @@ const deployResult = [
 
 makeTable({
   borderStyle: 'headers-only-with-underline',
-  columns: ['version', 'location', 'channel'],
+  columns: ['version', 'channel', 'location'],
   data: versions,
   // filter: (row) => /^.+$/.test(row.channel),
   headerOptions: {
@@ -1853,15 +1853,26 @@ makeTable({
     formatter: 'capitalCase',
   },
   overflow: 'wrap',
-  // sort: {
-  //   channel: 'desc',
-  // },
+  sort: {
+    channel(a, b) {
+      // sort in this order: latest, latest-rc, nightly, qa, undefined
+      if (!a) return 1
+      if (!b) return -1
+
+      const order = ['latest', 'latest-rc', 'nightly', 'qa']
+      return order.indexOf(a) - order.indexOf(b)
+    },
+    num(a, b) {
+      return a - b
+    },
+  },
 })
-// console.log()
+console.log()
 makeTable({
-  align: 'left',
+  // align: 'center',
   borderStyle: 'headers-only-with-underline',
-  columns: ['state', 'fullName', 'type'],
+  // borderStyle: 'all',
+  columns: ['state', 'fullName', 'type', {key: 'filePath', name: 'Path'}],
   data: deployResult,
   filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
   headerOptions: {

@@ -2,7 +2,7 @@ import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCas
 import {orderBy} from 'natural-orderby'
 import stripAnsi from 'strip-ansi'
 
-import {Column, ColumnProps, Config, ScalarDict} from './types.js'
+import {Column, ColumnProps, Config, ScalarDict, Sort} from './types.js'
 
 /**
  * Intersperses a list of elements with another element.
@@ -27,13 +27,10 @@ export function intersperse<T, I>(intersperser: (index: number) => I, elements: 
   return interspersed
 }
 
-export function sortData<T extends ScalarDict>(
-  data: T[],
-  sort?: Partial<Record<keyof T, 'asc' | 'desc'>> | undefined,
-): T[] {
+export function sortData<T extends ScalarDict>(data: T[], sort?: Sort<T> | undefined): T[] {
   if (!sort) return data
   const identifiers = Object.keys(sort)
-  const orders = identifiers.map((i) => sort[i]) as ['asc' | 'desc']
+  const orders = Object.values(sort)
   return orderBy(data, identifiers, orders)
 }
 
@@ -72,7 +69,7 @@ export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[
 }
 
 export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[] {
-  const {align, columns, maxWidth, padding} = config
+  const {columns, maxWidth, padding} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {key: propsOrKey}
@@ -90,7 +87,6 @@ export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[]
     const width = Math.max(...data, header) + padding * 2
 
     return {
-      align: align ?? 'left',
       column: key,
       key: String(key),
       width,

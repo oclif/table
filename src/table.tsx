@@ -7,9 +7,29 @@ import React from 'react'
 import stripAnsi from 'strip-ansi'
 
 import {BORDER_SKELETONS} from './skeletons.js'
-import {CellProps, Column, Config, Percentage, RowConfig, RowProps, ScalarDict, TableProps} from './types.js';
+import {
+  CellProps,
+  Column,
+  Config,
+  HeaderOptions,
+  Percentage,
+  RowConfig,
+  RowProps,
+  ScalarDict,
+  TableProps
+} from './types.js';
 import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData, truncate, wrap} from './utils.js';
 
+/**
+ * Determines the configured width based on the provided width value.
+ * If no width is provided, it returns the width of the current terminal.
+ * If the provided width is a percentage, it calculates the width based on the percentage of the terminal width.
+ * If the provided width is a number, it returns the provided width.
+ * If the calculated width is greater than the terminal width, it returns the terminal width.
+ *
+ * @param providedWidth - The width value provided.
+ * @returns The determined configured width.
+ */
 function determineConfiguredWidth(providedWidth: number | Percentage | undefined): number {
   if (!providedWidth) return process.stdout.columns
 
@@ -37,74 +57,80 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
 }
 
-export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> & Partial<TableProps<T>>) {
+export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const {
     align = 'left',
     borderStyle = 'all',
     data,
     filter,
-    headerOptions = {bold: true, color: 'blue'},
     maxWidth,
     overflow = 'truncate',
     padding = 1,
     sort,
   } = props
 
+  const headerOptions = {bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions
+  const processedData = sortData(filter ? data.filter((row) => filter(row)) : data, sort)
   const config: Config<T> = {
-    align,
     borderStyle,
     columns: props.columns ?? allKeysInCollection(data),
-    data,
+    data: processedData,
     headerOptions,
     maxWidth: determineConfiguredWidth(maxWidth),
     overflow,
     padding,
   }
+
   const columns = getColumns(config)
   const headings = getHeadings(config)
-  const processedData = sortData(filter ? data.filter((row) => filter(row)) : data, sort)
 
   const dataComponent = row<T>({
+    align,
     cell: Cell,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
   })
 
   const footerComponent = row<T>({
+    align,
     cell: Skeleton,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].footer,
   })
 
   const headerComponent = row<T>({
+    align,
     cell: Skeleton,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].header,
   })
 
   const {headerFooter} = BORDER_SKELETONS[config.borderStyle]
   const headerFooterComponent = headerFooter ? row<T>({
+    align,
     cell: Skeleton,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     skeleton: headerFooter,
   }) : () => false
 
   const headingComponent = row<T>({
+    align,
     cell: Header,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     props: config.headerOptions,
     skeleton: BORDER_SKELETONS[config.borderStyle].heading,
   })
 
   const separatorComponent = row<T>({
+    align,
     cell: Skeleton,
-    overflow: config.overflow,
-    padding: config.padding,
+    overflow,
+    padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
   })
 
@@ -135,7 +161,7 @@ export function Table<T extends ScalarDict>(props: Pick<TableProps<T>, 'data'> &
  */
 function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
-  const {overflow, padding, skeleton} = config
+  const {align, overflow, padding, skeleton} = config
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
@@ -164,12 +190,13 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
         overflow === 'wrap'
           ? column.width - stripAnsi(v).split('\n')[0].trim().length
           : column.width - stripAnsi(v).length
+
       let marginLeft: number
       let marginRight: number
-      if (column.align === 'left') {
+      if (align === 'left') {
         marginLeft = padding
         marginRight = spaces - marginLeft
-      } else if (column.align === 'center') {
+      } else if (align === 'center') {
         marginLeft = Math.floor(spaces / 2)
         marginRight = Math.ceil(spaces / 2)
       } else {
