@@ -1846,12 +1846,13 @@ makeTable({
   borderStyle: 'headers-only-with-underline',
   columns: ['version', 'channel', 'location'],
   data: versions,
-  // filter: (row) => /^.+$/.test(row.channel),
+  filter: (row) => /^.+$/.test(row.channel),
   headerOptions: {
     bold: true,
     color: '#905de8',
     formatter: 'capitalCase',
   },
+  orientation: 'vertical',
   overflow: 'wrap',
   sort: {
     channel(a, b) {
@@ -1867,7 +1868,9 @@ makeTable({
     },
   },
 })
+
 console.log()
+
 makeTable({
   // align: 'center',
   borderStyle: 'headers-only-with-underline',
@@ -1880,6 +1883,7 @@ makeTable({
     color: 'blueBright',
     formatter: 'capitalCase',
   },
+  orientation: 'vertical',
   overflow: 'wrap',
   sort: {
     fullName: 'asc',

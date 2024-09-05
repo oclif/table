@@ -108,11 +108,11 @@ export type TableProps<T extends ScalarDict> = {
    */
   headerOptions?: HeaderOptions
   /**
-   * Border style for the table. Defaults to 'all'.
+   * Border style for the table. Defaults to 'all'. Only applies to horizontal orientation.
    */
   borderStyle?: BorderStyle
   /**
-   * Align data in columns. Defaults to 'left'.
+   * Align data in columns. Defaults to 'left'. Only applies to horizontal orientation.
    */
   align?: ColumnAlignment
   /**
@@ -148,6 +148,25 @@ export type TableProps<T extends ScalarDict> = {
    * ```
    */
   sort?: Sort<T>
+  /**
+   * The orientation of the table. Defaults to 'horizontal'.
+   *
+   * If 'vertical', individual records will be displayed vertically in key:value pairs.
+   *
+   * @example
+   * ```
+   * ─────────────
+   *  Name Alice
+   *  Id   36329
+   *  Age  20
+   * ─────────────
+   *  Name Bob
+   *  Id   49032
+   *  Age  21
+   * ─────────────
+   * ```
+   */
+  orientation?: 'horizontal' | 'vertical'
 }
 
 export type Config<T> = {
