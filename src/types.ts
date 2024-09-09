@@ -232,5 +232,9 @@ export type ContainerProps = {
   readonly columnGap?: number
   readonly direction?: 'row' | 'column'
   readonly margin?: number
+  readonly marginLeft?: number
+  readonly marginRight?: number
+  readonly marginTop?: number
+  readonly marginBottom?: number
   readonly rowGap?: number
 }

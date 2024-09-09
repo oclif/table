@@ -314,7 +314,7 @@ export function makeTable<T extends ScalarDict>(options: TableProps<T>): void {
 
 function Container(props: ContainerProps) {
   return (
-    <Box columnGap={props.columnGap} alignItems={props.alignItems} rowGap={props.rowGap} margin={props.margin} flexWrap="wrap" flexDirection={props.direction ?? 'row'}>
+    <Box flexWrap="wrap" flexDirection={props.direction ?? 'row'} {...props}>
       {props.children}
     </Box>
   )
@@ -324,7 +324,9 @@ export function makeTables<T extends ScalarDict[]>(
   tables: {[P in keyof T]: TableProps<T[P]>},
   options?: Omit<ContainerProps, 'children'>
 ): void {
-  const columns = process.stdout.columns - ((options?.margin ?? 0) * 2)
+  const leftMargin = options?.marginLeft ?? options?.margin ?? 0
+  const rightMargin = options?.marginRight ?? options?.margin ?? 0
+  const columns = process.stdout.columns - (leftMargin + rightMargin)
 
   const processed = tables.map((table) => ({
     ...table,
