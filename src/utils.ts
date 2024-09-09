@@ -34,29 +34,6 @@ export function sortData<T extends ScalarDict>(data: T[], sort?: Sort<T> | undef
   return orderBy(data, identifiers, orders)
 }
 
-export const truncate = (value: string, length: number) => `${value.slice(0, length)}...`
-
-// insert new line every x characters
-export const wrap = (value: string, position: number, padding: number) => {
-  const chars = [...value]
-  const lines = []
-  let line = ''
-  let count = 0
-  for (const char of chars) {
-    if (count === position) {
-      lines.push(line)
-      line = ''
-      count = 0
-    }
-
-    line += char
-    count++
-  }
-
-  lines.push(line)
-  return lines.join(`${' '.repeat(padding)}\n${' '.repeat(padding)}`)
-}
-
 export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[] {
   const keys = new Set<keyof T>()
   for (const row of data) {

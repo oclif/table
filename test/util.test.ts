@@ -1,6 +1,6 @@
 import {config, expect} from 'chai'
 
-import {intersperse, sortData, truncate, wrap} from '../src/utils.js'
+import {intersperse, sortData} from '../src/utils.js'
 
 config.truncateThreshold = 0
 
@@ -62,48 +62,5 @@ describe('sortData', () => {
       {age: 20, name: 'Amy'},
     ]
     expect(sortData(data, sort)).to.deep.equal(expected)
-  })
-})
-
-describe('truncate', () => {
-  it('should truncate string', () => {
-    const value = 'foobar'
-    const length = 3
-    const expected = 'foo...'
-    expect(truncate(value, length)).to.equal(expected)
-  })
-})
-
-describe('wrap', () => {
-  it('should wrap string', () => {
-    const value = 'foobar'
-    const position = 3
-    const padding = 0
-    const expected = 'foo\nbar'
-    expect(wrap(value, position, padding)).to.deep.equal(expected)
-  })
-
-  it('should wrap string with padding', () => {
-    const value = 'foobar'
-    const position = 3
-    const padding = 1
-    const expected = 'foo \n bar'
-    expect(wrap(value, position, padding)).to.deep.equal(expected)
-  })
-
-  it('should wrap string multiple times', () => {
-    const value = 'foobarbaz'
-    const position = 3
-    const padding = 0
-    const expected = 'foo\nbar\nbaz'
-    expect(wrap(value, position, padding)).to.deep.equal(expected)
-  })
-
-  it('should wrap string multiple times with padding', () => {
-    const value = 'foobarbaz'
-    const position = 3
-    const padding = 1
-    const expected = 'foo \n bar \n baz'
-    expect(wrap(value, position, padding)).to.deep.equal(expected)
   })
 })

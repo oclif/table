@@ -1,1 +1,2 @@
-export {makeTable} from './table.js'
+export {makeTable, makeTables} from './table.js'
+export type {TableProps} from './types.js'

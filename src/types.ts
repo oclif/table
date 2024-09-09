@@ -8,7 +8,8 @@ export type ScalarDict = {
 
 export type CellProps = React.PropsWithChildren<{readonly column: number}>
 
-export type ColumnAlignment = 'left' | 'right' | 'center'
+export type HorizontalAlignment = 'left' | 'right' | 'center'
+export type VerticalAlignment = 'top' | 'center' | 'bottom'
 
 export interface ColumnProps<T> {
   key: T
@@ -114,7 +115,7 @@ export type TableProps<T extends ScalarDict> = {
   /**
    * Align data in columns. Defaults to 'left'. Only applies to horizontal orientation.
    */
-  align?: ColumnAlignment
+  horizontalAlignment?: HorizontalAlignment
   /**
    * Apply a filter to each row in the table.
    */
@@ -167,6 +168,10 @@ export type TableProps<T extends ScalarDict> = {
    * ```
    */
   orientation?: 'horizontal' | 'vertical'
+  /**
+   * Vertical alignment of cell content. Defaults to 'top'. Only applies to horizontal orientation.
+   */
+  verticalAlignment?: VerticalAlignment
 }
 
 export type Config<T> = {
@@ -205,7 +210,8 @@ export type RowConfig = {
   }
   overflow?: Overflow
   props?: Record<string, unknown>
-  align?: ColumnAlignment
+  horizontalAlignment?: HorizontalAlignment
+  verticalAlignment?: VerticalAlignment
 }
 
 export type RowProps<T extends ScalarDict> = {
@@ -218,4 +224,13 @@ export type Column<T> = {
   key: string
   column: keyof T
   width: number
+}
+
+export type ContainerProps = {
+  readonly alignItems?: 'flex-start' | 'flex-end' | 'center'
+  readonly children: React.ReactNode
+  readonly columnGap?: number
+  readonly direction?: 'row' | 'column'
+  readonly margin?: number
+  readonly rowGap?: number
 }

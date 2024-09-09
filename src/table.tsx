@@ -1,16 +1,19 @@
 
 /* eslint-disable react/prop-types */
 
+import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
+import wrapAnsi from 'wrap-ansi'
 
 import {BORDER_SKELETONS} from './skeletons.js'
 import {
   CellProps,
   Column,
   Config,
+  ContainerProps,
   HeaderOptions,
   Percentage,
   RowConfig,
@@ -18,7 +21,7 @@ import {
   ScalarDict,
   TableProps
 } from './types.js';
-import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData, truncate, wrap} from './utils.js';
+import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData} from './utils.js';
 
 /**
  * Determines the configured width based on the provided width value.
@@ -30,18 +33,18 @@ import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData, tru
  * @param providedWidth - The width value provided.
  * @returns The determined configured width.
  */
-function determineConfiguredWidth(providedWidth: number | Percentage | undefined): number {
-  if (!providedWidth) return process.stdout.columns
+function determineConfiguredWidth(providedWidth: number | Percentage | undefined, columns = process.stdout.columns): number {
+  if (!providedWidth) return columns
 
   const num =
     typeof providedWidth === 'string' && providedWidth.endsWith('%')
-      ? Math.floor((Number.parseInt(providedWidth, 10) / 100) * process.stdout.columns)
+      ? Math.floor((Number.parseInt(providedWidth, 10) / 100) * columns)
       : typeof providedWidth === 'string'
         ? Number.parseInt(providedWidth, 10)
         : providedWidth
 
-  if (num > process.stdout.columns) {
-    return process.stdout.columns
+  if (num > columns) {
+    return columns
   }
 
   return num
@@ -59,15 +62,16 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 
 export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const {
-    align = 'left',
     borderStyle = 'all',
     data,
     filter,
+    horizontalAlignment = 'left',
     maxWidth,
     orientation = 'horizontal',
     overflow = 'truncate',
     padding = 1,
     sort,
+    verticalAlignment = 'top',
   } = props
 
   const headerOptions = {bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions
@@ -86,24 +90,27 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const headings = getHeadings(config)
 
   const dataComponent = row<T>({
-    align,
     cell: Cell,
+    horizontalAlignment,
     overflow,
     padding,
+    props: {
+      alignItems: verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end',
+    },
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
   })
 
   const footerComponent = row<T>({
-    align,
     cell: Skeleton,
+    horizontalAlignment,
     overflow,
     padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].footer,
   })
 
   const headerComponent = row<T>({
-    align,
     cell: Skeleton,
+    horizontalAlignment,
     overflow,
     padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].header,
@@ -111,16 +118,16 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
 
   const {headerFooter} = BORDER_SKELETONS[config.borderStyle]
   const headerFooterComponent = headerFooter ? row<T>({
-    align,
     cell: Skeleton,
+    horizontalAlignment,
     overflow,
     padding,
     skeleton: headerFooter,
   }) : () => false
 
   const headingComponent = row<T>({
-    align,
     cell: Header,
+    horizontalAlignment,
     overflow,
     padding,
     props: config.headerOptions,
@@ -128,8 +135,8 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
   })
 
   const separatorComponent = row<T>({
-    align,
     cell: Skeleton,
+    horizontalAlignment,
     overflow,
     padding,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
@@ -191,7 +198,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
  */
 function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
-  const {align, overflow, padding, skeleton} = config
+  const {horizontalAlignment, overflow, padding, skeleton} = config
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
@@ -212,8 +219,8 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
         // if the visible length of the value is greater than the column width, truncate or wrap
         stripAnsi(String(value)).length >= column.width
           ? overflow === 'wrap'
-            ? wrap(String(value), column.width - padding * 2, padding)
-            : truncate(String(value), column.width - (3 + padding * 2))
+            ? wrapAnsi(String(value), column.width - padding * 2, {hard: true, trim: true}).replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
+            : cliTruncate(String(value), column.width - (3 + padding * 2))
           : String(value)
 
       const spaces =
@@ -223,10 +230,10 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
 
       let marginLeft: number
       let marginRight: number
-      if (align === 'left') {
+      if (horizontalAlignment === 'left') {
         marginLeft = padding
         marginRight = spaces - marginLeft
-      } else if (align === 'center') {
+      } else if (horizontalAlignment === 'center') {
         marginLeft = Math.floor(spaces / 2)
         marginRight = Math.ceil(spaces / 2)
       } else {
@@ -274,7 +281,12 @@ export function Header(props: React.PropsWithChildren) {
  * Renders a cell in the table.
  */
 export function Cell(props: CellProps) {
-  return <Text>{props.children}</Text>
+  return (
+    <Box {...props}>
+      <Text>{props.children}</Text>
+    </Box>
+
+  )
 }
 
 /**
@@ -297,5 +309,33 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
  */
 export function makeTable<T extends ScalarDict>(options: TableProps<T>): void {
   const instance = render(<Table {...options} />)
+  instance.unmount()
+}
+
+function Container(props: ContainerProps) {
+  return (
+    <Box columnGap={props.columnGap} alignItems={props.alignItems} rowGap={props.rowGap} margin={props.margin} flexWrap="wrap" flexDirection={props.direction ?? 'row'}>
+      {props.children}
+    </Box>
+  )
+}
+
+export function makeTables<T extends ScalarDict[]>(
+  tables: {[P in keyof T]: TableProps<T[P]>},
+  options?: Omit<ContainerProps, 'children'>
+): void {
+  const columns = process.stdout.columns - ((options?.margin ?? 0) * 2)
+
+  const processed = tables.map((table) => ({
+    ...table,
+    // adjust maxWidth to account for margin
+    maxWidth: determineConfiguredWidth(table.maxWidth, columns)
+  }))
+
+  const instance = render(
+    <Container {...options}>
+      {processed.map((table) => <Table key={sha1(table)} {...table} />)}
+    </Container>
+  )
   instance.unmount()
 }
