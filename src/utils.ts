@@ -58,7 +58,7 @@ export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[]
       const value = data[key]
 
       if (value === undefined || value === null) return 0
-      return stripAnsi(String(value)).length
+      return stripAnsi(String(value).replaceAll('​', ' ')).length
     })
 
     const width = Math.max(...data, header) + padding * 2
