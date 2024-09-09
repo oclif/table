@@ -215,13 +215,17 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
       }
 
       const key = `${props.key}-cell-${column.key}`
+      // Some terminals don't play nicely with zero-width characters, so we replace them with spaces.
+      // https://github.com/sindresorhus/terminal-link/issues/18
+      // https://github.com/Shopify/cli/pull/995
+      const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
       const v =
         // if the visible length of the value is greater than the column width, truncate or wrap
-        stripAnsi(String(value)).length >= column.width
+        stripAnsi(valueWithNoZeroWidthChars).length >= column.width
           ? overflow === 'wrap'
-            ? wrapAnsi(String(value), column.width - padding * 2, {hard: true, trim: true}).replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
-            : cliTruncate(String(value), column.width - (3 + padding * 2))
-          : String(value)
+            ? wrapAnsi(valueWithNoZeroWidthChars, column.width - padding * 2, {hard: true, trim: true}).replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
+            : cliTruncate(valueWithNoZeroWidthChars, column.width - (3 + padding * 2))
+          : valueWithNoZeroWidthChars
 
       const spaces =
         overflow === 'wrap'
