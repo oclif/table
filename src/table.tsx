@@ -72,8 +72,9 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
     maxWidth,
     orientation = 'horizontal',
     overflow = 'truncate',
-    padding = 1, sort,
-    verticalAlignment = 'top'
+    padding = 1,
+    sort,
+    verticalAlignment = 'top',
   } = props
 
   const headerOptions = {bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions
@@ -119,10 +120,10 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const {headerFooter} = BORDER_SKELETONS[config.borderStyle]
   const headerFooterComponent = headerFooter
     ? row<T>({
-      borderProps,
+        borderProps,
         cell: Skeleton,
         props: borderProps,
-    skeleton: headerFooter,
+        skeleton: headerFooter,
       })
     : () => false
 
@@ -258,14 +259,14 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
         marginLeft = spaces - marginRight
       }
 
-      const alignItems = verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
+      const alignItems =
+        verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
       return (
         <config.cell key={key} column={colI} {...{alignItems}} {...config.props}>
           {`${skeleton.line.repeat(marginLeft)}${v}${skeleton.line.repeat(marginRight)}`}
         </config.cell>
       )
     })
-
 
     const height = data.map((d) => d.props.children.split('\n').length).reduce((a, b) => Math.max(a, b), 0)
     const elements = intersperse((i) => {
@@ -280,9 +281,13 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
 
     return (
       <Box flexDirection="row">
-        <Skeleton height={height} {...borderProps}>{skeleton.left}</Skeleton>
+        <Skeleton height={height} {...borderProps}>
+          {skeleton.left}
+        </Skeleton>
         {...elements}
-        <Skeleton height={height} {...borderProps}>{skeleton.right}</Skeleton>
+        <Skeleton height={height} {...borderProps}>
+          {skeleton.right}
+        </Skeleton>
       </Box>
     )
   }
