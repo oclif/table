@@ -386,7 +386,7 @@ describe('Table', () => {
           {skeleton('│')}
           {cell(' Foo  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiii... ')}
+          {cell(' iiiiiiiiiiiiiiiiii… ')}
           {skeleton('│')}
         </Box>
         <Box>
@@ -400,7 +400,7 @@ describe('Table', () => {
           {skeleton('│')}
           {cell(' Bar  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiii... ')}
+          {cell(' iiiiiiiiiiiiiiiiii… ')}
           {skeleton('│')}
         </Box>
         <Box>

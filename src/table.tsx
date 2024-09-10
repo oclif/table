@@ -172,7 +172,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
   }
 
   return (
-    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)} paddingBottom={1}>
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
       {headerComponent({columns, data: {}, key: 'header'})}
       {headingComponent({columns, data: headings, key: 'heading'})}
       {headerFooterComponent({columns, data: {}, key: 'footer'})}
@@ -219,12 +219,13 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
       // https://github.com/sindresorhus/terminal-link/issues/18
       // https://github.com/Shopify/cli/pull/995
       const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
+      const spaceForText = column.width - (padding * 2)
       const v =
         // if the visible length of the value is greater than the column width, truncate or wrap
-        stripAnsi(valueWithNoZeroWidthChars).length >= column.width
+        stripAnsi(valueWithNoZeroWidthChars).length >= spaceForText
           ? overflow === 'wrap'
-            ? wrapAnsi(valueWithNoZeroWidthChars, column.width - padding * 2, {hard: true, trim: true}).replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
-            : cliTruncate(valueWithNoZeroWidthChars, column.width - (3 + padding * 2))
+            ? wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true}).replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
+            : cliTruncate(valueWithNoZeroWidthChars, spaceForText)
           : valueWithNoZeroWidthChars
 
       const spaces =
