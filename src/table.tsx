@@ -86,8 +86,8 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
     padding,
   }
 
-  const columns = getColumns(config)
   const headings = getHeadings(config)
+  const columns = getColumns(config, headings)
 
   const dataComponent = row<T>({
     cell: Cell,

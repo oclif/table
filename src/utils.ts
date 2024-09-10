@@ -45,14 +45,13 @@ export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[
   return [...keys]
 }
 
-export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[] {
+export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Partial<T>): Column<T>[] {
   const {columns, maxWidth, padding} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {key: propsOrKey}
-    const {key, name} = props
+    const {key} = props
 
-    const header = String(name ?? key).length
     // Get the width of each cell in the column
     const data = config.data.map((data) => {
       const value = data[key]
@@ -61,6 +60,7 @@ export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[]
       return stripAnsi(String(value).replaceAll('​', ' ')).length
     })
 
+    const header = String(headings[key]).length
     const width = Math.max(...data, header) + padding * 2
 
     return {
@@ -82,8 +82,10 @@ export function getColumns<T extends ScalarDict>(config: Config<T>): Column<T>[]
   const seen = new Set<string>()
   while (tableWidth > maxWidth) {
     const largestColumn = widths.reduce((a, b) => (a.width > b.width ? a : b))
+    const header = String(headings[largestColumn.key]).length
+    // The minimum width of a column is the width of the header plus padding on both sides
+    const minWidth = header + padding * 2
     const difference = tableWidth - maxWidth
-    const minWidth = largestColumn.key.length + padding * 2
     const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
     largestColumn.width = newWidth
     tableWidth = calculateTableWidth(widths)
@@ -143,8 +145,8 @@ export function getHeadings<T extends ScalarDict>(config: Config<T>): Partial<T>
   return Object.fromEntries(
     columns.map((c) => {
       const key = typeof c === 'object' ? c.key : c
-      const name = typeof c === 'object' ? (c.name ?? key) : c
-      return [key, format(name)]
+      const name = typeof c === 'object' ? (c.name ?? format(key)) : format(c)
+      return [key, name]
     }),
   ) as Partial<T>
 }
