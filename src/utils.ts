@@ -46,11 +46,12 @@ export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[
 }
 
 export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Partial<T>): Column<T>[] {
-  const {columns, maxWidth, padding} = config
+  const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {key: propsOrKey}
     const {key} = props
+    const padding = props.padding ?? config.padding
 
     // Get the width of each cell in the column
     const data = config.data.map((data) => {
@@ -65,7 +66,11 @@ export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Pa
 
     return {
       column: key,
+      horizontalAlignment: props.horizontalAlignment ?? horizontalAlignment,
       key: String(key),
+      overflow: props.overflow ?? overflow,
+      padding,
+      verticalAlignment: props.verticalAlignment ?? verticalAlignment,
       width,
     }
   })
@@ -84,7 +89,7 @@ export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Pa
     const largestColumn = widths.reduce((a, b) => (a.width > b.width ? a : b))
     const header = String(headings[largestColumn.key]).length
     // The minimum width of a column is the width of the header plus padding on both sides
-    const minWidth = header + padding * 2
+    const minWidth = header + largestColumn.padding * 2
     const difference = tableWidth - maxWidth
     const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
     largestColumn.width = newWidth

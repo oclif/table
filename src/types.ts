@@ -11,9 +11,28 @@ export type CellProps = React.PropsWithChildren<{readonly column: number}>
 export type HorizontalAlignment = 'left' | 'right' | 'center'
 export type VerticalAlignment = 'top' | 'center' | 'bottom'
 
-export interface ColumnProps<T> {
+export type ColumnProps<T> = {
+  /**
+   * Horizontal alignment of cell content. Overrides the horizontal alignment set in the table.
+   */
+  horizontalAlignment?: HorizontalAlignment
   key: T
+  /**
+   * Name of the column. If not provided, it will default to the key.
+   */
   name?: string
+  /**
+   * Overflow behavior for cells. Overrides the overflow set in the table.
+   */
+  overflow?: Overflow
+  /**
+   * Padding for the column. Overrides the padding set in the table.
+   */
+  padding?: number
+  /**
+   * Vertical alignment of cell content. Overrides the vertical alignment set in the table.
+   */
+  verticalAlignment?: VerticalAlignment
 }
 export type AllColumnProps<T> = {[K in keyof T]: ColumnProps<K>}[keyof T]
 
@@ -182,6 +201,8 @@ export type Config<T> = {
   overflow: Overflow
   headerOptions: HeaderOptions
   borderStyle: BorderStyle
+  horizontalAlignment: HorizontalAlignment
+  verticalAlignment: VerticalAlignment
 }
 
 export type RowConfig = {
@@ -189,10 +210,6 @@ export type RowConfig = {
    * Component used to render cells.
    */
   cell: (props: CellProps) => React.ReactNode
-  /**
-   * Tells the padding of each cell.
-   */
-  padding: number
   /**
    * Component used to render skeleton in the row.
    */
@@ -208,10 +225,7 @@ export type RowConfig = {
     cross: string
     line: string
   }
-  overflow?: Overflow
   props?: Record<string, unknown>
-  horizontalAlignment?: HorizontalAlignment
-  verticalAlignment?: VerticalAlignment
 }
 
 export type RowProps<T extends ScalarDict> = {
@@ -224,6 +238,10 @@ export type Column<T> = {
   key: string
   column: keyof T
   width: number
+  padding: number
+  horizontalAlignment: HorizontalAlignment
+  verticalAlignment: VerticalAlignment
+  overflow: Overflow
 }
 
 export type ContainerProps = {
