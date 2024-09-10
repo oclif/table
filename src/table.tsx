@@ -157,6 +157,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
               borderRight={false}
               flexDirection="column"
               borderStyle="single"
+              borderColor={borderColor}
             >
               {/* print all data in key:value pairs */}
               {columns.map((column) => {

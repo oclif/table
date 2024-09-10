@@ -1843,6 +1843,7 @@ const simple: TableProps<(typeof data)[number]> = {
 }
 
 const update: TableProps<(typeof versions)[number]> = {
+  borderColor: 'greenBright',
   borderStyle: 'headers-only-with-underline',
   columns: ['version', 'channel', 'location'],
   data: versions,
@@ -1911,7 +1912,8 @@ makeTables(
   [
     simple,
     deploy,
-    // update,
+    update,
+    // simple,
   ],
   {
     alignItems: 'center',
