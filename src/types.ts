@@ -38,6 +38,17 @@ export type AllColumnProps<T> = {[K in keyof T]: ColumnProps<K>}[keyof T]
 
 export type Percentage = `${number}%`
 
+type TextOptions = {
+  color?: SupportedColor
+  backgroundColor?: SupportedColor
+  bold?: boolean
+  dimColor?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  inverse?: boolean
+}
+
 export type HeaderFormatter =
   | ((header: string) => string)
   | 'camelCase'
@@ -71,15 +82,7 @@ export type SupportedColor =
   | `#${string}`
   | `rgb(${number},${number},${number})`
 
-export type HeaderOptions = {
-  color?: SupportedColor
-  backgroundColor?: SupportedColor
-  bold?: boolean
-  dimColor?: boolean
-  italic?: boolean
-  underline?: boolean
-  strikethrough?: boolean
-  inverse?: boolean
+export type HeaderOptions = TextOptions & {
   /**
    * Column header formatter. Can either be a function or a method name on the `change-case` library.
    *
@@ -195,6 +198,14 @@ export type TableProps<T extends ScalarDict> = {
    * Vertical alignment of cell content. Defaults to 'top'. Only applies to horizontal orientation.
    */
   verticalAlignment?: VerticalAlignment
+  /**
+   * Title of the table. Displayed above the table.
+   */
+  title?: string
+  /**
+   * Styling options for the title of the table.
+   */
+  titleOptions?: TextOptions
 }
 
 export type Config<T> = {

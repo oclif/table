@@ -1,7 +1,7 @@
 import ansis from 'ansis'
 import terminalLink from 'terminal-link'
 
-import {TableProps, makeTable, makeTables} from '../src/index.js'
+import {TableProps, makeTables} from '../src/index.js'
 
 const data = [
   {
@@ -9,7 +9,6 @@ const data = [
     bigData: ansis.bold('a'.repeat(200)),
     employed: ansis.bold('true'),
     evenMoreBigData: 'a'.repeat(130),
-    // some terminals don't like zero width characters
     id: terminalLink('36329', 'https://example.com/36329'),
     moreBigData: 'a'.repeat(89),
     name: 'Alice',
@@ -1818,15 +1817,14 @@ const deployResult = [
 
 const simple: TableProps<(typeof data)[number]> = {
   borderStyle: 'all',
-  // borderStyle: 'headers-only-with-underline',
   columns: [
     'id',
     {key: 'name', name: 'First Name', verticalAlignment: 'bottom'},
     'age',
     'employed',
     'bigData',
-    // 'moreBigData',
-    // 'evenMoreBigData',
+    'moreBigData',
+    'evenMoreBigData',
   ],
   data,
   headerOptions: {
@@ -1868,12 +1866,14 @@ const update: TableProps<(typeof versions)[number]> = {
       return a - b
     },
   },
+  title: 'VERSIONS',
+  titleOptions: {
+    bold: true,
+    color: 'greenBright',
+  },
 }
 
 const deploy: TableProps<(typeof deployResult)[number]> = {
-  borderColor: 'magentaBright',
-  // borderStyle: 'headers-only-with-underline',
-  // borderStyle: 'all',
   borderStyle: 'vertical',
   columns: [
     'state',
@@ -1883,22 +1883,16 @@ const deploy: TableProps<(typeof deployResult)[number]> = {
       key: 'filePath',
       name: 'Path',
       overflow: 'wrap',
-      // padding: 5,
     },
   ],
   data: deployResult,
   filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
   headerOptions: {
-    // backgroundColor: 'blue',
-    // bold: true,
-    // color: 'blueBright',
     color: 'white',
     formatter: 'capitalCase',
     inverse: true,
   },
-  // horizontalAlignment: 'center',
   maxWidth: '100%',
-  // orientation: 'vertical',
   overflow: 'truncate',
   padding: 1,
   sort: {
@@ -1917,7 +1911,7 @@ makeTables(
   ],
   {
     alignItems: 'center',
-    direction: 'column',
+    direction: 'row',
     margin: 1,
     rowGap: 2,
   },

@@ -1,5 +1,3 @@
-import ansis from 'ansis'
-
 import {makeTable} from '../src/index.js'
 import {BORDER_STYLES} from '../src/skeletons.js'
 
@@ -22,15 +20,16 @@ const data = [
 ]
 
 for (const borderStyle of BORDER_STYLES) {
-  console.log(ansis.bold(borderStyle))
   makeTable({
-    align: 'center',
     borderStyle,
     columns: ['id', {key: 'name', name: 'First Name'}, 'age'],
     data,
     headerOptions: {
       formatter: 'capitalCase',
     },
+    horizontalAlignment: 'center',
+    title: borderStyle,
+    titleOptions: {bold: true},
   })
   console.log()
 }
