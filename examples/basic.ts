@@ -1,15 +1,16 @@
 import ansis from 'ansis'
 import terminalLink from 'terminal-link'
 
-import {makeTable} from '../src/index.js'
+import {TableProps, makeTable, makeTables} from '../src/index.js'
 
 const data = [
   {
     age: 20,
-    bigData: 'a'.repeat(200),
+    bigData: ansis.bold('a'.repeat(200)),
     employed: ansis.bold('true'),
     evenMoreBigData: 'a'.repeat(130),
-    id: terminalLink('36329', 'https://example.com/alice'),
+    // some terminals don't like zero width characters
+    id: terminalLink('36329', 'https://example.com/36329'),
     moreBigData: 'a'.repeat(89),
     name: 'Alice',
   },
@@ -17,7 +18,7 @@ const data = [
     age: 21,
     bigData: 'b'.repeat(30),
     employed: ansis.bold('true'),
-    id: terminalLink('49032', 'https://example.com/bob'),
+    id: terminalLink('49032', 'https://example.com/49032'),
     moreBigData: 'b'.repeat(30),
     name: ansis.dim('Bob'),
   },
@@ -25,7 +26,7 @@ const data = [
     age: 22,
     bigData: 'c'.repeat(30),
     employed: ansis.bold('false'),
-    id: terminalLink('51786', 'https://example.com/charlie'),
+    id: terminalLink('51786', 'https://example.com/51786'),
     moreBigData: 'c'.repeat(30),
     name: 'Charlie',
   },
@@ -1815,34 +1816,33 @@ const deployResult = [
   },
 ]
 
-// makeTable({
-//   align: 'center',
-//   borderStyle: 'horizontal',
-//   columns: [
-//     'id',
-//     {key: 'name', name: 'First Name'},
-//     'age',
-//     'employed',
-//     'bigData',
-//     // 'moreBigData',
-//     // 'evenMoreBigData',
-//   ],
-//   data,
-//   filter: {
-//     // employed: false,
-//     // name: /^B/,
-//   },
-//   headerOptions: {
-//     bold: true,
-//     color: '#905de8',
-//   },
-//   overflow: 'wrap',
-//   sort: {
-//     id: 'desc',
-//   },
-// })
+const simple: TableProps<(typeof data)[number]> = {
+  borderStyle: 'all',
+  // borderStyle: 'headers-only-with-underline',
+  columns: [
+    'id',
+    {key: 'name', name: 'First Name', verticalAlignment: 'bottom'},
+    'age',
+    'employed',
+    'bigData',
+    // 'moreBigData',
+    // 'evenMoreBigData',
+  ],
+  data,
+  headerOptions: {
+    bold: true,
+    color: '#905de8',
+  },
+  horizontalAlignment: 'left',
+  maxWidth: '100%',
+  overflow: 'wrap',
+  sort: {
+    id: 'desc',
+  },
+  verticalAlignment: 'center',
+}
 
-makeTable({
+const update: TableProps<(typeof versions)[number]> = {
   borderStyle: 'headers-only-with-underline',
   columns: ['version', 'channel', 'location'],
   data: versions,
@@ -1867,26 +1867,56 @@ makeTable({
       return a - b
     },
   },
-})
+}
 
-console.log()
-
-makeTable({
-  // align: 'center',
-  borderStyle: 'headers-only-with-underline',
+const deploy: TableProps<(typeof deployResult)[number]> = {
+  borderColor: 'magentaBright',
+  // borderStyle: 'headers-only-with-underline',
   // borderStyle: 'all',
-  columns: ['state', 'fullName', 'type', {key: 'filePath', name: 'Path'}],
+  borderStyle: 'vertical',
+  columns: [
+    'state',
+    'fullName',
+    'type',
+    {
+      key: 'filePath',
+      name: 'Path',
+      overflow: 'wrap',
+      // padding: 5,
+    },
+  ],
   data: deployResult,
   filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
   headerOptions: {
-    bold: true,
-    color: 'blueBright',
+    // backgroundColor: 'blue',
+    // bold: true,
+    // color: 'blueBright',
+    color: 'white',
     formatter: 'capitalCase',
+    inverse: true,
   },
-  orientation: 'vertical',
-  overflow: 'wrap',
+  // horizontalAlignment: 'center',
+  maxWidth: '100%',
+  // orientation: 'vertical',
+  overflow: 'truncate',
+  padding: 1,
   sort: {
     fullName: 'asc',
     type: 'asc',
   },
-})
+  verticalAlignment: 'center',
+}
+
+makeTables(
+  [
+    simple,
+    deploy,
+    // update,
+  ],
+  {
+    alignItems: 'center',
+    direction: 'column',
+    margin: 1,
+    rowGap: 2,
+  },
+)

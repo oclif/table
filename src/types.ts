@@ -132,6 +132,10 @@ export type TableProps<T extends ScalarDict> = {
    */
   borderStyle?: BorderStyle
   /**
+   * Color of the table border. Defaults to 'white' in dark terminals and 'black' in light terminals.
+   */
+  borderColor?: SupportedColor
+  /**
    * Align data in columns. Defaults to 'left'. Only applies to horizontal orientation.
    */
   horizontalAlignment?: HorizontalAlignment
@@ -226,6 +230,9 @@ export type RowConfig = {
     line: string
   }
   props?: Record<string, unknown>
+  borderProps: {
+    color: SupportedColor | undefined
+  }
 }
 
 export type RowProps<T extends ScalarDict> = {

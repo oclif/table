@@ -64,6 +64,7 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 
 export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const {
+    borderColor,
     borderStyle = 'all',
     data,
     filter,
@@ -71,9 +72,8 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
     maxWidth,
     orientation = 'horizontal',
     overflow = 'truncate',
-    padding = 1,
-    sort,
-    verticalAlignment = 'top',
+    padding = 1, sort,
+    verticalAlignment = 'top'
   } = props
 
   const headerOptions = {bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions
@@ -92,38 +92,51 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
 
   const headings = getHeadings(config)
   const columns = getColumns(config, headings)
+  const borderProps = {
+    color: borderColor,
+  }
 
   const dataComponent = row<T>({
+    borderProps,
     cell: Cell,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
   })
 
   const footerComponent = row<T>({
+    borderProps,
     cell: Skeleton,
+    props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].footer,
   })
 
   const headerComponent = row<T>({
+    borderProps,
     cell: Skeleton,
+    props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].header,
   })
 
   const {headerFooter} = BORDER_SKELETONS[config.borderStyle]
   const headerFooterComponent = headerFooter
     ? row<T>({
+      borderProps,
         cell: Skeleton,
-        skeleton: headerFooter,
+        props: borderProps,
+    skeleton: headerFooter,
       })
     : () => false
 
   const headingComponent = row<T>({
+    borderProps,
     cell: Header,
     props: config.headerOptions,
     skeleton: BORDER_SKELETONS[config.borderStyle].heading,
   })
 
   const separatorComponent = row<T>({
+    borderProps,
     cell: Skeleton,
+    props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
   })
 
@@ -194,7 +207,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
  */
 function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
-  const {skeleton} = config
+  const {borderProps, skeleton} = config
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
@@ -252,12 +265,13 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
       )
     })
 
+
     const height = data.map((d) => d.props.children.split('\n').length).reduce((a, b) => Math.max(a, b), 0)
     const elements = intersperse((i) => {
       const key = `${props.key}-hseparator-${i}`
       // The horizontal separator.
       return (
-        <Skeleton key={key} height={height}>
+        <Skeleton key={key} height={height} {...borderProps}>
           {skeleton.cross}
         </Skeleton>
       )
@@ -265,9 +279,9 @@ function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => R
 
     return (
       <Box flexDirection="row">
-        <Skeleton height={height}>{skeleton.left}</Skeleton>
+        <Skeleton height={height} {...borderProps}>{skeleton.left}</Skeleton>
         {...elements}
-        <Skeleton height={height}>{skeleton.right}</Skeleton>
+        <Skeleton height={height} {...borderProps}>{skeleton.right}</Skeleton>
       </Box>
     )
   }
