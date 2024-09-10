@@ -146,7 +146,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
   if (orientation === 'vertical') {
     return (
       <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)} paddingBottom={1}>
-        <Text {...titleOptions}>{title}</Text>
+        {title && <Text {...titleOptions}>{title}</Text>}
         {processedData.map((row, index) => {
           // Calculate the hash of the row based on its value and position
           const key = `row-${sha1(row)}-${index}`
@@ -187,7 +187,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
-      <Text {...titleOptions}>{title}</Text>
+      {title && <Text {...titleOptions}>{title}</Text>}
       {headerComponent({columns, data: {}, key: 'header'})}
       {headingComponent({columns, data: headings, key: 'heading'})}
       {headerFooterComponent({columns, data: {}, key: 'footer'})}
