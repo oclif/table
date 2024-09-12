@@ -20,7 +20,7 @@ import {
   ScalarDict,
   TableProps,
 } from './types.js'
-import {allKeysInCollection, getColumns, getHeadings, intersperse, sortData} from './utils.js'
+import {allKeysInCollection, getColumns, getHeadings, intersperse, maybeStripAnsi, sortData} from './utils.js'
 
 /**
  * Determines the configured width based on the provided width value.
@@ -64,23 +64,26 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 
 export function Table<T extends ScalarDict>(props: TableProps<T>) {
   const {
-    borderColor,
-    borderStyle = 'all',
     data,
     filter,
     horizontalAlignment = 'left',
     maxWidth,
+    noStyle = false,
     orientation = 'horizontal',
     overflow = 'truncate',
     padding = 1,
     sort,
     title,
-    titleOptions,
     verticalAlignment = 'top',
   } = props
 
-  const headerOptions = {bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions
-  const processedData = sortData(filter ? data.filter((row) => filter(row)) : data, sort)
+  const headerOptions = noStyle ? {} : ({bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions)
+  const borderStyle = noStyle ? 'none' : (props.borderStyle ?? 'all')
+  const borderColor = noStyle ? undefined : props.borderColor
+  const borderProps = {color: borderColor}
+  const titleOptions = noStyle ? {} : props.titleOptions
+
+  const processedData = maybeStripAnsi(sortData(filter ? data.filter((row) => filter(row)) : data, sort), noStyle)
   const config: Config<T> = {
     borderStyle,
     columns: props.columns ?? allKeysInCollection(data),
@@ -95,9 +98,6 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
 
   const headings = getHeadings(config)
   const columns = getColumns(config, headings)
-  const borderProps = {
-    color: borderColor,
-  }
 
   const dataComponent = row<T>({
     borderProps,
@@ -160,7 +160,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
               borderLeft={false}
               borderRight={false}
               flexDirection="column"
-              borderStyle="single"
+              borderStyle={noStyle ? undefined : 'single'}
               borderColor={borderColor}
             >
               {/* print all data in key:value pairs */}

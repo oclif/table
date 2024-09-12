@@ -155,3 +155,21 @@ export function getHeadings<T extends ScalarDict>(config: Config<T>): Partial<T>
     }),
   ) as Partial<T>
 }
+
+export function maybeStripAnsi<T extends ScalarDict[]>(data: T, noStyle: boolean): T {
+  if (!noStyle) return data
+
+  const newData = []
+
+  for (const row in data) {
+    if (row in data) {
+      const newRow = Object.fromEntries(
+        Object.entries(data[row]).map(([key, value]) => [key, typeof value === 'string' ? stripAnsi(value) : value]),
+      )
+
+      newData.push(newRow)
+    }
+  }
+
+  return newData as T
+}

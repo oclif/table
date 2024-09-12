@@ -206,6 +206,10 @@ export type TableProps<T extends ScalarDict> = {
    * Styling options for the title of the table.
    */
   titleOptions?: TextOptions
+  /**
+   * Disable all styling for the table.
+   */
+  noStyle?: boolean
 }
 
 export type Config<T> = {
