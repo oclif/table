@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/oclif/core/compare/0.1.1...0.1.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* rename things ([d32e889](https://github.com/oclif/core/commit/d32e889caa383d7f1bdbe7b4b0ec99f2e31a2a69))
+
+
+
 ## [0.1.1](https://github.com/oclif/core/compare/0.1.0...0.1.1) (2024-09-23)
 
 
