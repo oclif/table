@@ -1,4 +1,13 @@
-# 0.1.0 (2024-09-23)
+## [0.1.1](https://github.com/oclif/core/compare/0.1.0...0.1.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* rename makeTable to printTable ([4d7a229](https://github.com/oclif/core/commit/4d7a229270750693e29c6474bc7615747a1dd4ee))
+
+
+
+# [0.1.0](https://github.com/oclif/core/compare/20dd4c0451f6866557845da4e515cbaf1de50f20...0.1.0) (2024-09-23)
 
 
 ### Bug Fixes
