@@ -17,8 +17,7 @@ import {
   Percentage,
   RowConfig,
   RowProps,
-  ScalarDict,
-  TableProps,
+  TableOptions,
 } from './types.js'
 import {allKeysInCollection, getColumns, getHeadings, intersperse, maybeStripAnsi, sortData} from './utils.js'
 
@@ -62,7 +61,7 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
 }
 
-export function Table<T extends ScalarDict>(props: TableProps<T>) {
+export function Table<T extends Record<string, unknown>>(props: TableOptions<T>) {
   const {
     data,
     filter,
@@ -211,7 +210,7 @@ export function Table<T extends ScalarDict>(props: TableProps<T>) {
 /**
  * Constructs a Row element from the configuration.
  */
-function row<T extends ScalarDict>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
+function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
   const {borderProps, skeleton} = config
 
@@ -332,9 +331,9 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 
 /**
  * Renders a table with the given data.
- * @param options see {@link TableProps}
+ * @param options see {@link TableOptions}
  */
-export function printTable<T extends ScalarDict>(options: TableProps<T>): void {
+export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
 }
@@ -347,8 +346,8 @@ function Container(props: ContainerProps) {
   )
 }
 
-export function printTables<T extends ScalarDict[]>(
-  tables: {[P in keyof T]: TableProps<T[P]>},
+export function printTables<T extends Record<string, unknown>[]>(
+  tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0

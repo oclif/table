@@ -1,11 +1,5 @@
 import {BorderStyle} from './skeletons.js'
 
-export type Scalar = string | number | boolean | null | undefined
-
-export type ScalarDict = {
-  [key: string]: Scalar
-}
-
 export type CellProps = React.PropsWithChildren<{readonly column: number}>
 
 export type HorizontalAlignment = 'left' | 'right' | 'center'
@@ -99,7 +93,7 @@ export type Sort<T> = {
   [K in keyof T]?: SortOrder<T[K]>
 }
 
-export type TableProps<T extends ScalarDict> = {
+export type TableOptions<T extends Record<string, unknown>> = {
   /**
    * List of values (rows).
    */
@@ -250,7 +244,7 @@ export type RowConfig = {
   }
 }
 
-export type RowProps<T extends ScalarDict> = {
+export type RowProps<T extends Record<string, unknown>> = {
   readonly key: string
   readonly data: Partial<T>
   readonly columns: Column<T>[]

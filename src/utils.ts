@@ -2,7 +2,7 @@ import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCas
 import {orderBy} from 'natural-orderby'
 import stripAnsi from 'strip-ansi'
 
-import {Column, ColumnProps, Config, ScalarDict, Sort} from './types.js'
+import {Column, ColumnProps, Config, Sort} from './types.js'
 
 /**
  * Intersperses a list of elements with another element.
@@ -27,14 +27,14 @@ export function intersperse<T, I>(intersperser: (index: number) => I, elements: 
   return interspersed
 }
 
-export function sortData<T extends ScalarDict>(data: T[], sort?: Sort<T> | undefined): T[] {
+export function sortData<T extends Record<string, unknown>>(data: T[], sort?: Sort<T> | undefined): T[] {
   if (!sort) return data
   const identifiers = Object.keys(sort)
   const orders = Object.values(sort)
   return orderBy(data, identifiers, orders)
 }
 
-export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[] {
+export function allKeysInCollection<T extends Record<string, unknown>>(data: T[]): (keyof T)[] {
   const keys = new Set<keyof T>()
   for (const row of data) {
     for (const key in row) {
@@ -45,7 +45,7 @@ export function allKeysInCollection<T extends ScalarDict>(data: T[]): (keyof T)[
   return [...keys]
 }
 
-export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Partial<T>): Column<T>[] {
+export function getColumns<T extends Record<string, unknown>>(config: Config<T>, headings: Partial<T>): Column<T>[] {
   const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
@@ -101,7 +101,7 @@ export function getColumns<T extends ScalarDict>(config: Config<T>, headings: Pa
   return widths
 }
 
-export function getHeadings<T extends ScalarDict>(config: Config<T>): Partial<T> {
+export function getHeadings<T extends Record<string, unknown>>(config: Config<T>): Partial<T> {
   const {
     columns,
     headerOptions: {formatter},
@@ -156,7 +156,7 @@ export function getHeadings<T extends ScalarDict>(config: Config<T>): Partial<T>
   ) as Partial<T>
 }
 
-export function maybeStripAnsi<T extends ScalarDict[]>(data: T, noStyle: boolean): T {
+export function maybeStripAnsi<T extends Record<string, unknown>[]>(data: T, noStyle: boolean): T {
   if (!noStyle) return data
 
   const newData = []

@@ -1,4 +1,4 @@
-import {TableProps, printTable} from '../../src'
+import {TableOptions, printTable} from '../../src'
 
 const deployResult = [
   {
@@ -940,7 +940,7 @@ const deployResult = [
   },
 ]
 
-const deploy: TableProps<(typeof deployResult)[number]> = {
+const deploy: TableOptions<(typeof deployResult)[number]> = {
   borderStyle: 'vertical',
   columns: [
     'state',

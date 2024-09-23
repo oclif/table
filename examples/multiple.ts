@@ -1,4 +1,4 @@
-import {TableProps, printTables} from '../src/index.js'
+import {TableOptions, printTables} from '../src/index.js'
 
 const description =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
@@ -63,7 +63,7 @@ const projects = [
   },
 ]
 
-const employeesTable: TableProps<(typeof employees)[number]> = {
+const employeesTable: TableOptions<(typeof employees)[number]> = {
   columns: ['id', 'name', 'age', 'description'],
   data: employees,
   headerOptions: {
@@ -79,7 +79,7 @@ const employeesTable: TableProps<(typeof employees)[number]> = {
   },
 }
 
-const stocksTable: TableProps<(typeof stocks)[number]> = {
+const stocksTable: TableOptions<(typeof stocks)[number]> = {
   columns: ['ticker', 'name', 'price'],
   data: stocks,
   headerOptions: {
@@ -95,7 +95,7 @@ const stocksTable: TableProps<(typeof stocks)[number]> = {
   },
 }
 
-const projectsTable: TableProps<(typeof projects)[number]> = {
+const projectsTable: TableOptions<(typeof projects)[number]> = {
   columns: ['id', 'name', 'status', 'description'],
   data: projects,
   headerOptions: {

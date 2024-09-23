@@ -1,7 +1,7 @@
 import ansis from 'ansis'
 import terminalLink from 'terminal-link'
 
-import {TableProps, printTable} from '../src/index.js'
+import {TableOptions, printTable} from '../src/index.js'
 
 const data = [
   {
@@ -25,7 +25,7 @@ const data = [
   },
 ]
 
-const basic: TableProps<(typeof data)[number]> = {
+const basic: TableOptions<(typeof data)[number]> = {
   borderStyle: 'all',
   columns: ['id', {key: 'name', name: 'First Name'}, 'age', 'employed'],
   data,
