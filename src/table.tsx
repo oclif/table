@@ -334,7 +334,7 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
  * Renders a table with the given data.
  * @param options see {@link TableProps}
  */
-export function makeTable<T extends ScalarDict>(options: TableProps<T>): void {
+export function printTable<T extends ScalarDict>(options: TableProps<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
 }
@@ -347,7 +347,7 @@ function Container(props: ContainerProps) {
   )
 }
 
-export function makeTables<T extends ScalarDict[]>(
+export function printTables<T extends ScalarDict[]>(
   tables: {[P in keyof T]: TableProps<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {

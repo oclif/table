@@ -1,4 +1,4 @@
-import {TableProps, makeTable} from '../../src'
+import {TableProps, printTable} from '../../src'
 
 const deployResult = [
   {
@@ -969,4 +969,4 @@ const deploy: TableProps<(typeof deployResult)[number]> = {
   verticalAlignment: 'center',
 }
 
-makeTable(deploy)
+printTable(deploy)

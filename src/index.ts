@@ -1,2 +1,2 @@
-export {makeTable, makeTables} from './table.js'
-export type {TableProps} from './types.js'
+export {printTable, printTables} from './table.js'
+export type {ScalarDict, TableProps} from './types.js'

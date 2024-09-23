@@ -1,4 +1,4 @@
-import {makeTable} from '../src/index.js'
+import {printTable} from '../src/index.js'
 
 const data = [
   {age: 25, id: '10245', name: 'Bob'},
@@ -9,7 +9,7 @@ const data = [
   {age: 35, id: '30345', name: 'Chris'},
 ]
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age'],
   data,
   headerOptions: {
@@ -21,7 +21,7 @@ makeTable({
   titleOptions: {bold: true},
 })
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age'],
   data,
   headerOptions: {
@@ -33,7 +33,7 @@ makeTable({
   titleOptions: {bold: true},
 })
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age'],
   data,
   headerOptions: {
@@ -45,7 +45,7 @@ makeTable({
   titleOptions: {bold: true},
 })
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age'],
   data,
   filter: (record) => record.age > 25,

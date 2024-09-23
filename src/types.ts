@@ -162,16 +162,16 @@ export type TableProps<T extends ScalarDict> = {
    * ]
    *
    * // sort the name column in ascending order
-   * makeTable({data, sort: {name: 'asc'}})
+   * printTable({data, sort: {name: 'asc'}})
    *
    * // sort the name column in descending order
-   * makeTable({data, sort: {name: 'desc'}})
+   * printTable({data, sort: {name: 'desc'}})
    *
    * // sort by name in ascending order and age in descending order
-   * makeTable({data, sort: {name: 'asc', age: 'desc'}})
+   * printTable({data, sort: {name: 'asc', age: 'desc'}})
    *
    * // sort by name in ascending order and age in descending order using a custom sort function
-   * makeTable({data, sort: {name: 'asc', age: (a, b) => b - a}})
+   * printTable({data, sort: {name: 'asc', age: (a, b) => b - a}})
    * ```
    */
   sort?: Sort<T>

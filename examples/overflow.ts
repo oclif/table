@@ -1,4 +1,4 @@
-import {makeTable} from '../src/index.js'
+import {printTable} from '../src/index.js'
 
 const description =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
@@ -24,7 +24,7 @@ const data = [
   },
 ]
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age', 'description'],
   data,
   headerOptions: {
@@ -36,7 +36,7 @@ makeTable({
   titleOptions: {bold: true},
 })
 
-makeTable({
+printTable({
   columns: ['id', 'name', 'age', 'description'],
   data,
   headerOptions: {

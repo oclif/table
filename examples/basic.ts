@@ -1,7 +1,7 @@
 import ansis from 'ansis'
 import terminalLink from 'terminal-link'
 
-import {TableProps, makeTable} from '../src/index.js'
+import {TableProps, printTable} from '../src/index.js'
 
 const data = [
   {
@@ -40,4 +40,4 @@ const basic: TableProps<(typeof data)[number]> = {
   verticalAlignment: 'center',
 }
 
-makeTable(basic)
+printTable(basic)

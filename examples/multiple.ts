@@ -1,4 +1,4 @@
-import {TableProps, makeTables} from '../src/index.js'
+import {TableProps, printTables} from '../src/index.js'
 
 const description =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
@@ -110,7 +110,7 @@ const projectsTable: TableProps<(typeof projects)[number]> = {
   },
 }
 
-makeTables([employeesTable, stocksTable, projectsTable], {
+printTables([employeesTable, stocksTable, projectsTable], {
   alignItems: 'center',
   columnGap: 1,
   margin: 1,

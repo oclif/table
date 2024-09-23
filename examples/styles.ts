@@ -1,4 +1,4 @@
-import {makeTable} from '../src/index.js'
+import {printTable} from '../src/index.js'
 import {BORDER_STYLES} from '../src/skeletons.js'
 
 const data = [
@@ -20,7 +20,7 @@ const data = [
 ]
 
 for (const borderStyle of BORDER_STYLES) {
-  makeTable({
+  printTable({
     borderStyle,
     columns: ['id', {key: 'name', name: 'First Name'}, 'age'],
     data,

@@ -1,4 +1,4 @@
-import {makeTable} from '../../src'
+import {printTable} from '../../src'
 
 const versions = [
   {
@@ -838,7 +838,7 @@ const versions = [
   },
 ]
 
-makeTable({
+printTable({
   borderColor: 'greenBright',
   borderStyle: 'headers-only-with-underline',
   columns: ['version', 'channel', 'location'],
