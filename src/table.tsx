@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import cliTruncate from 'cli-truncate'
-import {Box, Newline, Text, render} from 'ink'
+import {Box, Text, render} from 'ink'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
