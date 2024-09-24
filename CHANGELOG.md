@@ -1,3 +1,12 @@
+## [0.1.7](https://github.com/oclif/core/compare/0.1.6...0.1.7) (2024-09-24)
+
+
+### Bug Fixes
+
+* calculate width of wrapped ansi ([796359e](https://github.com/oclif/core/commit/796359e6f0c66a82c1f01ec36b6e1273e4721d4a))
+
+
+
 ## [0.1.6](https://github.com/oclif/core/compare/0.1.5...0.1.6) (2024-09-24)
 
 
