@@ -1,3 +1,12 @@
+## [0.1.6](https://github.com/oclif/core/compare/0.1.5...0.1.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* remove dead code ([16111a2](https://github.com/oclif/core/commit/16111a279fff48ee346c23f708040f85f28b2779))
+
+
+
 ## [0.1.5](https://github.com/oclif/core/compare/0.1.4...0.1.5) (2024-09-24)
 
 
