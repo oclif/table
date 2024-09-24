@@ -14,6 +14,8 @@ import {
   Config,
   ContainerProps,
   HeaderOptions,
+  HorizontalAlignment,
+  Overflow,
   Percentage,
   RowConfig,
   RowProps,
@@ -59,6 +61,123 @@ function determineConfiguredWidth(
 function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): number {
   const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b) + columns.length + 1
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
+}
+
+function determineWidthOfWrappedText(text: string): number {
+  const lines = text.split('\n')
+  return lines.reduce((max, line) => Math.max(max, line.length), 0)
+}
+
+function wrapText(text: string, spaceForText: number, width: number, padding: number): string {
+  const wrappedText = wrapAnsi(text, spaceForText, {hard: true, trim: true, wordWrap: true})
+  if (wrappedText.includes('\n')) {
+    const widthOfWrappedText = determineWidthOfWrappedText(wrappedText)
+    const rightPadding = width - widthOfWrappedText - padding * 2
+    // return wrappedText.replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(rightPadding)}`)
+    // return wrappedText
+    const final = wrappedText.replaceAll('\n', `${' '.repeat(rightPadding)}\n${' '.repeat(padding)}`)
+    console.log({
+      final,
+      padding,
+      rightPadding,
+      spaceForText,
+      width,
+      widthOrWrappedText: widthOfWrappedText,
+      wrappedText,
+    })
+    return final
+  }
+
+  return wrappedText.replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
+}
+
+function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {
+  switch (overflow) {
+    case 'truncate-middle': {
+      return 'middle'
+    }
+
+    case 'truncate-start': {
+      return 'start'
+    }
+
+    case 'truncate-end': {
+      return 'end'
+    }
+
+    default: {
+      return 'end'
+    }
+  }
+}
+
+function doStuffWithText({
+  horizontalAlignment,
+  overflow,
+  padding,
+  value,
+  width,
+}: {
+  overflow: Overflow
+  value: unknown
+  width: number
+  padding: number
+  horizontalAlignment: HorizontalAlignment
+}): {
+  text: string
+  marginLeft: number
+  marginRight: number
+} {
+  function calculateMargins(spaces: number): {marginLeft: number; marginRight: number} {
+    let marginLeft: number
+    let marginRight: number
+    if (horizontalAlignment === 'left') {
+      marginLeft = padding
+      marginRight = spaces - marginLeft
+    } else if (horizontalAlignment === 'center') {
+      marginLeft = Math.floor(spaces / 2)
+      marginRight = Math.ceil(spaces / 2)
+    } else {
+      marginRight = padding
+      marginLeft = spaces - marginRight
+    }
+
+    return {marginLeft, marginRight}
+  }
+
+  // Some terminals don't play nicely with zero-width characters, so we replace them with spaces.
+  // https://github.com/sindresorhus/terminal-link/issues/18
+  // https://github.com/Shopify/cli/pull/995
+  const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
+  const spaceForText = width - padding * 2
+
+  if (stripAnsi(valueWithNoZeroWidthChars).length < spaceForText) {
+    const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
+    return {
+      text: valueWithNoZeroWidthChars,
+      ...calculateMargins(spaces),
+    }
+  }
+
+  if (overflow === 'wrap') {
+    const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
+    const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(wrappedText))
+
+    const text = wrappedText.replaceAll('\n', `${' '.repeat(marginRight)}\n${' '.repeat(marginLeft)}`)
+
+    return {
+      marginLeft,
+      marginRight,
+      text,
+    }
+  }
+
+  const text = cliTruncate(valueWithNoZeroWidthChars, spaceForText, {position: determineTruncatePosition(overflow)})
+  const spaces = width - stripAnsi(text).length
+  return {
+    text,
+    ...calculateMargins(spaces),
+  }
 }
 
 export function Table<T extends Record<string, unknown>>(props: TableOptions<T>) {
@@ -230,43 +349,19 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
       }
 
       const key = `${props.key}-cell-${column.key}`
-      // Some terminals don't play nicely with zero-width characters, so we replace them with spaces.
-      // https://github.com/sindresorhus/terminal-link/issues/18
-      // https://github.com/Shopify/cli/pull/995
-      const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
-      const spaceForText = width - padding * 2
-      const v =
-        // if the visible length of the value is greater than the column width, truncate or wrap
-        stripAnsi(valueWithNoZeroWidthChars).length >= spaceForText
-          ? overflow === 'wrap'
-            ? wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: false}).replaceAll(
-                '\n',
-                `${' '.repeat(padding)}\n${' '.repeat(padding)}`,
-              )
-            : cliTruncate(valueWithNoZeroWidthChars, spaceForText)
-          : valueWithNoZeroWidthChars
-
-      const spaces =
-        overflow === 'wrap' ? width - stripAnsi(v).split('\n')[0].trim().length : width - stripAnsi(v).length
-
-      let marginLeft: number
-      let marginRight: number
-      if (horizontalAlignment === 'left') {
-        marginLeft = padding
-        marginRight = spaces - marginLeft
-      } else if (horizontalAlignment === 'center') {
-        marginLeft = Math.floor(spaces / 2)
-        marginRight = Math.ceil(spaces / 2)
-      } else {
-        marginRight = padding
-        marginLeft = spaces - marginRight
-      }
+      const {marginLeft, marginRight, text} = doStuffWithText({
+        horizontalAlignment,
+        overflow,
+        padding,
+        value,
+        width,
+      })
 
       const alignItems =
         verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
       return (
         <config.cell key={key} column={colI} {...{alignItems}} {...config.props}>
-          {`${skeleton.line.repeat(marginLeft)}${v}${skeleton.line.repeat(marginRight)}`}
+          {`${skeleton.line.repeat(marginLeft)}${text}${skeleton.line.repeat(marginRight)}`}
         </config.cell>
       )
     })

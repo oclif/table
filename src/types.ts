@@ -85,7 +85,7 @@ export type HeaderOptions = TextOptions & {
   formatter?: HeaderFormatter
 }
 
-type Overflow = 'wrap' | 'truncate'
+export type Overflow = 'wrap' | 'truncate' | 'truncate-middle' | 'truncate-start' | 'truncate-end'
 
 type SortOrder<T> = 'asc' | 'desc' | ((valueA: T, valueB: T) => number)
 

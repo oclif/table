@@ -32,7 +32,31 @@ printTable({
   },
   horizontalAlignment: 'center',
   overflow: 'truncate',
-  title: 'Truncate',
+  title: 'Truncate (end)',
+  titleOptions: {bold: true},
+})
+
+printTable({
+  columns: ['id', 'name', 'age', 'description'],
+  data,
+  headerOptions: {
+    formatter: 'capitalCase',
+  },
+  horizontalAlignment: 'center',
+  overflow: 'truncate-start',
+  title: 'Truncate (start)',
+  titleOptions: {bold: true},
+})
+
+printTable({
+  columns: ['id', 'name', 'age', 'description'],
+  data,
+  headerOptions: {
+    formatter: 'capitalCase',
+  },
+  horizontalAlignment: 'center',
+  overflow: 'truncate-middle',
+  title: 'Truncate (middle)',
   titleOptions: {bold: true},
 })
 
@@ -44,6 +68,30 @@ printTable({
   },
   horizontalAlignment: 'center',
   overflow: 'wrap',
-  title: 'Wrap',
+  title: 'Wrap (aligned center)',
+  titleOptions: {bold: true},
+})
+
+printTable({
+  columns: ['id', 'name', 'age', 'description'],
+  data,
+  headerOptions: {
+    formatter: 'capitalCase',
+  },
+  horizontalAlignment: 'left',
+  overflow: 'wrap',
+  title: 'Wrap (aligned left)',
+  titleOptions: {bold: true},
+})
+
+printTable({
+  columns: ['id', 'name', 'age', 'description'],
+  data,
+  headerOptions: {
+    formatter: 'capitalCase',
+  },
+  horizontalAlignment: 'right',
+  overflow: 'wrap',
+  title: 'Wrap (aligned right)',
   titleOptions: {bold: true},
 })
