@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/oclif/core/compare/0.1.3...0.1.4) (2024-09-24)
+
+
+### Bug Fixes
+
+* fine tune wrapping ([336ec17](https://github.com/oclif/core/commit/336ec172bf3c1809a82223eef88235ac345e56e8))
+
+
+
 ## [0.1.3](https://github.com/oclif/core/compare/0.1.2...0.1.3) (2024-09-24)
 
 
