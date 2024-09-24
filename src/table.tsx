@@ -88,7 +88,7 @@ function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'en
   }
 }
 
-function doStuffWithText({
+function formatTextWithMargins({
   horizontalAlignment,
   overflow,
   padding,
@@ -138,8 +138,7 @@ function doStuffWithText({
 
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
-    const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(wrappedText))
-
+    const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
     const text = wrappedText.replaceAll('\n', `${' '.repeat(marginRight)}\n${' '.repeat(marginLeft)}`)
 
     return {
@@ -326,7 +325,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
       }
 
       const key = `${props.key}-cell-${column.key}`
-      const {marginLeft, marginRight, text} = doStuffWithText({
+      const {marginLeft, marginRight, text} = formatTextWithMargins({
         horizontalAlignment,
         overflow,
         padding,
