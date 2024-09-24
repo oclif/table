@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import cliTruncate from 'cli-truncate'
-import {Box, Text, render} from 'ink'
+import {Box, Newline, Text, render} from 'ink'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -66,29 +66,6 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
 function determineWidthOfWrappedText(text: string): number {
   const lines = text.split('\n')
   return lines.reduce((max, line) => Math.max(max, line.length), 0)
-}
-
-function wrapText(text: string, spaceForText: number, width: number, padding: number): string {
-  const wrappedText = wrapAnsi(text, spaceForText, {hard: true, trim: true, wordWrap: true})
-  if (wrappedText.includes('\n')) {
-    const widthOfWrappedText = determineWidthOfWrappedText(wrappedText)
-    const rightPadding = width - widthOfWrappedText - padding * 2
-    // return wrappedText.replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(rightPadding)}`)
-    // return wrappedText
-    const final = wrappedText.replaceAll('\n', `${' '.repeat(rightPadding)}\n${' '.repeat(padding)}`)
-    console.log({
-      final,
-      padding,
-      rightPadding,
-      spaceForText,
-      width,
-      widthOrWrappedText: widthOfWrappedText,
-      wrappedText,
-    })
-    return final
-  }
-
-  return wrappedText.replaceAll('\n', `${' '.repeat(padding)}\n${' '.repeat(padding)}`)
 }
 
 function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {
