@@ -407,6 +407,7 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
+  process.stdout.write('\n')
 }
 
 function Container(props: ContainerProps) {
@@ -439,4 +440,5 @@ export function printTables<T extends Record<string, unknown>[]>(
     </Container>,
   )
   instance.unmount()
+  process.stdout.write('\n')
 }
