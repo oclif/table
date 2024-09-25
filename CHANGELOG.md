@@ -1,3 +1,12 @@
+## [0.1.9](https://github.com/oclif/core/compare/0.1.8...0.1.9) (2024-09-25)
+
+
+### Bug Fixes
+
+* newline after table ([fcb6029](https://github.com/oclif/core/commit/fcb602926d4be844e839c17daeb8f15e490eaab8))
+
+
+
 ## [0.1.8](https://github.com/oclif/core/compare/0.1.7...0.1.8) (2024-09-25)
 
 
