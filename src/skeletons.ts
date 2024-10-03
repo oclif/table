@@ -8,6 +8,7 @@ export const BORDER_STYLES = [
   'none',
   'outline',
   'vertical-with-outline',
+  'vertical-rows-with-outline',
   'vertical',
 ] as const
 
@@ -326,6 +327,44 @@ export const BORDER_SKELETONS: Record<
     },
     heading: {
       cross: '│',
+      left: '│',
+      line: ' ',
+      right: '│',
+    },
+    separator: {
+      cross: '',
+      left: '',
+      line: '',
+      right: '',
+    },
+  },
+  'vertical-rows-with-outline': {
+    data: {
+      cross: '│',
+      left: '│',
+      line: ' ',
+      right: '│',
+    },
+    footer: {
+      cross: '┴',
+      left: '└',
+      line: '─',
+      right: '┘',
+    },
+    header: {
+      cross: '─',
+      left: '┌',
+      line: '─',
+      right: '┐',
+    },
+    headerFooter: {
+      cross: '┬',
+      left: '├',
+      line: '─',
+      right: '┤',
+    },
+    heading: {
+      cross: ' ',
       left: '│',
       line: ' ',
       right: '│',
