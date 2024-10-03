@@ -128,7 +128,7 @@ function formatTextWithMargins({
   const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
   const spaceForText = width - padding * 2
 
-  if (stripAnsi(valueWithNoZeroWidthChars).length < spaceForText) {
+  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText) {
     const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
     return {
       text: valueWithNoZeroWidthChars,
@@ -139,12 +139,28 @@ function formatTextWithMargins({
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
-    const text = wrappedText.replaceAll('\n', `${' '.repeat(marginRight)}\n${' '.repeat(marginLeft)}`)
+
+    const lines = wrappedText.split('\n').map((line, idx) => {
+      const lineMargins = calculateMargins(spaceForText - stripAnsi(line).length)
+      if (idx === 0) {
+        return `${line}${' '.repeat(lineMargins.marginRight)}`
+      }
+
+      if (horizontalAlignment === 'left') {
+        return `${' '.repeat(marginLeft)}${line}${' '.repeat(lineMargins.marginRight)}`
+      }
+
+      if (horizontalAlignment === 'right') {
+        return `${' '.repeat(lineMargins.marginLeft + marginLeft)}${line}${' '.repeat(marginRight)}`
+      }
+
+      return `${' '.repeat(lineMargins.marginLeft + marginLeft)}${line}${' '.repeat(lineMargins.marginRight)}`
+    })
 
     return {
       marginLeft,
       marginRight,
-      text,
+      text: lines.join('\n'),
     }
   }
 
@@ -289,6 +305,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         value,
         width,
       })
+      // console.log(text, {marginLeft, marginRight}, text.match(/ +$/)?.[0]?.length)
 
       const alignItems =
         verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
