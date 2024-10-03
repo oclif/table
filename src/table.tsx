@@ -163,7 +163,6 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     horizontalAlignment = 'left',
     maxWidth,
     noStyle = false,
-    orientation = 'horizontal',
     overflow = 'truncate',
     padding = 1,
     sort,
@@ -236,48 +235,6 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
   })
-
-  if (orientation === 'vertical') {
-    return (
-      <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)} paddingBottom={1}>
-        {title && <Text {...titleOptions}>{title}</Text>}
-        {processedData.map((row, index) => {
-          // Calculate the hash of the row based on its value and position
-          const key = `row-${sha1(row)}-${index}`
-          const maxKeyLength = Math.max(...Object.values(headings).map((c) => c.length))
-          // Construct a row.
-          return (
-            <Box
-              key={key}
-              borderTop
-              borderBottom={false}
-              borderLeft={false}
-              borderRight={false}
-              flexDirection="column"
-              borderStyle={noStyle ? undefined : 'single'}
-              borderColor={borderColor}
-            >
-              {/* print all data in key:value pairs */}
-              {columns.map((column) => {
-                const value = (row[column.column] ?? '').toString()
-                const keyName = (headings[column.key] ?? column.key).toString()
-                const keyPadding = ' '.repeat(maxKeyLength - keyName.length + padding)
-                return (
-                  <Box key={`${key}-cell-${column.key}`} flexWrap="wrap">
-                    <Text {...config.headerOptions}>
-                      {keyName}
-                      {keyPadding}
-                    </Text>
-                    <Text wrap={overflow}>{value}</Text>
-                  </Box>
-                )
-              })}
-            </Box>
-          )
-        })}
-      </Box>
-    )
-  }
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
