@@ -138,27 +138,42 @@ function formatTextWithMargins({
 
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
-    const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
+    const spaces = width - determineWidthOfWrappedText(stripAnsi(wrappedText))
+    const {marginLeft, marginRight} = calculateMargins(spaces)
 
     const lines = wrappedText.split('\n').map((line, idx) => {
       const {marginLeft: lineSpecificLeftMargin} = calculateMargins(width - stripAnsi(line).length)
-      if (idx === 0) {
-        // if it's the first line, only add margin to the right side (The left margin will be applied later)
-        return `${line}${' '.repeat(marginRight)}`
-      }
+      // if (idx === 0) {
+      //   // if it's the first line, only add margin to the right side (The left margin will be applied later)
+      //   return `${line}${' '.repeat(marginRight)}`
+      // }
 
       if (horizontalAlignment === 'left') {
-        // if left alignment, add the overall margin to the left side only
-        return `${' '.repeat(marginLeft)}${line}`
+        if (idx === 0) {
+          // if it's the first line, only add margin to the right side (The left margin will be applied later)
+          return `${line}${' '.repeat(marginRight)}`
+        }
+
+        // if left alignment, add the overall margin to the left side and right sides
+        return `${' '.repeat(marginLeft)}${line}${' '.repeat(marginRight)}`
       }
 
-      if (horizontalAlignment === 'right') {
-        // if right alignment, add line specific margin to the left side only
-        return `${' '.repeat(lineSpecificLeftMargin)}${line}`
+      if (horizontalAlignment === 'center') {
+        if (idx === 0) {
+          // if it's the first line, only add margin to the right side (The left margin will be applied later)
+          return `${line}${' '.repeat(marginRight)}`
+        }
+
+        // if center alignment, add line specific margin to the left side and the overall margin to the right side
+        return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
       }
 
-      // if center alignment, add line specific margin to the left side
-      return `${' '.repeat(lineSpecificLeftMargin)}${line}`
+      // right alignment
+      if (idx === 0) {
+        return `${' '.repeat(Math.max(0, lineSpecificLeftMargin - marginLeft))}${line}${' '.repeat(marginRight)}`
+      }
+
+      return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
     })
 
     return {
@@ -310,6 +325,10 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         width,
       })
 
+      // console.log(
+      //   {marginLeft, marginRight, text},
+      //   JSON.stringify(`${skeleton.line.repeat(marginLeft)}${text}${skeleton.line.repeat(marginRight)}`),
+      // )
       const alignItems =
         verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
       return (
