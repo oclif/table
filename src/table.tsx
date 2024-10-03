@@ -325,10 +325,6 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         width,
       })
 
-      // console.log(
-      //   {marginLeft, marginRight, text},
-      //   JSON.stringify(`${skeleton.line.repeat(marginLeft)}${text}${skeleton.line.repeat(marginRight)}`),
-      // )
       const alignItems =
         verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
       return (
