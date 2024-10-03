@@ -138,15 +138,10 @@ function formatTextWithMargins({
 
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
-    const spaces = width - determineWidthOfWrappedText(stripAnsi(wrappedText))
-    const {marginLeft, marginRight} = calculateMargins(spaces)
+    const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
 
     const lines = wrappedText.split('\n').map((line, idx) => {
       const {marginLeft: lineSpecificLeftMargin} = calculateMargins(width - stripAnsi(line).length)
-      // if (idx === 0) {
-      //   // if it's the first line, only add margin to the right side (The left margin will be applied later)
-      //   return `${line}${' '.repeat(marginRight)}`
-      // }
 
       if (horizontalAlignment === 'left') {
         if (idx === 0) {
