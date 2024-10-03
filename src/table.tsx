@@ -128,7 +128,7 @@ function formatTextWithMargins({
   const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
   const spaceForText = width - padding * 2
 
-  if (stripAnsi(valueWithNoZeroWidthChars).length < spaceForText) {
+  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText) {
     const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
     return {
       text: valueWithNoZeroWidthChars,
@@ -139,12 +139,42 @@ function formatTextWithMargins({
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
-    const text = wrappedText.replaceAll('\n', `${' '.repeat(marginRight)}\n${' '.repeat(marginLeft)}`)
+
+    const lines = wrappedText.split('\n').map((line, idx) => {
+      const {marginLeft: lineSpecificLeftMargin} = calculateMargins(width - stripAnsi(line).length)
+
+      if (horizontalAlignment === 'left') {
+        if (idx === 0) {
+          // if it's the first line, only add margin to the right side (The left margin will be applied later)
+          return `${line}${' '.repeat(marginRight)}`
+        }
+
+        // if left alignment, add the overall margin to the left side and right sides
+        return `${' '.repeat(marginLeft)}${line}${' '.repeat(marginRight)}`
+      }
+
+      if (horizontalAlignment === 'center') {
+        if (idx === 0) {
+          // if it's the first line, only add margin to the right side (The left margin will be applied later)
+          return `${line}${' '.repeat(marginRight)}`
+        }
+
+        // if center alignment, add line specific margin to the left side and the overall margin to the right side
+        return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
+      }
+
+      // right alignment
+      if (idx === 0) {
+        return `${' '.repeat(Math.max(0, lineSpecificLeftMargin - marginLeft))}${line}${' '.repeat(marginRight)}`
+      }
+
+      return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
+    })
 
     return {
       marginLeft,
       marginRight,
-      text,
+      text: lines.join('\n'),
     }
   }
 
@@ -163,7 +193,6 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     horizontalAlignment = 'left',
     maxWidth,
     noStyle = false,
-    orientation = 'horizontal',
     overflow = 'truncate',
     padding = 1,
     sort,
@@ -236,48 +265,6 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
   })
-
-  if (orientation === 'vertical') {
-    return (
-      <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)} paddingBottom={1}>
-        {title && <Text {...titleOptions}>{title}</Text>}
-        {processedData.map((row, index) => {
-          // Calculate the hash of the row based on its value and position
-          const key = `row-${sha1(row)}-${index}`
-          const maxKeyLength = Math.max(...Object.values(headings).map((c) => c.length))
-          // Construct a row.
-          return (
-            <Box
-              key={key}
-              borderTop
-              borderBottom={false}
-              borderLeft={false}
-              borderRight={false}
-              flexDirection="column"
-              borderStyle={noStyle ? undefined : 'single'}
-              borderColor={borderColor}
-            >
-              {/* print all data in key:value pairs */}
-              {columns.map((column) => {
-                const value = (row[column.column] ?? '').toString()
-                const keyName = (headings[column.key] ?? column.key).toString()
-                const keyPadding = ' '.repeat(maxKeyLength - keyName.length + padding)
-                return (
-                  <Box key={`${key}-cell-${column.key}`} flexWrap="wrap">
-                    <Text {...config.headerOptions}>
-                      {keyName}
-                      {keyPadding}
-                    </Text>
-                    <Text wrap={overflow}>{value}</Text>
-                  </Box>
-                )
-              })}
-            </Box>
-          )
-        })}
-      </Box>
-    )
-  }
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
@@ -407,7 +394,6 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
-  // It might be nice to have a "paddingBefore" and "paddingAfter" option for the number of newlines to enter.
   process.stdout.write('\n')
 }
 
@@ -429,8 +415,8 @@ export function printTables<T extends Record<string, unknown>[]>(
 
   const processed = tables.map((table) => ({
     ...table,
-    // adjust maxWidth to account for margin
-    maxWidth: determineConfiguredWidth(table.maxWidth, columns),
+    // adjust maxWidth to account for margin and columnGap
+    maxWidth: determineConfiguredWidth(table.maxWidth, columns) - (options?.columnGap ?? 0) * tables.length,
   }))
 
   const instance = render(

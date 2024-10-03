@@ -113,7 +113,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    *
    * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
    *
-   * If you provide a number or percentage that is too small to fit the table, it will default to the width of the table.
+   * If you provide a number or percentage that is too small to fit the table, it will default to the minimum width of the table.
    */
   maxWidth?: Percentage | number
   /**
@@ -125,7 +125,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   headerOptions?: HeaderOptions
   /**
-   * Border style for the table. Defaults to 'all'. Only applies to horizontal orientation.
+   * Border style for the table. Defaults to 'all'.
    */
   borderStyle?: BorderStyle
   /**
@@ -133,7 +133,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   borderColor?: SupportedColor
   /**
-   * Align data in columns. Defaults to 'left'. Only applies to horizontal orientation.
+   * Align data in columns. Defaults to 'left'.
    */
   horizontalAlignment?: HorizontalAlignment
   /**
@@ -170,26 +170,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   sort?: Sort<T>
   /**
-   * The orientation of the table. Defaults to 'horizontal'.
-   *
-   * If 'vertical', individual records will be displayed vertically in key:value pairs.
-   *
-   * @example
-   * ```
-   * ─────────────
-   *  Name Alice
-   *  Id   36329
-   *  Age  20
-   * ─────────────
-   *  Name Bob
-   *  Id   49032
-   *  Age  21
-   * ─────────────
-   * ```
-   */
-  orientation?: 'horizontal' | 'vertical'
-  /**
-   * Vertical alignment of cell content. Defaults to 'top'. Only applies to horizontal orientation.
+   * Vertical alignment of cell content. Defaults to 'top'.
    */
   verticalAlignment?: VerticalAlignment
   /**
