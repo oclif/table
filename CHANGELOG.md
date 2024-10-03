@@ -1,3 +1,12 @@
+## [0.1.12](https://github.com/oclif/table/compare/0.1.11...0.1.12) (2024-10-03)
+
+
+### Bug Fixes
+
+* move @types/react to deps ([72028f0](https://github.com/oclif/table/commit/72028f0da8a7e64a145ea676b3eb3cbca9242d47))
+
+
+
 ## [0.1.11](https://github.com/oclif/table/compare/0.1.10...0.1.11) (2024-10-03)
 
 
