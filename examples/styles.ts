@@ -42,7 +42,7 @@ printTable({
     formatter: 'capitalCase',
   },
   horizontalAlignment: 'center',
+  noStyle: true,
   title: 'Remove style with "noStyle: true"',
   titleOptions: {bold: true},
-  noStyle: true,
 })
