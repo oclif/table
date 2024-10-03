@@ -407,6 +407,7 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
+  // It might be nice to have a "paddingBefore" and "paddingAfter" option for the number of newlines to enter.
   process.stdout.write('\n')
 }
 
