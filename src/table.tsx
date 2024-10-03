@@ -309,7 +309,6 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         value,
         width,
       })
-      // console.log(text, {marginLeft, marginRight}, text.match(/ +$/)?.[0]?.length)
 
       const alignItems =
         verticalAlignment === 'top' ? 'flex-start' : verticalAlignment === 'center' ? 'center' : 'flex-end'
