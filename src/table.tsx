@@ -141,20 +141,24 @@ function formatTextWithMargins({
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
 
     const lines = wrappedText.split('\n').map((line, idx) => {
-      const lineMargins = calculateMargins(spaceForText - stripAnsi(line).length)
+      const {marginLeft: lineSpecificLeftMargin} = calculateMargins(width - stripAnsi(line).length)
       if (idx === 0) {
-        return `${line}${' '.repeat(lineMargins.marginRight)}`
+        // if it's the first line, only add margin to the right side (The left margin will be applied later)
+        return `${line}${' '.repeat(marginRight)}`
       }
 
       if (horizontalAlignment === 'left') {
-        return `${' '.repeat(marginLeft)}${line}${' '.repeat(lineMargins.marginRight)}`
+        // if left alignment, add the overall margin to the left side only
+        return `${' '.repeat(marginLeft)}${line}`
       }
 
       if (horizontalAlignment === 'right') {
-        return `${' '.repeat(lineMargins.marginLeft + marginLeft)}${line}${' '.repeat(marginRight)}`
+        // if right alignment, add line specific margin to the left side only
+        return `${' '.repeat(lineSpecificLeftMargin)}${line}`
       }
 
-      return `${' '.repeat(lineMargins.marginLeft + marginLeft)}${line}${' '.repeat(lineMargins.marginRight)}`
+      // if center alignment, add line specific margin to the left side
+      return `${' '.repeat(lineSpecificLeftMargin)}${line}`
     })
 
     return {
@@ -381,7 +385,6 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const instance = render(<Table {...options} />)
   instance.unmount()
-  // It might be nice to have a "paddingBefore" and "paddingAfter" option for the number of newlines to enter.
   process.stdout.write('\n')
 }
 
