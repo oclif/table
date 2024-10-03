@@ -33,3 +33,16 @@ for (const borderStyle of BORDER_STYLES) {
   })
   console.log()
 }
+
+printTable({
+  borderStyle: 'all',
+  columns: ['id', {key: 'name', name: 'First Name'}, 'age'],
+  data,
+  headerOptions: {
+    formatter: 'capitalCase',
+  },
+  horizontalAlignment: 'center',
+  noStyle: true,
+  title: 'Remove style with "noStyle: true"',
+  titleOptions: {bold: true},
+})

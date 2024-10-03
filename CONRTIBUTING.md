@@ -2,20 +2,20 @@
 
 ## Reporting Bugs
 
-When submitting a new bug report, please first [search](https://github.com/oclif/multi-stage-output/issues) for an existing or similar report & then use one of our existing [issue templates](https://github.com/oclif/multi-stage-output/issues/new/choose) if you believe you've come across a unique problem. Duplicate issues, or issues that don't use one of our templates may get closed without a response.
+When submitting a new bug report, please first [search](https://github.com/oclif/table/issues) for an existing or similar report & then use one of our existing [issue templates](https://github.com/oclif/table/issues/new/choose) if you believe you've come across a unique problem. Duplicate issues, or issues that don't use one of our templates may get closed without a response.
 
 ## Development
 
 **1. Clone this repository...**
 
 ```bash
-$ git clone git@github.com:oclif/multi-stage-output.git
+$ git clone git@github.com:oclif/table.git
 ```
 
 **2. Navigate into project & install development-specific dependencies...**
 
 ```bash
-$ cd ./multi-stage-output && yarn
+$ cd ./table && yarn
 ```
 
 **3. Write some code &/or add some tests...**
@@ -30,7 +30,7 @@ $ cd ./multi-stage-output && yarn
 $ yarn test
 ```
 
-**5. Open a [Pull Request](https://github.com/oclif/multi-stage-output/pulls) for your work & become the newest contributor to `@oclif/multi-stage-output`! 🎉**
+**5. Open a [Pull Request](https://github.com/oclif/table/pulls) for your work & become the newest contributor to `@oclif/table`! 🎉**
 
 ## Pull Request Conventions
 

@@ -1,8 +1,8 @@
 import {printTable} from '../src/index.js'
 
 const data = [
-  {age: 25, id: '10245', name: 'Bob'},
-  {age: 26, id: '10345', name: 'Bill'},
+  {age: 100, id: '10245', name: 'Bob'},
+  {age: 10, id: '10345', name: 'Bill'},
   {age: 30, id: '20245', name: 'Alice'},
   {age: 20, id: '20345', name: 'Amy'},
   {age: 30, id: '30245', name: 'Charlie'},
