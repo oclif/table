@@ -82,6 +82,7 @@ printTable({
   overflow: 'wrap',
   title: 'Wrap (aligned left)',
   titleOptions: {bold: true},
+  verticalAlignment: 'center',
 })
 
 printTable({
@@ -94,4 +95,5 @@ printTable({
   overflow: 'wrap',
   title: 'Wrap (aligned right)',
   titleOptions: {bold: true},
+  verticalAlignment: 'bottom',
 })
