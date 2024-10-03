@@ -33,6 +33,27 @@ printTable({
   titleOptions: {bold: true},
 })
 
+// When the vertical orientation table wraps, the "value" does not stay in its column
+// Example (note the "description" column):
+//
+// ──────────────────────────────────────────────────────────────────────────────────────
+// Item        Item 1
+// Description
+// Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+// incididunt ut labore et dolore magna aliqua.
+// Url         https://www.example.com/item/1
+//
+// I would expect it to look like this:
+//
+// Example (note the "description" column):
+// ------------------------------------------------
+// Item        Item 1
+// Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+//             eiusmod tempor incididunt ut labore et dolore magna aliqua.
+// Url         https://www.example.com/item/1
+
+
+
 printTable({
   columns: ['item', 'description', 'url'],
   data,

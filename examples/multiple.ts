@@ -63,6 +63,9 @@ const projects = [
   },
 ]
 
+// Occasionally, if you have two maxWidths that add up to 100% they will stack vertically instead of horizontally.
+// At first I thought this might be when the window has an odd number of pixels, but it seems to be more random than that.
+
 const employeesTable: TableOptions<(typeof employees)[number]> = {
   columns: ['id', 'name', 'age', 'description'],
   data: employees,
