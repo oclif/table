@@ -429,8 +429,8 @@ export function printTables<T extends Record<string, unknown>[]>(
 
   const processed = tables.map((table) => ({
     ...table,
-    // adjust maxWidth to account for margin
-    maxWidth: determineConfiguredWidth(table.maxWidth, columns),
+    // adjust maxWidth to account for margin and columnGap
+    maxWidth: determineConfiguredWidth(table.maxWidth, columns) - (options?.columnGap ?? 0) * tables.length,
   }))
 
   const instance = render(

@@ -113,7 +113,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    *
    * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
    *
-   * If you provide a number or percentage that is too small to fit the table, it will default to the width of the table.
+   * If you provide a number or percentage that is too small to fit the table, it will default to the minimum width of the table.
    */
   maxWidth?: Percentage | number
   /**
