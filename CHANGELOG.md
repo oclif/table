@@ -1,3 +1,15 @@
+## [0.1.13](https://github.com/oclif/table/compare/0.1.12...0.1.13) (2024-10-04)
+
+
+### Bug Fixes
+
+* better fix for center aligned wrapped text ([ae049a8](https://github.com/oclif/table/commit/ae049a8a5b77b1e398ab2b53a90f151a5a1b3f3e))
+* center wrapped text ([53d51bc](https://github.com/oclif/table/commit/53d51bc4002c78f1f73222063bbfa59804512744))
+* handle wrapping of multiline strings ([742dc27](https://github.com/oclif/table/commit/742dc27ad1391c2cf9bc9bb3c0cafedcd2c559a5))
+* remove newlines when truncating text ([f42e550](https://github.com/oclif/table/commit/f42e550e3c4b22e95c3278af41a055c946727f07))
+
+
+
 ## [0.1.12](https://github.com/oclif/table/compare/0.1.11...0.1.12) (2024-10-03)
 
 
