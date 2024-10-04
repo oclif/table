@@ -614,7 +614,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
       ).to.deep.equal({
         marginLeft: 1,
         marginRight: 1,
-        text: ' iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n              iiiiiiiiiiiiiiiiiiiiii             ',
+        text: 'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii \n              iiiiiiiiiiiiiiiiiiiiii             ',
       })
     })
 
@@ -632,7 +632,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
       ).to.deep.equal({
         marginLeft: 1,
         marginRight: 2,
-        text: '     Lorem ipsum dolor sit amet, consectetur    \n                      adipi                     \n scing elit. Sed do eiusmod tempor incididunt ut\n          labore et dolore magna aliqua.        ',
+        text: '    Lorem ipsum dolor sit amet, consectetur      \n                      adipi                     \n scing elit. Sed do eiusmod tempor incididunt ut\n          labore et dolore magna aliqua.        ',
       })
     })
   })

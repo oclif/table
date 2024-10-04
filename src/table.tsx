@@ -155,7 +155,9 @@ export function formatTextWithMargins({
       }
 
       if (horizontalAlignment === 'center') {
-        return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
+        return idx === 0
+          ? `${' '.repeat(lineSpecificLeftMargin - marginLeft)}${line}${' '.repeat(lineSpecificRightMargin)}`
+          : `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
       }
 
       // right alignment

@@ -72,28 +72,28 @@ printTable({
   titleOptions: {bold: true},
 })
 
-printTable({
-  columns: ['id', 'name', 'age', 'description'],
-  data,
-  headerOptions: {
-    formatter: 'capitalCase',
-  },
-  horizontalAlignment: 'left',
-  overflow: 'wrap',
-  title: 'Wrap (aligned left)',
-  titleOptions: {bold: true},
-  verticalAlignment: 'center',
-})
+// printTable({
+//   columns: ['id', 'name', 'age', 'description'],
+//   data,
+//   headerOptions: {
+//     formatter: 'capitalCase',
+//   },
+//   horizontalAlignment: 'left',
+//   overflow: 'wrap',
+//   title: 'Wrap (aligned left)',
+//   titleOptions: {bold: true},
+//   verticalAlignment: 'center',
+// })
 
-printTable({
-  columns: ['id', 'name', 'age', 'description'],
-  data,
-  headerOptions: {
-    formatter: 'capitalCase',
-  },
-  horizontalAlignment: 'right',
-  overflow: 'wrap',
-  title: 'Wrap (aligned right)',
-  titleOptions: {bold: true},
-  verticalAlignment: 'bottom',
-})
+// printTable({
+//   columns: ['id', 'name', 'age', 'description'],
+//   data,
+//   headerOptions: {
+//     formatter: 'capitalCase',
+//   },
+//   horizontalAlignment: 'right',
+//   overflow: 'wrap',
+//   title: 'Wrap (aligned right)',
+//   titleOptions: {bold: true},
+//   verticalAlignment: 'bottom',
+// })
