@@ -2,6 +2,7 @@
 
 import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
+import {EOL} from 'node:os'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -21,7 +22,15 @@ import {
   RowProps,
   TableOptions,
 } from './types.js'
-import {allKeysInCollection, getColumns, getHeadings, intersperse, maybeStripAnsi, sortData} from './utils.js'
+import {
+  allKeysInCollection,
+  determineWidthOfWrappedText,
+  getColumns,
+  getHeadings,
+  intersperse,
+  maybeStripAnsi,
+  sortData,
+} from './utils.js'
 
 /**
  * Determines the configured width based on the provided width value.
@@ -63,11 +72,6 @@ function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): 
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
 }
 
-function determineWidthOfWrappedText(text: string): number {
-  const lines = text.split('\n')
-  return lines.reduce((max, line) => Math.max(max, line.length), 0)
-}
-
 function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {
   switch (overflow) {
     case 'truncate-middle': {
@@ -88,7 +92,7 @@ function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'en
   }
 }
 
-function formatTextWithMargins({
+export function formatTextWithMargins({
   horizontalAlignment,
   overflow,
   padding,
@@ -141,34 +145,26 @@ function formatTextWithMargins({
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
 
     const lines = wrappedText.split('\n').map((line, idx) => {
-      const {marginLeft: lineSpecificLeftMargin} = calculateMargins(width - stripAnsi(line).length)
+      const {marginLeft: lineSpecificLeftMargin, marginRight: lineSpecificRightMargin} = calculateMargins(
+        width - stripAnsi(line).length,
+      )
 
       if (horizontalAlignment === 'left') {
-        if (idx === 0) {
-          // if it's the first line, only add margin to the right side (The left margin will be applied later)
-          return `${line}${' '.repeat(marginRight)}`
-        }
-
-        // if left alignment, add the overall margin to the left side and right sides
-        return `${' '.repeat(marginLeft)}${line}${' '.repeat(marginRight)}`
+        return idx === 0
+          ? `${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
+          : `${' '.repeat(marginLeft)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
       }
 
       if (horizontalAlignment === 'center') {
-        if (idx === 0) {
-          // if it's the first line, only add margin to the right side (The left margin will be applied later)
-          return `${line}${' '.repeat(marginRight)}`
-        }
-
-        // if center alignment, add line specific margin to the left side and the overall margin to the right side
-        return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
+        return idx === 0
+          ? `${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
+          : `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
       }
 
       // right alignment
-      if (idx === 0) {
-        return `${' '.repeat(Math.max(0, lineSpecificLeftMargin - marginLeft))}${line}${' '.repeat(marginRight)}`
-      }
-
-      return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(marginRight)}`
+      return idx === 0
+        ? `${' '.repeat(Math.max(0, lineSpecificLeftMargin - marginLeft))}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
+        : `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
     })
 
     return {
@@ -178,7 +174,7 @@ function formatTextWithMargins({
     }
   }
 
-  const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll('\n', ' '), spaceForText, {
+  const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll(EOL, ' '), spaceForText, {
     position: determineTruncatePosition(overflow),
   })
   const spaces = width - stripAnsi(text).length

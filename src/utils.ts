@@ -1,5 +1,6 @@
 import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {orderBy} from 'natural-orderby'
+import {EOL} from 'node:os'
 import stripAnsi from 'strip-ansi'
 
 import {Column, ColumnProps, Config, Sort} from './types.js'
@@ -45,6 +46,11 @@ export function allKeysInCollection<T extends Record<string, unknown>>(data: T[]
   return [...keys]
 }
 
+export function determineWidthOfWrappedText(text: string): number {
+  const lines = text.split(EOL)
+  return lines.reduce((max, line) => Math.max(max, line.length), 0)
+}
+
 export function getColumns<T extends Record<string, unknown>>(config: Config<T>, headings: Partial<T>): Column<T>[] {
   const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment} = config
 
@@ -58,7 +64,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
       const value = data[key]
 
       if (value === undefined || value === null) return 0
-      return stripAnsi(String(value).replaceAll('​', ' ')).length
+      return determineWidthOfWrappedText(stripAnsi(String(value).replaceAll('​', ' ')))
     })
 
     const header = String(headings[key]).length
