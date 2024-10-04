@@ -2,7 +2,6 @@
 
 import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
-import {EOL} from 'node:os'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -156,9 +155,7 @@ export function formatTextWithMargins({
       }
 
       if (horizontalAlignment === 'center') {
-        return idx === 0
-          ? `${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
-          : `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
+        return `${' '.repeat(lineSpecificLeftMargin)}${line}${' '.repeat(lineSpecificRightMargin - marginRight)}`
       }
 
       // right alignment
@@ -174,7 +171,7 @@ export function formatTextWithMargins({
     }
   }
 
-  const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll(EOL, ' '), spaceForText, {
+  const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll('\n', ' '), spaceForText, {
     position: determineTruncatePosition(overflow),
   })
   const spaces = width - stripAnsi(text).length
