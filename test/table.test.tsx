@@ -532,7 +532,7 @@ describe('Table', () => {
   })
 })
 
-describe.only('formatTextWithMargins', () => {
+describe('formatTextWithMargins', () => {
   describe('wrap + align left', () => {
     it('formats short string', () => {
       expect(
