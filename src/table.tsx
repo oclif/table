@@ -178,7 +178,9 @@ function formatTextWithMargins({
     }
   }
 
-  const text = cliTruncate(valueWithNoZeroWidthChars, spaceForText, {position: determineTruncatePosition(overflow)})
+  const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll('\n', ' '), spaceForText, {
+    position: determineTruncatePosition(overflow),
+  })
   const spaces = width - stripAnsi(text).length
   return {
     text,
