@@ -6,7 +6,7 @@
   "bugs": "https://github.com/oclif/table/issues",
   "dependencies": {
     "@oclif/core": "^4",
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "change-case": "^5.4.4",
     "cli-truncate": "^4.0.0",
     "ink": "^5.0.1",
