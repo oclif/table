@@ -1,3 +1,14 @@
+## [0.1.16](https://github.com/oclif/table/compare/0.1.15...0.1.16) (2024-10-08)
+
+
+### Bug Fixes
+
+* dont use stream if test ([1d44eb3](https://github.com/oclif/table/commit/1d44eb32680c15e428f9f0d7b77a4fc8483f383c))
+* dont use stream if test ([74c4e34](https://github.com/oclif/table/commit/74c4e34428ad5913632860f6f9c75b0b2088a4d1))
+* use 0 for stdout stream ([13bb59f](https://github.com/oclif/table/commit/13bb59f0bb5edd6b92d9e2f73c7acb9029b01949))
+
+
+
 ## [0.1.15](https://github.com/oclif/table/compare/0.1.14...0.1.15) (2024-10-08)
 
 
