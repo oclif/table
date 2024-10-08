@@ -1,3 +1,12 @@
+## [0.1.17](https://github.com/oclif/table/compare/0.1.16...0.1.17) (2024-10-08)
+
+
+### Bug Fixes
+
+* use Stream wrapper class ([ba0e913](https://github.com/oclif/table/commit/ba0e913ab7fbcba71267a7487086040fba17f5e5))
+
+
+
 ## [0.1.16](https://github.com/oclif/table/compare/0.1.15...0.1.16) (2024-10-08)
 
 
