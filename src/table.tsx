@@ -391,7 +391,7 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
  * because it uses ansiEscapes.clearTerminal, which doesn't seem to have
  * the desired effect in powershell.
  */
-class Stdout extends WriteStream {
+class Stream extends WriteStream {
   private frames: string[] = []
   public lastFrame(): string | undefined {
     return this.frames.filter((f) => stripAnsi(f) !== '').at(-1)
@@ -408,7 +408,7 @@ class Stdout extends WriteStream {
  * @param options see {@link TableOptions}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
-  const stdout = new Stdout(1)
+  const stdout = new Stream(0)
   const instance = render(<Table {...options} />, {stdout})
   instance.unmount()
   process.stdout.write(`${stdout.lastFrame()}\n`)
@@ -426,7 +426,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
-  const stdout = new Stdout(1)
+  const stdout = new Stream(0)
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
   const columns = process.stdout.columns - (leftMargin + rightMargin)
