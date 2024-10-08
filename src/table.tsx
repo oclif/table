@@ -408,7 +408,7 @@ class Output {
   public stream: Stream | WriteStream
 
   public constructor(fd = 1) {
-    this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new WriteStream(fd)
+    this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new Stream(fd)
   }
 
   public maybePrintLastFrame() {
