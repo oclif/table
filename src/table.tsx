@@ -2,6 +2,7 @@
 
 import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
+import {WriteStream} from 'node:tty'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -385,13 +386,32 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 }
 
 /**
+ * A custom WriteStream that captures the frames written to stdout.
+ * This allows us to avoid an issue where Ink rerenders the component twice
+ * because it uses ansiEscapes.clearTerminal, which doesn't seem to have
+ * the desired effect in powershell.
+ */
+class Stdout extends WriteStream {
+  private frames: string[] = []
+  public lastFrame(): string | undefined {
+    return this.frames.filter((f) => stripAnsi(f) !== '').at(-1)
+  }
+
+  write(data: string): boolean {
+    this.frames.push(data)
+    return true
+  }
+}
+
+/**
  * Renders a table with the given data.
  * @param options see {@link TableOptions}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
-  const instance = render(<Table {...options} />)
+  const stdout = new Stdout(1)
+  const instance = render(<Table {...options} />, {stdout})
   instance.unmount()
-  process.stdout.write('\n')
+  process.stdout.write(`${stdout.lastFrame()}\n`)
 }
 
 function Container(props: ContainerProps) {
@@ -406,6 +426,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
+  const stdout = new Stdout(1)
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
   const columns = process.stdout.columns - (leftMargin + rightMargin)
@@ -422,7 +443,8 @@ export function printTables<T extends Record<string, unknown>[]>(
         <Table key={sha1(table)} {...table} />
       ))}
     </Container>,
+    {stdout},
   )
   instance.unmount()
-  process.stdout.write('\n')
+  process.stdout.write(`${stdout.lastFrame()}\n`)
 }
