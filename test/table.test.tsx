@@ -691,7 +691,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
   })
 })
 
-describe('printTable', () => {
+describe('printTable compatibility with @oclif/test', () => {
   it('should print a simple table', async () => {
     const data = [
       {name: 'Foo', age: 12},

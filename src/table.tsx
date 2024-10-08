@@ -403,13 +403,21 @@ class Stream extends WriteStream {
   }
 }
 
+function makeOptions() {
+  if (process.env.NODE_ENV === 'test') {
+    return {}
+  }
+
+  return {stdout: new Stream(1)}
+}
+
 /**
  * Renders a table with the given data.
  * @param options see {@link TableOptions}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const stdout = new Stream(0)
-  const instance = render(<Table {...options} />, {stdout})
+  const instance = render(<Table {...options} />, {...makeOptions()})
   instance.unmount()
   process.stdout.write(`${stdout.lastFrame()}\n`)
 }
@@ -443,7 +451,7 @@ export function printTables<T extends Record<string, unknown>[]>(
         <Table key={sha1(table)} {...table} />
       ))}
     </Container>,
-    {stdout},
+    {...makeOptions()},
   )
   instance.unmount()
   process.stdout.write(`${stdout.lastFrame()}\n`)
