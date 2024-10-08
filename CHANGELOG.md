@@ -1,3 +1,12 @@
+## [0.1.15](https://github.com/oclif/table/compare/0.1.14...0.1.15) (2024-10-08)
+
+
+### Bug Fixes
+
+* only print last valid frame ([b763bf7](https://github.com/oclif/table/commit/b763bf7b889651908ba642da0e42fa74839af71f))
+
+
+
 ## [0.1.14](https://github.com/oclif/table/compare/0.1.13...0.1.14) (2024-10-06)
 
 
