@@ -391,8 +391,9 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
  * because it uses ansiEscapes.clearTerminal, which doesn't seem to have
  * the desired effect in powershell.
  */
-class Stdout extends WriteStream {
+class Stream extends WriteStream {
   private frames: string[] = []
+
   public lastFrame(): string | undefined {
     return this.frames.filter((f) => stripAnsi(f) !== '').at(-1)
   }
@@ -403,15 +404,31 @@ class Stdout extends WriteStream {
   }
 }
 
+class Output {
+  public stream: Stream | WriteStream
+
+  public constructor(fd = 1) {
+    this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new WriteStream(fd)
+  }
+
+  public maybePrintLastFrame() {
+    if (this.stream instanceof Stream) {
+      process.stdout.write(`${this.stream.lastFrame()}\n`)
+    } else {
+      process.stdout.write('\n')
+    }
+  }
+}
+
 /**
  * Renders a table with the given data.
  * @param options see {@link TableOptions}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
-  const stdout = new Stdout(1)
-  const instance = render(<Table {...options} />, {stdout})
+  const output = new Output()
+  const instance = render(<Table {...options} />, {stdout: output.stream})
   instance.unmount()
-  process.stdout.write(`${stdout.lastFrame()}\n`)
+  output.maybePrintLastFrame()
 }
 
 function Container(props: ContainerProps) {
@@ -426,7 +443,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
-  const stdout = new Stdout(1)
+  const output = new Output()
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
   const columns = process.stdout.columns - (leftMargin + rightMargin)
@@ -443,8 +460,8 @@ export function printTables<T extends Record<string, unknown>[]>(
         <Table key={sha1(table)} {...table} />
       ))}
     </Container>,
-    {stdout},
+    {stdout: output.stream},
   )
   instance.unmount()
-  process.stdout.write(`${stdout.lastFrame()}\n`)
+  output.maybePrintLastFrame()
 }

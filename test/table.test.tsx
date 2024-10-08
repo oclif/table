@@ -1,11 +1,12 @@
 /* eslint-disable perfectionist/sort-objects */
+import {captureOutput} from '@oclif/test'
 import ansis from 'ansis'
 import {config, expect} from 'chai'
 import {Box} from 'ink'
 import {render} from 'ink-testing-library'
 import React from 'react'
 
-import {Cell, Header, Skeleton, Table, formatTextWithMargins} from '../src/table.js'
+import {Cell, Header, Skeleton, Table, formatTextWithMargins, printTable} from '../src/table.js'
 
 config.truncateThreshold = 0
 
@@ -687,5 +688,32 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         text: '        Lorem ipsum dolor sit amet, consectetur\n                                            adipi\n  scing elit. Sed do eiusmod tempor incididunt ut\n                   labore et dolore magna aliqua.',
       })
     })
+  })
+})
+
+describe('printTable compatibility with @oclif/test', () => {
+  it('should print a simple table', async () => {
+    const data = [
+      {name: 'Foo', age: 12},
+      {name: 'Bar', age: 15},
+    ]
+
+    const expected = `┌──────┬─────┐
+│ name │ age │
+├──────┼─────┤
+│ Foo  │ 12  │
+├──────┼─────┤
+│ Bar  │ 15  │
+└──────┴─────┘
+
+`
+
+    const {stdout} = await captureOutput(async () =>
+      printTable({
+        data,
+        columns: ['name', 'age'],
+      }),
+    )
+    expect(stdout).to.equal(expected)
   })
 })
