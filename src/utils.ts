@@ -83,7 +83,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   const numberOfBorders = widths.length + 1
 
   const calculateTableWidth = (widths: Column<T>[]) =>
-    widths.map((w) => w.width).reduce((a, b) => a + b) + numberOfBorders
+    widths.map((w) => w.width + w.padding * 2).reduce((a, b) => a + b) + numberOfBorders
 
   // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
   // At most, it will reduce the width to the length of the column's header plus padding.
@@ -91,7 +91,9 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   let tableWidth = calculateTableWidth(widths)
   const seen = new Set<string>()
   while (tableWidth > maxWidth) {
-    const largestColumn = widths.reduce((a, b) => (a.width > b.width ? a : b))
+    const largestColumn = widths.filter((w) => !seen.has(w.key)).sort((a, b) => b.width - a.width)[0]
+    if (!largestColumn) break
+    if (seen.has(largestColumn.key)) break
     const header = String(headings[largestColumn.key]).length
     // The minimum width of a column is the width of the header plus padding on both sides
     const minWidth = header + largestColumn.padding * 2
@@ -99,7 +101,6 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
     const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
     largestColumn.width = newWidth
     tableWidth = calculateTableWidth(widths)
-    if (seen.has(largestColumn.key)) break
     seen.add(largestColumn.key)
   }
 
