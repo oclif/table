@@ -374,49 +374,49 @@ describe('Table', () => {
           {skeleton('┌')}
           {skeleton('──────')}
           {skeleton('┬')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┐')}
         </Box>
         <Box>
           {skeleton('│')}
           {header(' name ')}
           {skeleton('│')}
-          {header(' id                  ')}
+          {header(' id              ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('├')}
           {skeleton('──────')}
           {skeleton('┼')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┤')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell(' Foo  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiii… ')}
+          {cell(' iiiiiiiiiiiiii… ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('├')}
           {skeleton('──────')}
           {skeleton('┼')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┤')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell(' Bar  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiii… ')}
+          {cell(' iiiiiiiiiiiiii… ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('└')}
           {skeleton('──────')}
           {skeleton('┴')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┘')}
         </Box>
       </>,
@@ -439,91 +439,105 @@ describe('Table', () => {
           {skeleton('┌')}
           {skeleton('──────')}
           {skeleton('┬')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┐')}
         </Box>
         <Box>
           {skeleton('│')}
           {header(' name ')}
           {skeleton('│')}
-          {header(' id                  ')}
+          {header(' id              ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('├')}
           {skeleton('──────')}
           {skeleton('┼')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┤')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell(' Foo  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiii       ')}
+          {cell(' iiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiii      ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('├')}
           {skeleton('──────')}
           {skeleton('┼')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┤')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell(' Bar  ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiiiiiiiii ')}
+          {cell(' iiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
           {cell('      ')}
           {skeleton('│')}
-          {cell(' iiiiiiiiiiiii       ')}
+          {cell(' iiiiiiiiiiiiiii ')}
+          {skeleton('│')}
+        </Box>
+        <Box>
+          {skeleton('│')}
+          {cell('      ')}
+          {skeleton('│')}
+          {cell(' iiiiiiiiii      ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('└')}
           {skeleton('──────')}
           {skeleton('┴')}
-          {skeleton('─────────────────────')}
+          {skeleton('─────────────────')}
           {skeleton('┘')}
         </Box>
       </>,
