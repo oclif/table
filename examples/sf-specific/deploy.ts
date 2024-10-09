@@ -941,7 +941,7 @@ const deployResult = [
 ]
 
 const deploy: TableOptions<(typeof deployResult)[number]> = {
-  borderStyle: 'vertical',
+  borderStyle: 'vertical-with-outline',
   columns: [
     'state',
     'fullName',
@@ -949,15 +949,20 @@ const deploy: TableOptions<(typeof deployResult)[number]> = {
     {
       key: 'filePath',
       name: 'Path',
-      overflow: 'truncate',
+      overflow: 'wrap',
+    },
+    {
+      key: 'filePath',
+      name: 'Path',
+      overflow: 'wrap',
     },
   ],
   data: deployResult,
   filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
   headerOptions: {
-    color: 'white',
+    // color: 'white',
     formatter: 'capitalCase',
-    inverse: true,
+    // inverse: true,
   },
   maxWidth: '100%',
   overflow: 'truncate',
