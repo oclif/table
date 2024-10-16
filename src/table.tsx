@@ -499,7 +499,7 @@ function renderTableInChunks<T extends Record<string, unknown>>(props: TableOpti
   headerInstance.unmount()
   headerOutput.maybePrintLastFrame()
 
-  const chunks = chunk(processedData, Math.max(1, process.stdout.rows / 2))
+  const chunks = chunk(processedData, Math.max(1, Math.floor(process.stdout.rows / 2)))
   for (const chunk of chunks) {
     const chunkOutput = new Output()
     const instance = render(
@@ -507,7 +507,6 @@ function renderTableInChunks<T extends Record<string, unknown>>(props: TableOpti
         {chunk.map((row, index) => {
           // Calculate the hash of the row based on its value and position
           const key = `row-${sha1(row)}-${index}`
-
           // Construct a row.
           return (
             <Box key={key} flexDirection="column">
@@ -541,6 +540,7 @@ function renderTableInChunks<T extends Record<string, unknown>>(props: TableOpti
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   if (options.data.length > 50_000) {
     renderTableInChunks(options)
+    return
   }
 
   const output = new Output()
