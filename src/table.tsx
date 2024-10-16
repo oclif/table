@@ -219,6 +219,12 @@ function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
 
   const headings = getHeadings(config)
   const columns = getColumns(config, headings)
+  // check for duplicate columns
+  const columnKeys = columns.map((c) => c.key)
+  const duplicates = columnKeys.filter((c, i) => columnKeys.indexOf(c) !== i)
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate columns found: ${duplicates.join(', ')}`)
+  }
 
   const dataComponent = row<T>({
     borderProps,

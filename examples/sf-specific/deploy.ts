@@ -951,11 +951,6 @@ const deploy: TableOptions<(typeof deployResult)[number]> = {
       name: 'Path',
       overflow: 'wrap',
     },
-    {
-      key: 'filePath',
-      name: 'Path',
-      overflow: 'wrap',
-    },
   ],
   data: deployResult,
   filter: (row) => row.state === 'Changed' && row.type.startsWith('A'),
