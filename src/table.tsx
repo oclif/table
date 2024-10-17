@@ -561,7 +561,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
-  if (tables.some((table) => table.data.length > 50_000)) {
+  if (tables.reduce((acc, table) => acc + table.data.length, 0) > 50_000) {
     throw new Error('The data is too large to print multiple tables. Please use `printTable` instead.')
   }
 
