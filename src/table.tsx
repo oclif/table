@@ -184,7 +184,7 @@ export function formatTextWithMargins({
   }
 }
 
-export function Table<T extends Record<string, unknown>>(props: TableOptions<T>) {
+function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
   const {
     data,
     filter,
@@ -219,6 +219,12 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
 
   const headings = getHeadings(config)
   const columns = getColumns(config, headings)
+  // check for duplicate columns
+  const columnKeys = columns.map((c) => c.key)
+  const duplicates = columnKeys.filter((c, i) => columnKeys.indexOf(c) !== i)
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate columns found: ${duplicates.join(', ')}`)
+  }
 
   const dataComponent = row<T>({
     borderProps,
@@ -263,6 +269,38 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     props: borderProps,
     skeleton: BORDER_SKELETONS[config.borderStyle].separator,
   })
+
+  return {
+    columns,
+    config,
+    dataComponent,
+    footerComponent,
+    headerComponent,
+    headerFooterComponent,
+    headingComponent,
+    headings,
+    processedData,
+    separatorComponent,
+    title,
+    titleOptions,
+  }
+}
+
+export function Table<T extends Record<string, unknown>>(props: TableOptions<T>) {
+  const {
+    columns,
+    config,
+    dataComponent,
+    footerComponent,
+    headerComponent,
+    headerFooterComponent,
+    headingComponent,
+    headings,
+    processedData,
+    separatorComponent,
+    title,
+    titleOptions,
+  } = setup(props)
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
@@ -395,7 +433,12 @@ class Stream extends WriteStream {
   private frames: string[] = []
 
   public lastFrame(): string | undefined {
-    return this.frames.filter((f) => stripAnsi(f) !== '').at(-1)
+    return this.frames
+      .filter((f) => {
+        const stripped = stripAnsi(f)
+        return stripped !== '' && stripped !== '\n'
+      })
+      .at(-1)
   }
 
   write(data: string): boolean {
@@ -413,11 +456,81 @@ class Output {
 
   public maybePrintLastFrame() {
     if (this.stream instanceof Stream) {
-      process.stdout.write(`${this.stream.lastFrame()}\n`)
+      process.stdout.write(`${this.stream.lastFrame()}`)
     } else {
       process.stdout.write('\n')
     }
   }
+}
+
+function chunk<T>(array: T[], size: number): T[][] {
+  return array.reduce((acc, _, i) => {
+    if (i % size === 0) acc.push(array.slice(i, i + size))
+    return acc
+  }, [] as T[][])
+}
+
+function renderTableInChunks<T extends Record<string, unknown>>(props: TableOptions<T>): void {
+  const {
+    columns,
+    config,
+    dataComponent,
+    footerComponent,
+    headerComponent,
+    headerFooterComponent,
+    headingComponent,
+    headings,
+    processedData,
+    separatorComponent,
+    title,
+    titleOptions,
+  } = setup(props)
+
+  const headerOutput = new Output()
+  const headerInstance = render(
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+      {title && <Text {...titleOptions}>{title}</Text>}
+      {headerComponent({columns, data: {}, key: 'header'})}
+      {headingComponent({columns, data: headings, key: 'heading'})}
+      {headerFooterComponent({columns, data: {}, key: 'footer'})}
+    </Box>,
+    {stdout: headerOutput.stream},
+  )
+  headerInstance.unmount()
+  headerOutput.maybePrintLastFrame()
+
+  const chunks = chunk(processedData, Math.max(1, Math.floor(process.stdout.rows / 2)))
+  for (const chunk of chunks) {
+    const chunkOutput = new Output()
+    const instance = render(
+      <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+        {chunk.map((row, index) => {
+          // Calculate the hash of the row based on its value and position
+          const key = `row-${sha1(row)}-${index}`
+          // Construct a row.
+          return (
+            <Box key={key} flexDirection="column">
+              {separatorComponent({columns, data: {}, key: `separator-${key}`})}
+              {dataComponent({columns, data: row, key: `data-${key}`})}
+            </Box>
+          )
+        })}
+      </Box>,
+      {stdout: chunkOutput.stream},
+    )
+    instance.unmount()
+    chunkOutput.maybePrintLastFrame()
+  }
+
+  const footerOutput = new Output()
+  const footerInstance = render(
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+      {footerComponent({columns, data: {}, key: 'footer'})}
+    </Box>,
+    {stdout: footerOutput.stream},
+  )
+  footerInstance.unmount()
+  footerOutput.maybePrintLastFrame()
 }
 
 /**
@@ -425,6 +538,11 @@ class Output {
  * @param options see {@link TableOptions}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
+  if (options.data.length > 50_000) {
+    renderTableInChunks(options)
+    return
+  }
+
   const output = new Output()
   const instance = render(<Table {...options} />, {stdout: output.stream})
   instance.unmount()
@@ -443,6 +561,10 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
+  if (tables.reduce((acc, table) => acc + table.data.length, 0) > 30_000) {
+    throw new Error('The data is too large to print multiple tables. Please use `printTable` instead.')
+  }
+
   const output = new Output()
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
