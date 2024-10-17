@@ -1,3 +1,17 @@
+## [0.1.19](https://github.com/oclif/table/compare/0.1.18...0.1.19) (2024-10-17)
+
+
+### Bug Fixes
+
+* drop limit on printTables to 30k ([fb81cf6](https://github.com/oclif/table/commit/fb81cf63f3d57ea0fc9511fb32912931bdcff8e7))
+* handle very tall tables ([b81be9e](https://github.com/oclif/table/commit/b81be9e1732621f4f56d75c3808d7b598b7c2cd3))
+* handle very wide tables ([0627af9](https://github.com/oclif/table/commit/0627af931092269f58bdd67e9ecf5ba9c4a414b2))
+* limit printTables to 50k total records ([b698088](https://github.com/oclif/table/commit/b6980884c1110495847481f1f637528b163961ac))
+* return after rendering chunked table ([e8bfaad](https://github.com/oclif/table/commit/e8bfaad18a0df73e7b44cdb2edc4f8c27d9f2ea9))
+* throw error if duplicate columns ([3a43b86](https://github.com/oclif/table/commit/3a43b86818ad6b7805adca4e64b25a64e1904856))
+
+
+
 ## [0.1.18](https://github.com/oclif/table/compare/0.1.17...0.1.18) (2024-10-12)
 
 
