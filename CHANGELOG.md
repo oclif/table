@@ -1,3 +1,12 @@
+## [0.1.20](https://github.com/oclif/table/compare/0.1.19...0.1.20) (2024-10-17)
+
+
+### Bug Fixes
+
+* default Stream fd to 0 ([93124c2](https://github.com/oclif/table/commit/93124c2300a54036f12391c2052ea3b34fc3cb83))
+
+
+
 ## [0.1.19](https://github.com/oclif/table/compare/0.1.18...0.1.19) (2024-10-17)
 
 
