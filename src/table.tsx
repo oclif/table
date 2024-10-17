@@ -450,7 +450,8 @@ class Stream extends WriteStream {
 class Output {
   public stream: Stream | WriteStream
 
-  public constructor(fd = 1) {
+  public constructor() {
+    const fd = process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : 0
     this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new Stream(fd)
   }
 
