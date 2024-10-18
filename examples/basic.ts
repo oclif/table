@@ -18,7 +18,6 @@ const data = [
   },
   {
     age: 22,
-    bigData: 'c'.repeat(30),
     employed: ansis.bold('false'),
     id: terminalLink('51786', 'https://example.com/51786'),
     name: 'Charlie',

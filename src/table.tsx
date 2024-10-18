@@ -457,6 +457,8 @@ class Output {
   public stream: Stream | WriteStream
 
   public constructor() {
+    // Use process.stdout if NODE_ENV is `test` OR if tests are being run by wireit on windows (windows + tests run by wireit
+    // are problematic for an unknown reason)
     this.stream =
       (process.platform === 'win32' && process.env.npm_lifecycle_script === 'wireit') || process.env.NODE_ENV === 'test'
         ? process.stdout
