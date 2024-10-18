@@ -457,8 +457,10 @@ class Output {
   public stream: Stream | WriteStream
 
   public constructor() {
-    const fd = process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : 0
-    this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new Stream(fd)
+    this.stream =
+      (process.platform === 'win32' && process.env.npm_lifecycle_script === 'wireit') || process.env.NODE_ENV === 'test'
+        ? process.stdout
+        : new Stream(process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : process.stdout.fd)
   }
 
   public maybePrintLastFrame() {
