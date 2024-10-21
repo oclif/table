@@ -462,7 +462,7 @@ class Output {
     this.stream =
       (process.platform === 'win32' && process.env.npm_lifecycle_script === 'wireit') || process.env.NODE_ENV === 'test'
         ? process.stdout
-        : new Stream(process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : process.stdout.fd)
+        : new Stream(process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : 0)
   }
 
   public maybePrintLastFrame() {
