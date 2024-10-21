@@ -2,7 +2,7 @@
 
 import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
-import {WriteStream} from 'node:tty'
+import {EventEmitter} from 'node:events'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -423,54 +423,55 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
   return <Box flexDirection="column">{texts}</Box>
 }
 
+type FakeStdout = {
+  lastFrame: () => string | undefined
+} & NodeJS.WriteStream
+
 /**
- * A custom WriteStream that captures the frames written to stdout.
+ * Return a custom WriteStream that captures the frames written to stdout.
  * This allows us to avoid an issue where Ink rerenders the component twice
  * because it uses ansiEscapes.clearTerminal, which doesn't seem to have
  * the desired effect in powershell.
+ *
+ * Implementation inspired by https://github.com/vadimdemedes/ink/blob/master/test/helpers/create-stdout.ts
  */
-class Stream extends WriteStream {
+const createStdout = (): FakeStdout => {
+  // eslint-disable-next-line unicorn/prefer-event-target
+  const stdout = new EventEmitter() as unknown as FakeStdout
   // Override the rows so that ink doesn't clear the entire terminal when
   // unmounting the component and the height of the output is greater than
   // the height of the terminal
   // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
   // This might be a bad idea but it works.
-  public rows = 10_000
-  private frames: string[] = []
+  stdout.rows = 10_000
+  stdout.columns = process.stdout.columns ?? 80
+  const frames: string[] = []
 
-  public lastFrame(): string | undefined {
-    return this.frames
+  stdout.write = (data: string) => {
+    frames.push(data)
+    return true
+  }
+
+  stdout.lastFrame = () =>
+    frames
       .filter((f) => {
         const stripped = stripAnsi(f)
         return stripped !== '' && stripped !== '\n'
       })
       .at(-1)
-  }
 
-  write(data: string): boolean {
-    this.frames.push(data)
-    return true
-  }
+  return stdout
 }
 
 class Output {
-  public stream: Stream | WriteStream
+  public stream: FakeStdout
 
   public constructor() {
-    // Use process.stdout if NODE_ENV is `test` OR if tests are being run by wireit on windows (windows + tests run by wireit
-    // are problematic for an unknown reason)
-    this.stream =
-      (process.platform === 'win32' && process.env.npm_lifecycle_script === 'wireit') || process.env.NODE_ENV === 'test'
-        ? process.stdout
-        : new Stream(process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : 0)
+    this.stream = createStdout()
   }
 
   public maybePrintLastFrame() {
-    if (this.stream instanceof Stream) {
-      process.stdout.write(`${this.stream.lastFrame()}`)
-    } else {
-      process.stdout.write('\n')
-    }
+    process.stdout.write(`${this.stream.lastFrame()}\n`)
   }
 }
 
