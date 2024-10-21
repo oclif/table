@@ -1,3 +1,12 @@
+## [0.1.23](https://github.com/oclif/table/compare/0.1.22...0.1.23) (2024-10-21)
+
+
+### Bug Fixes
+
+* change default fd ([c9a5f70](https://github.com/oclif/table/commit/c9a5f70e0038a001363c6887743a37ac51c947b7))
+
+
+
 ## [0.1.22](https://github.com/oclif/table/compare/0.1.21...0.1.22) (2024-10-21)
 
 
