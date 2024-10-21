@@ -1,3 +1,12 @@
+## [0.1.24](https://github.com/oclif/table/compare/0.1.23...0.1.24) (2024-10-21)
+
+
+### Bug Fixes
+
+* improve stdout wrapper ([3e87eca](https://github.com/oclif/table/commit/3e87ecab19a06bb74be288accac376e1fecb07b0))
+
+
+
 ## [0.1.23](https://github.com/oclif/table/compare/0.1.22...0.1.23) (2024-10-21)
 
 
