@@ -1,3 +1,13 @@
+## [0.1.22](https://github.com/oclif/table/compare/0.1.21...0.1.22) (2024-10-21)
+
+
+### Bug Fixes
+
+* override stdout rows to prevent terminal clearing ([7ad0fec](https://github.com/oclif/table/commit/7ad0fec6c421787db04087f33112330ec5ef7b1d))
+* windows + wireit test fix ([e69204b](https://github.com/oclif/table/commit/e69204b72a322fd212566d3f04f5ac6c6f4511c2))
+
+
+
 ## [0.1.21](https://github.com/oclif/table/compare/0.1.20...0.1.21) (2024-10-19)
 
 
