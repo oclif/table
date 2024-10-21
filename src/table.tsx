@@ -430,6 +430,12 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
  * the desired effect in powershell.
  */
 class Stream extends WriteStream {
+  // Override the rows so that ink doesn't clear the entire terminal when
+  // unmounting the component and the height of the output is greater than
+  // the height of the terminal
+  // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
+  // This might be a bad idea but it works.
+  public rows = 10_000
   private frames: string[] = []
 
   public lastFrame(): string | undefined {
@@ -451,8 +457,12 @@ class Output {
   public stream: Stream | WriteStream
 
   public constructor() {
-    const fd = process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : 0
-    this.stream = process.env.NODE_ENV === 'test' ? process.stdout : new Stream(fd)
+    // Use process.stdout if NODE_ENV is `test` OR if tests are being run by wireit on windows (windows + tests run by wireit
+    // are problematic for an unknown reason)
+    this.stream =
+      (process.platform === 'win32' && process.env.npm_lifecycle_script === 'wireit') || process.env.NODE_ENV === 'test'
+        ? process.stdout
+        : new Stream(process.env.OCLIF_TABLE_FD ? Number(process.env.OCLIF_TABLE_FD) : process.stdout.fd)
   }
 
   public maybePrintLastFrame() {
