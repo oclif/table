@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/oclif/table/compare/0.1.24...0.2.0) (2024-10-22)
+
+
+### Features
+
+* add makeTable ([69af4d2](https://github.com/oclif/table/commit/69af4d290e7000ce72b47b6cb08e4bb3d004990f))
+
+
+
 ## [0.1.24](https://github.com/oclif/table/compare/0.1.23...0.1.24) (2024-10-21)
 
 
