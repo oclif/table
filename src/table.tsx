@@ -546,8 +546,12 @@ function renderTableInChunks<T extends Record<string, unknown>>(props: TableOpti
 }
 
 /**
- * Renders a table with the given data.
- * @param options see {@link TableOptions}
+ * Prints a table based on the provided options. If the data length exceeds 50,000 entries,
+ * the table is rendered in chunks to handle large datasets efficiently.
+ *
+ * @template T - A generic type that extends a record with string keys and unknown values.
+ * @param {TableOptions<T>} options - The options for rendering the table, including data and other configurations.
+ * @returns {void}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   if (options.data.length > 50_000) {
@@ -561,6 +565,20 @@ export function printTable<T extends Record<string, unknown>>(options: TableOpti
   output.maybePrintLastFrame()
 }
 
+/**
+ * Generates a table as a string based on the provided options.
+ *
+ * @template T - A generic type extending a record with string keys and unknown values.
+ * @param {TableOptions<T>} options - The options to configure the table.
+ * @returns {string} The rendered table as a string.
+ */
+export function makeTable<T extends Record<string, unknown>>(options: TableOptions<T>): string {
+  const output = new Output()
+  const instance = render(<Table {...options} />, {stdout: output.stream})
+  instance.unmount()
+  return output.stream.lastFrame() ?? ''
+}
+
 function Container(props: ContainerProps) {
   return (
     <Box flexWrap="wrap" flexDirection={props.direction ?? 'row'} {...props}>
@@ -569,6 +587,14 @@ function Container(props: ContainerProps) {
   )
 }
 
+/**
+ * Prints multiple tables to the console.
+ *
+ * @template T - An array of records where each record represents a table.
+ * @param {Object.<keyof T, TableOptions<T[keyof T]>>} tables - An object containing table options for each table.
+ * @param {Omit<ContainerProps, 'children'>} [options] - Optional container properties excluding 'children'.
+ * @throws {Error} Throws an error if the total number of rows across all tables exceeds 30,000.
+ */
 export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
