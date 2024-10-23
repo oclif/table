@@ -68,7 +68,7 @@ function determineConfiguredWidth(
  * This allows us to use the minimum width required to display the table if the configured width is too small.
  */
 function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): number {
-  const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b) + columns.length + 1
+  const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b, 0) + columns.length + 1
   return tableWidth < configuredWidth ? configuredWidth : tableWidth
 }
 
@@ -458,7 +458,7 @@ const createStdout = (): FakeStdout => {
         const stripped = stripAnsi(f)
         return stripped !== '' && stripped !== '\n'
       })
-      .at(-1)
+      .at(-1) ?? ''
 
   return stdout
 }

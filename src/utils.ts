@@ -83,7 +83,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   const numberOfBorders = widths.length + 1
 
   const calculateTableWidth = (widths: Column<T>[]) =>
-    widths.map((w) => w.width + w.padding * 2).reduce((a, b) => a + b) + numberOfBorders
+    widths.map((w) => w.width + w.padding * 2).reduce((a, b) => a + b, 0) + numberOfBorders
 
   // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
   // At most, it will reduce the width to the length of the column's header plus padding.
