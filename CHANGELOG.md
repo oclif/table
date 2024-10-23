@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/oclif/table/compare/0.2.0...0.2.1) (2024-10-23)
+
+
+### Bug Fixes
+
+* handle no data ([90257fe](https://github.com/oclif/table/commit/90257fe9031b083a76e69559521afb09b5fcfb45))
+
+
+
 # [0.2.0](https://github.com/oclif/table/compare/0.1.24...0.2.0) (2024-10-22)
 
 
