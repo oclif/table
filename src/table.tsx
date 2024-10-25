@@ -112,6 +112,10 @@ export function formatTextWithMargins({
   function calculateMargins(spaces: number): {marginLeft: number; marginRight: number} {
     let marginLeft: number
     let marginRight: number
+    if (spaces <= 0 || Number.isNaN(spaces)) {
+      return {marginLeft: 0, marginRight: 0}
+    }
+
     if (horizontalAlignment === 'left') {
       marginLeft = padding
       marginRight = spaces - marginLeft
@@ -123,7 +127,11 @@ export function formatTextWithMargins({
       marginLeft = spaces - marginRight
     }
 
-    return {marginLeft, marginRight}
+    return {
+      // Ensure that the margin is never negative
+      marginLeft: Math.max(0, marginLeft),
+      marginRight: Math.max(0, marginRight),
+    }
   }
 
   // Some terminals don't play nicely with zero-width characters, so we replace them with spaces.
@@ -141,7 +149,11 @@ export function formatTextWithMargins({
   }
 
   if (overflow === 'wrap') {
-    const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {hard: true, trim: true, wordWrap: true})
+    const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
+      hard: true,
+      trim: true,
+      wordWrap: true,
+    }).replace(/^\n/, '') // remove leading newline (wrapAnsi adds it to emojis)
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
 
     const lines = wrappedText.split('\n').map((line, idx) => {
