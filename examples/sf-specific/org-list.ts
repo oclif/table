@@ -1,4 +1,19 @@
+import ansis from 'ansis'
+
 import {printTable} from '../../src'
+
+function addColor(row: (typeof data)[number], key: string) {
+  return row[key]
+    ? row.isSandbox
+      ? ansis.yellowBright(row[key])
+      : row.isDevHub
+        ? ansis.cyanBright(row[key])
+        : row.isScratch
+          ? row[key]
+          : ansis.magentaBright(row[key])
+    : null
+}
+
 const data = [
   {
     alias: 'devhub',
@@ -111,7 +126,7 @@ const data = [
     isScratch: true,
     lastUsed: '2024-10-09T18:44:31.494Z',
     loginUrl: 'https://nosoftware-platform-8292-dev-ed.scratch.my.salesforce.com',
-    namespace: null,
+    namespace: 'myNamespace',
     orgId: '00DO2000004SuOLMA0',
     orgName: 'Company',
     signupUsername: 'test-1yomelh1c0ha@example.com',
@@ -124,45 +139,34 @@ const data = [
 
 printTable({
   borderStyle: 'vertical-with-outline',
-  columns: [
-    {
-      key: 'defaultMarker',
-      name: ' ',
-    },
-    'type',
-    'alias',
-    'username',
-    {
-      key: 'instanceUrl',
-      name: 'Instance URL',
-    },
-    {
-      key: 'orgId',
-      name: 'Org ID',
-    },
-    {
-      key: 'connectedStatus',
-      name: 'Status',
-    },
-    'namespace',
-    {
-      key: 'devHubId',
-      name: 'Devhub ID',
-    },
-    {
-      key: 'createdDate',
-      name: 'Created',
-    },
-    {
-      key: 'expirationDate',
-      name: 'Expires',
-    },
-  ],
-  data,
+  data: data
+    .map((row) => ({
+      ...row,
+      alias: addColor(row, 'alias'),
+      connectedStatus: row.connectedStatus.startsWith('Unable')
+        ? ansis.red(row.connectedStatus)
+        : ansis.green(row.connectedStatus),
+      instanceUrl: addColor(row, 'instanceUrl'),
+      namespace: addColor(row, 'namespace'),
+      orgId: addColor(row, 'orgId'),
+      type: addColor(row, 'type'),
+      username: addColor(row, 'username'),
+    }))
+    .map((row) => ({
+      ' ': row.defaultMarker,
+      Alias: row.alias,
+      'Instance URL': row.instanceUrl,
+      Namespace: row.namespace,
+      'Org ID': row.orgId,
+      Status: row.connectedStatus,
+      Type: row.type,
+      Username: row.username,
+      ...('devHubOrgId' in row ? {'Dev Hub ID': row.devHubOrgId} : {}),
+      ...('createdDate' in row ? {Created: row.createdDate} : {}),
+      ...('expirationDate' in row ? {Expires: row.expirationDate} : {}),
+    })),
   headerOptions: {
     formatter: 'capitalCase',
   },
-  maxWidth: '100%',
   overflow: 'wrap',
-  verticalAlignment: 'center',
 })
