@@ -112,7 +112,7 @@ export function formatTextWithMargins({
   function calculateMargins(spaces: number): {marginLeft: number; marginRight: number} {
     let marginLeft: number
     let marginRight: number
-    if (spaces <= 0) {
+    if (spaces <= 0 || Number.isNaN(spaces)) {
       return {marginLeft: 0, marginRight: 0}
     }
 
