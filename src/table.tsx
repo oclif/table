@@ -3,6 +3,7 @@
 import cliTruncate from 'cli-truncate'
 import {Box, Text, render} from 'ink'
 import {EventEmitter} from 'node:events'
+import {env} from 'node:process'
 import {sha1} from 'object-hash'
 import React from 'react'
 import stripAnsi from 'strip-ansi'
@@ -436,7 +437,7 @@ export function Skeleton(props: React.PropsWithChildren & {readonly height?: num
 }
 
 type FakeStdout = {
-  lastFrame: () => string | undefined
+  lastFrame: () => string
 } & NodeJS.WriteStream
 
 /**
@@ -482,91 +483,66 @@ class Output {
     this.stream = createStdout()
   }
 
-  public maybePrintLastFrame() {
+  public printLastFrame() {
     process.stdout.write(`${this.stream.lastFrame()}\n`)
   }
 }
 
-function chunk<T>(array: T[], size: number): T[][] {
-  return array.reduce((acc, _, i) => {
-    if (i % size === 0) acc.push(array.slice(i, i + size))
-    return acc
-  }, [] as T[][])
-}
-
 function renderTableInChunks<T extends Record<string, unknown>>(props: TableOptions<T>): void {
-  const {
-    columns,
-    config,
-    dataComponent,
-    footerComponent,
-    headerComponent,
-    headerFooterComponent,
-    headingComponent,
-    headings,
-    processedData,
-    separatorComponent,
-    title,
-    titleOptions,
-  } = setup(props)
+  const {columns, headings, processedData, title} = setup(props)
 
-  const headerOutput = new Output()
-  const headerInstance = render(
-    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
-      {title && <Text {...titleOptions}>{title}</Text>}
-      {headerComponent({columns, data: {}, key: 'header'})}
-      {headingComponent({columns, data: headings, key: 'heading'})}
-      {headerFooterComponent({columns, data: {}, key: 'footer'})}
-    </Box>,
-    {stdout: headerOutput.stream},
-  )
-  headerInstance.unmount()
-  headerOutput.maybePrintLastFrame()
+  if (title) console.log(title)
+  const headerString = columns.reduce((acc, column) => {
+    const {horizontalAlignment, overflow, padding, width} = column
+    const {marginLeft, marginRight, text} = formatTextWithMargins({
+      horizontalAlignment,
+      overflow,
+      padding,
+      value: column.column,
+      width,
+    })
+    const columnHeader = headings[text] ?? text
+    return `${acc}${' '.repeat(marginLeft)}${columnHeader}${' '.repeat(marginRight)}`
+  }, '')
+  console.log(headerString)
+  console.log('-'.repeat(headerString.length))
 
-  const chunks = chunk(processedData, Math.max(1, Math.floor(process.stdout.rows / 2)))
-  for (const chunk of chunks) {
-    const chunkOutput = new Output()
-    const instance = render(
-      <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
-        {chunk.map((row, index) => {
-          // Calculate the hash of the row based on its value and position
-          const key = `row-${sha1(row)}-${index}`
-          // Construct a row.
-          return (
-            <Box key={key} flexDirection="column">
-              {separatorComponent({columns, data: {}, key: `separator-${key}`})}
-              {dataComponent({columns, data: row, key: `data-${key}`})}
-            </Box>
-          )
-        })}
-      </Box>,
-      {stdout: chunkOutput.stream},
-    )
-    instance.unmount()
-    chunkOutput.maybePrintLastFrame()
+  for (const row of processedData) {
+    const stringToPrint = columns.reduce((acc, column) => {
+      const {horizontalAlignment, overflow, padding, width} = column
+      const value = row[column.column]
+
+      if (value === undefined || value === null) {
+        return `${acc}${' '.repeat(width)}`
+      }
+
+      const {marginLeft, marginRight, text} = formatTextWithMargins({
+        horizontalAlignment,
+        overflow,
+        padding,
+        value,
+        width,
+      })
+
+      return `${acc}${' '.repeat(marginLeft)}${text}${' '.repeat(marginRight)}`
+    }, '')
+    console.log(stringToPrint)
   }
 
-  const footerOutput = new Output()
-  const footerInstance = render(
-    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
-      {footerComponent({columns, data: {}, key: 'footer'})}
-    </Box>,
-    {stdout: footerOutput.stream},
-  )
-  footerInstance.unmount()
-  footerOutput.maybePrintLastFrame()
+  console.log()
 }
 
 /**
- * Prints a table based on the provided options. If the data length exceeds 50,000 entries,
- * the table is rendered in chunks to handle large datasets efficiently.
+ * Prints a table based on the provided options. If the data length exceeds 10,000 entries,
+ * the table is rendered in a non-styled format to avoid memory issues.
  *
  * @template T - A generic type that extends a record with string keys and unknown values.
  * @param {TableOptions<T>} options - The options for rendering the table, including data and other configurations.
  * @returns {void}
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
-  if (options.data.length > 50_000) {
+  const limit = Number.parseInt(env.OCLIF_TABLE_LIMIT ?? env.SF_TABLE_LIMIT ?? '10000', 10) ?? 10_000
+  if (options.data.length >= limit) {
     renderTableInChunks(options)
     return
   }
@@ -574,7 +550,7 @@ export function printTable<T extends Record<string, unknown>>(options: TableOpti
   const output = new Output()
   const instance = render(<Table {...options} />, {stdout: output.stream})
   instance.unmount()
-  output.maybePrintLastFrame()
+  output.printLastFrame()
 }
 
 /**
@@ -635,5 +611,5 @@ export function printTables<T extends Record<string, unknown>[]>(
     {stdout: output.stream},
   )
   instance.unmount()
-  output.maybePrintLastFrame()
+  output.printLastFrame()
 }
