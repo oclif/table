@@ -30,6 +30,7 @@ import {
   getHeadings,
   intersperse,
   maybeStripAnsi,
+  shouldUsePlainTable,
   sortData,
 } from './utils.js'
 
@@ -488,7 +489,7 @@ class Output {
   }
 }
 
-function renderTableInChunks<T extends Record<string, unknown>>(props: TableOptions<T>): void {
+function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions<T>): void {
   const {columns, headings, processedData, title} = setup(props)
 
   if (title) console.log(title)
@@ -542,8 +543,8 @@ function renderTableInChunks<T extends Record<string, unknown>>(props: TableOpti
  */
 export function printTable<T extends Record<string, unknown>>(options: TableOptions<T>): void {
   const limit = Number.parseInt(env.OCLIF_TABLE_LIMIT ?? env.SF_TABLE_LIMIT ?? '10000', 10) ?? 10_000
-  if (options.data.length >= limit) {
-    renderTableInChunks(options)
+  if (options.data.length >= limit || shouldUsePlainTable()) {
+    renderPlainTable(options)
     return
   }
 

@@ -1,5 +1,6 @@
 import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {orderBy} from 'natural-orderby'
+import {env} from 'node:process'
 import stripAnsi from 'strip-ansi'
 
 import {Column, ColumnProps, Config, Sort} from './types.js'
@@ -178,4 +179,18 @@ export function maybeStripAnsi<T extends Record<string, unknown>[]>(data: T, noS
   }
 
   return newData as T
+}
+
+function isTruthy(value: string | undefined): boolean {
+  return value !== '0' && value !== 'false'
+}
+
+// Inspired by https://github.com/sindresorhus/is-in-ci
+export function shouldUsePlainTable(): boolean {
+  if (
+    isTruthy(env.CI) &&
+    ('CI' in env || 'CONTINUOUS_INTEGRATION' in env || Object.keys(env).some((key) => key.startsWith('CI_')))
+  )
+    return true
+  return false
 }
