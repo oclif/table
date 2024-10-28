@@ -185,8 +185,18 @@ function isTruthy(value: string | undefined): boolean {
   return value !== '0' && value !== 'false'
 }
 
-// Inspired by https://github.com/sindresorhus/is-in-ci
+/**
+ * Determines whether the plain text table should be used.
+ *
+ * If the OCLIF_TABLE_SKIP_CI_CHECK environment variable is set to a truthy value, the CI check will be skipped.
+ *
+ * If the CI environment variable is set, the plain text table will be used.
+ *
+ * @returns {boolean} True if the plain text table should be used, false otherwise.
+ */
 export function shouldUsePlainTable(): boolean {
+  if (env.OCLIF_TABLE_SKIP_CI_CHECK && isTruthy(env.OCLIF_TABLE_SKIP_CI_CHECK)) return false
+  // Inspired by https://github.com/sindresorhus/is-in-ci
   if (
     isTruthy(env.CI) &&
     ('CI' in env || 'CONTINUOUS_INTEGRATION' in env || Object.keys(env).some((key) => key.startsWith('CI_')))
