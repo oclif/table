@@ -10,6 +10,8 @@ import {Cell, Header, Skeleton, Table, formatTextWithMargins, printTable} from '
 
 config.truncateThreshold = 0
 
+process.env.OCLIF_TABLE_SKIP_CI_CHECK = 'true'
+
 // Helpers -------------------------------------------------------------------
 
 const skeleton = (v: string) => <Skeleton>{v}</Skeleton>

@@ -1,5 +1,6 @@
 import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {orderBy} from 'natural-orderby'
+import {env} from 'node:process'
 import stripAnsi from 'strip-ansi'
 
 import {Column, ColumnProps, Config, Sort} from './types.js'
@@ -178,4 +179,28 @@ export function maybeStripAnsi<T extends Record<string, unknown>[]>(data: T, noS
   }
 
   return newData as T
+}
+
+function isTruthy(value: string | undefined): boolean {
+  return value !== '0' && value !== 'false'
+}
+
+/**
+ * Determines whether the plain text table should be used.
+ *
+ * If the OCLIF_TABLE_SKIP_CI_CHECK environment variable is set to a truthy value, the CI check will be skipped.
+ *
+ * If the CI environment variable is set, the plain text table will be used.
+ *
+ * @returns {boolean} True if the plain text table should be used, false otherwise.
+ */
+export function shouldUsePlainTable(): boolean {
+  if (env.OCLIF_TABLE_SKIP_CI_CHECK && isTruthy(env.OCLIF_TABLE_SKIP_CI_CHECK)) return false
+  // Inspired by https://github.com/sindresorhus/is-in-ci
+  if (
+    isTruthy(env.CI) &&
+    ('CI' in env || 'CONTINUOUS_INTEGRATION' in env || Object.keys(env).some((key) => key.startsWith('CI_')))
+  )
+    return true
+  return false
 }
