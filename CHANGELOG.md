@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/oclif/table/compare/0.2.4...0.3.0) (2024-10-29)
+
+
+### Features
+
+* dont use ink when size in greater than 10k ([#32](https://github.com/oclif/table/issues/32)) ([8c1371e](https://github.com/oclif/table/commit/8c1371ef3a9efbcd99f8e904c94226e913bfcd0f))
+
+
+
 ## [0.2.4](https://github.com/oclif/table/compare/0.2.3...0.2.4) (2024-10-26)
 
 
