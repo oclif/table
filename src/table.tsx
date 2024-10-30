@@ -499,11 +499,11 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
       horizontalAlignment,
       overflow,
       padding,
-      value: column.column,
+      value: headings[column.column] ?? column.column,
       width,
     })
-    const columnHeader = headings[text] ?? text
-    return `${acc}${' '.repeat(marginLeft)}${columnHeader}${' '.repeat(marginRight)}`
+
+    return `${acc}${' '.repeat(marginLeft)}${text}${' '.repeat(marginRight)}`
   }, '')
   console.log(headerString)
   console.log('-'.repeat(headerString.length))
@@ -588,7 +588,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {
-  if (tables.reduce((acc, table) => acc + table.data.length, 0) > 30_000) {
+  if (tables.reduce((acc, table) => acc + table.data.length, 0) > 10_000) {
     throw new Error('The data is too large to print multiple tables. Please use `printTable` instead.')
   }
 
