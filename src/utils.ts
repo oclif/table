@@ -84,27 +84,34 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   const numberOfBorders = widths.length + 1
 
   const calculateTableWidth = (widths: Column<T>[]) =>
-    widths.map((w) => w.width + w.padding * 2).reduce((a, b) => a + b, 0) + numberOfBorders
+    widths.map((w) => w.width).reduce((a, b) => a + b, 0) + numberOfBorders
 
-  // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
-  // At most, it will reduce the width to the length of the column's header plus padding.
-  // If the table is still too wide, it will reduce the width of the next largest column and so on
   let tableWidth = calculateTableWidth(widths)
   const seen = new Set<string>()
-  while (tableWidth > maxWidth) {
-    const largestColumn = widths.filter((w) => !seen.has(w.key)).sort((a, b) => b.width - a.width)[0]
-    if (!largestColumn) break
-    if (seen.has(largestColumn.key)) break
-    const header = String(headings[largestColumn.key]).length
-    // The minimum width of a column is the width of the header plus padding on both sides
-    const minWidth = header + largestColumn.padding * 2
-    const difference = tableWidth - maxWidth
-    const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
-    largestColumn.width = newWidth
-    tableWidth = calculateTableWidth(widths)
-    seen.add(largestColumn.key)
+
+  const reduceColumnWidths = (calcMinWidth: (col: Column<T>) => number) => {
+    // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
+    // If the table is still too wide, it will reduce the width of the next largest column and so on
+    while (tableWidth > maxWidth) {
+      const largestColumn = widths.filter((w) => !seen.has(w.key)).sort((a, b) => b.width - a.width)[0]
+      if (!largestColumn) break
+      if (seen.has(largestColumn.key)) break
+
+      const minWidth = calcMinWidth(largestColumn)
+      const difference = tableWidth - maxWidth
+      const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
+      largestColumn.width = newWidth
+      tableWidth = calculateTableWidth(widths)
+      seen.add(largestColumn.key)
+    }
   }
 
+  // At most, reduce the width to the length of the column's header plus padding.
+  reduceColumnWidths((col) => stripAnsi(String(headings[col.key])).length + col.padding * 2)
+
+  seen.clear()
+  // At most, reduce the width to the padding + 3
+  reduceColumnWidths((col) => col.padding * 2 + 3)
   return widths
 }
 
