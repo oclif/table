@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/oclif/table/compare/0.3.0...0.3.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* margins on plain text table ([b541bd1](https://github.com/oclif/table/commit/b541bd19637b3fc0cd8d595426333f5329029f69))
+
+
+
 # [0.3.0](https://github.com/oclif/table/compare/0.2.4...0.3.0) (2024-10-29)
 
 
