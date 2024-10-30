@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/oclif/table/compare/0.3.1...0.3.2) (2024-10-30)
+
+
+### Bug Fixes
+
+* improve table width calculation ([4a71378](https://github.com/oclif/table/commit/4a7137850e429f9a665966858bf728b57164b11e))
+
+
+
 ## [0.3.1](https://github.com/oclif/table/compare/0.3.0...0.3.1) (2024-10-30)
 
 
