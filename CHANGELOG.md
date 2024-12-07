@@ -1,3 +1,12 @@
+## [0.3.6](https://github.com/oclif/table/compare/0.3.5...0.3.6) (2024-12-07)
+
+
+### Bug Fixes
+
+* **deps:** bump ink from 5.0.1 to 5.1.0 ([bde5cb7](https://github.com/oclif/table/commit/bde5cb7b7c866491af09b7f3cfc711cc2545ed5c))
+
+
+
 ## [0.3.5](https://github.com/oclif/table/compare/0.3.4...0.3.5) (2024-11-16)
 
 
