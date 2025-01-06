@@ -3,7 +3,7 @@ import {orderBy} from 'natural-orderby'
 import {env} from 'node:process'
 import stripAnsi from 'strip-ansi'
 
-import {Column, ColumnProps, Config, Sort} from './types.js'
+import {Column, ColumnProps, Config, Percentage, Sort} from './types.js'
 
 /**
  * Intersperses a list of elements with another element.
@@ -51,8 +51,38 @@ export function determineWidthOfWrappedText(text: string): number {
   return lines.reduce((max, line) => Math.max(max, line.length), 0)
 }
 
+/**
+ * Determines the configured width based on the provided width value.
+ * If no width is provided, it returns the width of the current terminal.
+ * If the provided width is a percentage, it calculates the width based on the percentage of the terminal width.
+ * If the provided width is a number, it returns the provided width.
+ * If the calculated width is greater than the terminal width, it returns the terminal width.
+ *
+ * @param providedWidth - The width value provided.
+ * @returns The determined configured width.
+ */
+export function determineConfiguredWidth(
+  providedWidth: number | Percentage | undefined,
+  columns = process.stdout.columns,
+): number {
+  if (!providedWidth) return columns
+
+  const num =
+    typeof providedWidth === 'string' && providedWidth.endsWith('%')
+      ? Math.floor((Number.parseInt(providedWidth, 10) / 100) * columns)
+      : typeof providedWidth === 'string'
+        ? Number.parseInt(providedWidth, 10)
+        : providedWidth
+
+  if (num > columns) {
+    return columns
+  }
+
+  return num
+}
+
 export function getColumns<T extends Record<string, unknown>>(config: Config<T>, headings: Partial<T>): Column<T>[] {
-  const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment} = config
+  const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment, width} = config
 
   const widths: Column<T>[] = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {key: propsOrKey}
@@ -64,11 +94,17 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
       const value = data[key]
 
       if (value === undefined || value === null) return 0
+      // Some terminals don't play nicely with zero-width characters, so we replace them with spaces.
+      // https://github.com/sindresorhus/terminal-link/issues/18
+      // https://github.com/Shopify/cli/pull/995
       return determineWidthOfWrappedText(stripAnsi(String(value).replaceAll('​', ' ')))
     })
 
     const header = String(headings[key]).length
-    const width = Math.max(...data, header) + padding * 2
+    // If a column width is provided, use that. Otherwise, use the width of the largest cell in the column.
+    // In both cases, we also need to add in the padding on either side.
+    const columnWidth =
+      (props.width ? determineConfiguredWidth(props.width, width ?? maxWidth) : Math.max(...data, header)) + padding * 2
 
     return {
       column: key,
@@ -77,7 +113,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
       overflow: props.overflow ?? overflow,
       padding,
       verticalAlignment: props.verticalAlignment ?? verticalAlignment,
-      width,
+      width: columnWidth,
     }
   })
 
@@ -112,6 +148,21 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   seen.clear()
   // At most, reduce the width to the padding + 3
   reduceColumnWidths((col) => col.padding * 2 + 3)
+
+  // If the table width was provided AND it's greater than the calculated table width, expand the columns to fill the width
+  if (width && width > tableWidth) {
+    const extraWidth = width - tableWidth
+    const extraWidthPerColumn = Math.floor(extraWidth / widths.length)
+
+    for (const w of widths) {
+      w.width += extraWidthPerColumn
+      // if it's the last column, add all the remaining width
+      if (w === widths.at(-1)) {
+        w.width += extraWidth - extraWidthPerColumn * widths.length
+      }
+    }
+  }
+
   return widths
 }
 
