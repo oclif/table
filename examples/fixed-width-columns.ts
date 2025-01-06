@@ -23,5 +23,4 @@ printTable({
   overflow: 'wrap',
   title: 'Fixed-Width Columns',
   titleOptions: {bold: true},
-  // width: '100%',
 })
