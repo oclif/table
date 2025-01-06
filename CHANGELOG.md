@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/oclif/table/compare/0.3.9...0.4.0) (2025-01-06)
+
+
+### Features
+
+* support fixed column widths ([#71](https://github.com/oclif/table/issues/71)) ([dbe7be8](https://github.com/oclif/table/commit/dbe7be835bb8c547e48db8c63d2c65308d752612))
+
+
+
 ## [0.3.9](https://github.com/oclif/table/compare/0.3.8...0.3.9) (2024-12-21)
 
 
