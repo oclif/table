@@ -102,9 +102,9 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
 
     const header = String(headings[key]).length
     // If a column width is provided, use that. Otherwise, use the width of the largest cell in the column.
-    // In both cases, we also need to add in the padding on either side.
-    const columnWidth =
-      (props.width ? determineConfiguredWidth(props.width, width ?? maxWidth) : Math.max(...data, header)) + padding * 2
+    const columnWidth = props.width
+      ? determineConfiguredWidth(props.width, width ?? maxWidth)
+      : Math.max(...data, header) + padding * 2
 
     return {
       column: key,
