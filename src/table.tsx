@@ -25,6 +25,7 @@ import {
 } from './types.js'
 import {
   allKeysInCollection,
+  determineConfiguredWidth,
   determineWidthOfWrappedText,
   getColumns,
   getHeadings,
@@ -35,43 +36,13 @@ import {
 } from './utils.js'
 
 /**
- * Determines the configured width based on the provided width value.
- * If no width is provided, it returns the width of the current terminal.
- * If the provided width is a percentage, it calculates the width based on the percentage of the terminal width.
- * If the provided width is a number, it returns the provided width.
- * If the calculated width is greater than the terminal width, it returns the terminal width.
- *
- * @param providedWidth - The width value provided.
- * @returns The determined configured width.
- */
-function determineConfiguredWidth(
-  providedWidth: number | Percentage | undefined,
-  columns = process.stdout.columns,
-): number {
-  if (!providedWidth) return columns
-
-  const num =
-    typeof providedWidth === 'string' && providedWidth.endsWith('%')
-      ? Math.floor((Number.parseInt(providedWidth, 10) / 100) * columns)
-      : typeof providedWidth === 'string'
-        ? Number.parseInt(providedWidth, 10)
-        : providedWidth
-
-  if (num > columns) {
-    return columns
-  }
-
-  return num
-}
-
-/**
  * Determine the width to use for the table.
  *
  * This allows us to use the minimum width required to display the table if the configured width is too small.
  */
-function determineWidthToUse<T>(columns: Column<T>[], configuredWidth: number): number {
+function determineWidthToUse<T>(columns: Column<T>[], maxWidth: number, width: number | undefined): number {
   const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b, 0) + columns.length + 1
-  return tableWidth < configuredWidth ? configuredWidth : tableWidth
+  return width ?? (tableWidth < maxWidth ? maxWidth : tableWidth)
 }
 
 function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {
@@ -210,6 +181,7 @@ function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
     sort,
     title,
     verticalAlignment = 'top',
+    width,
   } = props
 
   const headerOptions = noStyle ? {} : ({bold: true, color: 'blue', ...props.headerOptions} satisfies HeaderOptions)
@@ -219,13 +191,15 @@ function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
   const titleOptions = noStyle ? {} : props.titleOptions
 
   const processedData = maybeStripAnsi(sortData(filter ? data.filter((row) => filter(row)) : data, sort), noStyle)
+  const tableWidth = width ? determineConfiguredWidth(width) : undefined
   const config: Config<T> = {
     borderStyle,
     columns: props.columns ?? allKeysInCollection(data),
     data: processedData,
     headerOptions,
     horizontalAlignment,
-    maxWidth: determineConfiguredWidth(maxWidth),
+    maxWidth: tableWidth ?? determineConfiguredWidth(maxWidth),
+    width: tableWidth,
     overflow,
     padding,
     verticalAlignment,
@@ -317,7 +291,7 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
   } = setup(props)
 
   return (
-    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth)}>
+    <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth, config.width)}>
       {title && <Text {...titleOptions}>{title}</Text>}
       {headerComponent({columns, data: {}, key: 'header'})}
       {headingComponent({columns, data: headings, key: 'heading'})}

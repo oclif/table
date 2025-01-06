@@ -4,6 +4,7 @@ export type CellProps = React.PropsWithChildren<{readonly column: number}>
 
 export type HorizontalAlignment = 'left' | 'right' | 'center'
 export type VerticalAlignment = 'top' | 'center' | 'bottom'
+export type Percentage = `${number}%`
 
 export type ColumnProps<T> = {
   /**
@@ -27,10 +28,12 @@ export type ColumnProps<T> = {
    * Vertical alignment of cell content. Overrides the vertical alignment set in the table.
    */
   verticalAlignment?: VerticalAlignment
+  /**
+   * Set the width of the column. If not provided, it will default to the width of the content.
+   */
+  width?: Percentage | number
 }
 export type AllColumnProps<T> = {[K in keyof T]: ColumnProps<K>}[keyof T]
-
-export type Percentage = `${number}%`
 
 type TextOptions = {
   color?: SupportedColor
@@ -107,15 +110,35 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   padding?: number
   /**
-   * Width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
+   * Maximum width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
    *
-   * If not provided, it will default to the width of the terminal (determined by `process.stdout.columns`).
+   * By default, the table will only take up as much space as it needs to fit the content. If it extends beyond the maximum width,
+   * it will wrap or truncate the content based on the `overflow` option. In other words, this property allows you to set the width
+   * at which wrapping or truncation occurs.
+   *
+   * If not provided, the maximum width will default to the terminal width.
    *
    * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
    *
    * If you provide a number or percentage that is too small to fit the table, it will default to the minimum width of the table.
    */
   maxWidth?: Percentage | number
+  /**
+   * Exact width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
+   *
+   * By default, the table will only take up as much space as it needs to fit the content. If you set the `width` option, the table will
+   * always take up that amount of space, regardless of the content. If the content is too large, it will wrap or truncate based on the
+   * `overflow` option. If it's too small, it will add empty space evenly across the columns.
+   *
+   * Setting this property will override the `maxWidth` option.
+   *
+   * If not provided, it will default to the natural width of the table.
+   *
+   * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
+   *
+   * If you provide a number or percentage that is too small to fit the table, it will default to the minimum width of the table.
+   */
+  width?: Percentage | number
   /**
    * Overflow behavior for cells. Defaults to 'truncate'.
    */
@@ -197,6 +220,7 @@ export type Config<T> = {
   borderStyle: BorderStyle
   horizontalAlignment: HorizontalAlignment
   verticalAlignment: VerticalAlignment
+  width: number | undefined
 }
 
 export type RowConfig = {
