@@ -1,4 +1,4 @@
-import {TableOptions, printTables} from '../src/index.js'
+import {printTables, TableOptions} from '../src/index.js'
 
 const description =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'

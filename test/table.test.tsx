@@ -6,7 +6,7 @@ import {Box} from 'ink'
 import {render} from 'ink-testing-library'
 import React from 'react'
 
-import {Cell, Header, Skeleton, Table, formatTextWithMargins, printTable} from '../src/table.js'
+import {Cell, formatTextWithMargins, Header, printTable, Skeleton, Table} from '../src/table.js'
 
 config.truncateThreshold = 0
 

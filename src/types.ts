@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {BorderStyle} from './skeletons.js'
 
 export type CellProps = React.PropsWithChildren<{readonly column: number}>

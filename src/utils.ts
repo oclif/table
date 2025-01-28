@@ -135,7 +135,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
 
       const minWidth = calcMinWidth(largestColumn)
       const difference = tableWidth - maxWidth
-      const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
+      const newWidth = Math.max(largestColumn.width - difference, minWidth)
       largestColumn.width = newWidth
       tableWidth = calculateTableWidth(widths)
       seen.add(largestColumn.key)
@@ -178,32 +178,32 @@ export function getHeadings<T extends Record<string, unknown>>(config: Config<T>
     if (typeof formatter === 'function') return formatter(header)
 
     switch (formatter) {
-      case 'pascalCase': {
-        return pascalCase(header)
+      case 'camelCase': {
+        return camelCase(header)
       }
 
       case 'capitalCase': {
         return capitalCase(header)
       }
 
-      case 'camelCase': {
-        return camelCase(header)
-      }
-
-      case 'snakeCase': {
-        return snakeCase(header)
+      case 'constantCase': {
+        return constantCase(header)
       }
 
       case 'kebabCase': {
         return kebabCase(header)
       }
 
-      case 'constantCase': {
-        return constantCase(header)
+      case 'pascalCase': {
+        return pascalCase(header)
       }
 
       case 'sentenceCase': {
         return sentenceCase(header)
+      }
+
+      case 'snakeCase': {
+        return snakeCase(header)
       }
 
       default: {
