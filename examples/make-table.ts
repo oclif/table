@@ -1,7 +1,7 @@
 import ansis from 'ansis'
 import terminalLink from 'terminal-link'
 
-import {TableOptions, makeTable} from '../src/index.js'
+import {makeTable, TableOptions} from '../src/index.js'
 
 const data = [
   {

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import cliTruncate from 'cli-truncate'
-import {Box, Text, render} from 'ink'
+import {Box, render, Text} from 'ink'
 import {EventEmitter} from 'node:events'
 import {env} from 'node:process'
 import {sha1} from 'object-hash'
@@ -18,7 +18,6 @@ import {
   HeaderOptions,
   HorizontalAlignment,
   Overflow,
-  Percentage,
   RowConfig,
   RowProps,
   TableOptions,
@@ -42,21 +41,21 @@ import {
  */
 function determineWidthToUse<T>(columns: Column<T>[], maxWidth: number, width: number | undefined): number {
   const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b, 0) + columns.length + 1
-  return width ?? (tableWidth < maxWidth ? maxWidth : tableWidth)
+  return width ?? Math.max(tableWidth, maxWidth)
 }
 
 function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {
   switch (overflow) {
+    case 'truncate-end': {
+      return 'end'
+    }
+
     case 'truncate-middle': {
       return 'middle'
     }
 
     case 'truncate-start': {
       return 'start'
-    }
-
-    case 'truncate-end': {
-      return 'end'
     }
 
     default: {
@@ -169,7 +168,7 @@ export function formatTextWithMargins({
   }
 }
 
-function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
+function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
   const {
     data,
     filter,
@@ -199,10 +198,10 @@ function setup<T extends Record<string, unknown>>(props: TableOptions<T>) {
     headerOptions,
     horizontalAlignment,
     maxWidth: tableWidth ?? determineConfiguredWidth(maxWidth),
-    width: tableWidth,
     overflow,
     padding,
     verticalAlignment,
+    width: tableWidth,
   }
 
   const headings = getHeadings(config)
@@ -288,11 +287,11 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
     separatorComponent,
     title,
     titleOptions,
-  } = setup(props)
+  } = setupTable(props)
 
   return (
     <Box flexDirection="column" width={determineWidthToUse(columns, config.maxWidth, config.width)}>
-      {title && <Text {...titleOptions}>{title}</Text>}
+      {title ? <Text {...titleOptions}>{title}</Text> : null}
       {headerComponent({columns, data: {}, key: 'header'})}
       {headingComponent({columns, data: headings, key: 'heading'})}
       {headerFooterComponent({columns, data: {}, key: 'footer'})}
@@ -464,7 +463,7 @@ class Output {
 }
 
 function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions<T>): void {
-  const {columns, headings, processedData, title} = setup(props)
+  const {columns, headings, processedData, title} = setupTable(props)
 
   if (title) console.log(title)
   const headerString = columns.reduce((acc, column) => {
