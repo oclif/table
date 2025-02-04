@@ -1,3 +1,12 @@
+## [0.4.6](https://github.com/oclif/table/compare/0.4.5...0.4.6) (2025-02-04)
+
+
+### Bug Fixes
+
+* revert regression caused by eslint ([214ba33](https://github.com/oclif/table/commit/214ba33de7e7cc51ecb4b2423634f737c4671b99))
+
+
+
 ## [0.4.5](https://github.com/oclif/table/compare/0.4.4...0.4.5) (2025-02-01)
 
 
