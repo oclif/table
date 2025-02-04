@@ -28,6 +28,7 @@ export default [
       'react/jsx-tag-spacing': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/prefer-array-find': 'off',
+      'unicorn/prefer-math-min-max': 'off',
       'unicorn/prefer-module': 'off',
     },
   },

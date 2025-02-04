@@ -41,7 +41,7 @@ import {
  */
 function determineWidthToUse<T>(columns: Column<T>[], maxWidth: number, width: number | undefined): number {
   const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b, 0) + columns.length + 1
-  return width ?? Math.max(tableWidth, maxWidth)
+  return width ?? (tableWidth < maxWidth ? maxWidth : tableWidth)
 }
 
 function determineTruncatePosition(overflow: Overflow): 'start' | 'middle' | 'end' {

@@ -5,7 +5,6 @@
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/table/issues",
   "dependencies": {
-    "@oclif/core": "^4",
     "@types/react": "^18.3.12",
     "change-case": "^5.4.4",
     "cli-truncate": "^4.0.0",
@@ -19,6 +18,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19",
     "@eslint/compat": "^1.2.6",
+    "@oclif/core": "^4",
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^4.1.8",
     "@types/chai": "^4.3.16",

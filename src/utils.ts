@@ -135,7 +135,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
 
       const minWidth = calcMinWidth(largestColumn)
       const difference = tableWidth - maxWidth
-      const newWidth = Math.max(largestColumn.width - difference, minWidth)
+      const newWidth = largestColumn.width - difference < minWidth ? minWidth : largestColumn.width - difference
       largestColumn.width = newWidth
       tableWidth = calculateTableWidth(widths)
       seen.add(largestColumn.key)
