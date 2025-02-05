@@ -849,7 +849,6 @@ printTable({
     color: '#905de8',
     formatter: 'capitalCase',
   },
-  orientation: 'vertical',
   overflow: 'wrap',
   sort: {
     channel(a, b) {
