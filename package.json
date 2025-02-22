@@ -20,7 +20,7 @@
     "@eslint/compat": "^1.2.6",
     "@oclif/core": "^4",
     "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^4.1.9",
+    "@oclif/test": "^4.1.10",
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "^18",
