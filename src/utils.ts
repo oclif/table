@@ -52,7 +52,10 @@ export function determineWidthOfWrappedText(text: string): number {
 }
 
 // In certain systems, `process.stdout.columns` can be 0
-// When 0, '80' or the value of `OCLIF_TABLE_COLUMN_OVERRIDE` will be used
+// The column width is calculated by:
+// 1. The value of `OCLIF_TABLE_COLUMN_OVERRIDE` (if set)
+// 2. The value of `process.stdout.columns`
+// 3. If `process.stdout.columns` is 0, use 80
 export function getColumnWidth(): number {
   return Number.parseInt(process.env.OCLIF_TABLE_COLUMN_OVERRIDE || '0', 10) || process.stdout.columns || 80
 }
