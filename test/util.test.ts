@@ -1,6 +1,6 @@
 import {config, expect} from 'chai'
 
-import {intersperse, sortData} from '../src/utils.js'
+import {getColumnWidth, intersperse, sortData} from '../src/utils.js'
 
 config.truncateThreshold = 0
 
@@ -62,5 +62,25 @@ describe('sortData', () => {
       {age: 20, name: 'Amy'},
     ]
     expect(sortData(data, sort)).to.deep.equal(expected)
+  })
+})
+
+describe('should get the correct column width', () => {
+  it('should return the value of OCLIF_TABLE_COLUMN_OVERRIDE', () => {
+    process.env.OCLIF_TABLE_COLUMN_OVERRIDE = '100'
+    expect(getColumnWidth()).to.equal(100)
+    delete process.env.OCLIF_TABLE_COLUMN_OVERRIDE
+  })
+
+  it('should return the value of process.stdout.columns', () => {
+    const currentColumns = process.stdout.columns
+    expect(getColumnWidth()).to.equal(currentColumns)
+  })
+
+  it('should return the default value of 80', () => {
+    const backupColumns = process.stdout.columns
+    process.stdout.columns = 0
+    expect(getColumnWidth()).to.equal(80)
+    process.stdout.columns = backupColumns
   })
 })

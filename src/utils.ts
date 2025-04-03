@@ -51,6 +51,12 @@ export function determineWidthOfWrappedText(text: string): number {
   return lines.reduce((max, line) => Math.max(max, line.length), 0)
 }
 
+// In certain systems, `process.stdout.columns` can be 0
+// When 0, '80' or the value of `OCLIF_TABLE_COLUMN_OVERRIDE` will be used
+export function getColumnWidth(): number {
+  return Number.parseInt(process.env.OCLIF_TABLE_COLUMN_OVERRIDE || '0', 10) || process.stdout.columns || 80
+}
+
 /**
  * Determines the configured width based on the provided width value.
  * If no width is provided, it returns the width of the current terminal.
@@ -63,7 +69,7 @@ export function determineWidthOfWrappedText(text: string): number {
  */
 export function determineConfiguredWidth(
   providedWidth: number | Percentage | undefined,
-  columns = process.stdout.columns,
+  columns = getColumnWidth(),
 ): number {
   if (!providedWidth) return columns
 
