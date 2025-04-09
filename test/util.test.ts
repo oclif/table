@@ -73,8 +73,13 @@ describe('should get the correct column width', () => {
   })
 
   it('should return the value of process.stdout.columns', () => {
-    const currentColumns = process.stdout.columns
-    expect(getColumnWidth()).to.equal(currentColumns)
+    if (process.env.CI && !process.stdout.columns) {
+      // In GHA process.stdout.columns is undefined
+      expect(getColumnWidth()).to.equal(80)
+    } else {
+      const currentColumns = process.stdout.columns
+      expect(getColumnWidth()).to.equal(currentColumns)
+    }
   })
 
   it('should return the default value of 80', () => {
