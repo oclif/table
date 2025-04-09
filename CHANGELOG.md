@@ -1,3 +1,12 @@
+## [0.4.7](https://github.com/oclif/table/compare/0.4.6...0.4.7) (2025-04-09)
+
+
+### Bug Fixes
+
+* alt values for process.stdout.columns ([#131](https://github.com/oclif/table/issues/131)) ([4956ac8](https://github.com/oclif/table/commit/4956ac861381e2162c1bd13c21978176c2a33df4))
+
+
+
 ## [0.4.6](https://github.com/oclif/table/compare/0.4.5...0.4.6) (2025-02-04)
 
 
