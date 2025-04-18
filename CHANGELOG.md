@@ -1,3 +1,12 @@
+## [0.4.8](https://github.com/oclif/table/compare/0.4.7...0.4.8) (2025-04-18)
+
+
+### Reverts
+
+* Revert "fix: alt values for process.stdout.columns (#131)" ([a659248](https://github.com/oclif/table/commit/a6592482d8518a736d710d5b27468b93c9aebd7f)), closes [#131](https://github.com/oclif/table/issues/131)
+
+
+
 ## [0.4.7](https://github.com/oclif/table/compare/0.4.6...0.4.7) (2025-04-09)
 
 
