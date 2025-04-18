@@ -27,7 +27,6 @@ import {
   determineConfiguredWidth,
   determineWidthOfWrappedText,
   getColumns,
-  getColumnWidth,
   getHeadings,
   intersperse,
   maybeStripAnsi,
@@ -432,7 +431,7 @@ const createStdout = (): FakeStdout => {
   // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
   // This might be a bad idea but it works.
   stdout.rows = 10_000
-  stdout.columns = getColumnWidth();
+  stdout.columns = process.stdout.columns ?? 80
   const frames: string[] = []
 
   stdout.write = (data: string) => {
@@ -569,7 +568,8 @@ export function printTables<T extends Record<string, unknown>[]>(
   const output = new Output()
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
-  const columns = getColumnWidth() - (leftMargin + rightMargin)
+  const columns = process.stdout.columns - (leftMargin + rightMargin)
+
   const processed = tables.map((table) => ({
     ...table,
     // adjust maxWidth to account for margin and columnGap
