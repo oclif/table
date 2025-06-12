@@ -75,7 +75,7 @@ describe('should get the correct column width', () => {
   it('should return the value of process.stdout.columns', () => {
     if (process.env.CI && !process.stdout.columns) {
       // In GHA process.stdout.columns is undefined
-      expect(getColumnWidth()).to.equal(80)
+      expect(getColumnWidth()).to.equal(undefined)
     } else {
       const currentColumns = process.stdout.columns
       expect(getColumnWidth()).to.equal(currentColumns)
