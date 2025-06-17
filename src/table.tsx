@@ -113,7 +113,8 @@ export function formatTextWithMargins({
   const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
   const spaceForText = width - padding * 2
 
-  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText) {
+  // Handle the simple case where text fits within the available space and doesn't contain any newlines.
+  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText && !valueWithNoZeroWidthChars.includes('\n')) {
     const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
     return {
       text: valueWithNoZeroWidthChars,
@@ -121,6 +122,7 @@ export function formatTextWithMargins({
     }
   }
 
+  // Handle the case where the text needs to be wrapped.
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
       hard: true,
@@ -159,6 +161,7 @@ export function formatTextWithMargins({
     }
   }
 
+  // Handle the case where the text needs to be truncated.
   const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll('\n', ' '), spaceForText, {
     position: determineTruncatePosition(overflow),
   })
