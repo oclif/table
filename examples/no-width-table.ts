@@ -16,7 +16,6 @@ printTable({
   headerOptions: {
     formatter: 'capitalCase',
   },
-  noStyle: true,
   overflow: 'wrap',
   title: 'process.stdout.columns is 0',
   titleOptions: {bold: true},
@@ -30,7 +29,6 @@ printTable({
   headerOptions: {
     formatter: 'capitalCase',
   },
-  noStyle: true,
   overflow: 'wrap',
   title: 'process.stdout.columns is undefined',
   titleOptions: {bold: true},
