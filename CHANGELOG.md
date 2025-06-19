@@ -1,3 +1,13 @@
+## [0.4.9](https://github.com/oclif/table/compare/0.4.8...0.4.9) (2025-06-19)
+
+
+### Bug Fixes
+
+* handle short multiline strings ([c2c2e55](https://github.com/oclif/table/commit/c2c2e550080c1fe88a05cdbb4193dd33ee2c0273))
+* **W-18763150:** width calculation when no process.stdout.columns ([081ce59](https://github.com/oclif/table/commit/081ce59a59985f19656a9c36a5a2dc5982f18e64))
+
+
+
 ## [0.4.8](https://github.com/oclif/table/compare/0.4.7...0.4.8) (2025-04-18)
 
 
