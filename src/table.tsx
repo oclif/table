@@ -27,6 +27,7 @@ import {
   determineConfiguredWidth,
   determineWidthOfWrappedText,
   getColumns,
+  getColumnWidth,
   getHeadings,
   intersperse,
   maybeStripAnsi,
@@ -112,7 +113,8 @@ export function formatTextWithMargins({
   const valueWithNoZeroWidthChars = String(value).replaceAll('​', ' ')
   const spaceForText = width - padding * 2
 
-  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText) {
+  // Handle the simple case where text fits within the available space and doesn't contain any newlines.
+  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText && !valueWithNoZeroWidthChars.includes('\n')) {
     const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
     return {
       text: valueWithNoZeroWidthChars,
@@ -120,6 +122,7 @@ export function formatTextWithMargins({
     }
   }
 
+  // Handle the case where the text needs to be wrapped.
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
       hard: true,
@@ -158,6 +161,7 @@ export function formatTextWithMargins({
     }
   }
 
+  // Handle the case where the text needs to be truncated.
   const text = cliTruncate(valueWithNoZeroWidthChars.replaceAll('\n', ' '), spaceForText, {
     position: determineTruncatePosition(overflow),
   })
@@ -431,7 +435,7 @@ const createStdout = (): FakeStdout => {
   // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
   // This might be a bad idea but it works.
   stdout.rows = 10_000
-  stdout.columns = process.stdout.columns ?? 80
+  stdout.columns = getColumnWidth()
   const frames: string[] = []
 
   stdout.write = (data: string) => {
@@ -568,8 +572,7 @@ export function printTables<T extends Record<string, unknown>[]>(
   const output = new Output()
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
-  const columns = process.stdout.columns - (leftMargin + rightMargin)
-
+  const columns = getColumnWidth() - (leftMargin + rightMargin)
   const processed = tables.map((table) => ({
     ...table,
     // adjust maxWidth to account for margin and columnGap
