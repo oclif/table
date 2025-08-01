@@ -1,3 +1,12 @@
+## [0.4.10](https://github.com/oclif/table/compare/0.4.9...0.4.10) (2025-08-01)
+
+
+### Bug Fixes
+
+* handle multiline strings in plain table ([60acddf](https://github.com/oclif/table/commit/60acddffdfa07f7d3d3bcf5ce2ccbbdba3c4dc10))
+
+
+
 ## [0.4.9](https://github.com/oclif/table/compare/0.4.8...0.4.9) (2025-06-19)
 
 
