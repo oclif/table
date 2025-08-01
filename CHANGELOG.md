@@ -1,3 +1,12 @@
+## [0.4.11](https://github.com/oclif/table/compare/0.4.10...0.4.11) (2025-08-01)
+
+
+### Bug Fixes
+
+* handle multiline headers in plain table ([ce07d01](https://github.com/oclif/table/commit/ce07d011cb58dc56d3a63482d768f7eabea935a2))
+
+
+
 ## [0.4.10](https://github.com/oclif/table/compare/0.4.9...0.4.10) (2025-08-01)
 
 
