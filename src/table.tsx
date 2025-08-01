@@ -486,12 +486,13 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
   console.log('-'.repeat(headerString.length))
 
   for (const row of processedData) {
-    const stringToPrint = columns.reduce((acc, column) => {
+    // Process all columns and get their formatted text
+    const columnTexts = columns.map((column) => {
       const {horizontalAlignment, overflow, padding, width} = column
       const value = row[column.column]
 
       if (value === undefined || value === null) {
-        return `${acc}${' '.repeat(width)}`
+        return [' '.repeat(width)] // Single line of spaces
       }
 
       const {marginLeft, marginRight, text} = formatTextWithMargins({
@@ -502,9 +503,29 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
         width,
       })
 
-      return `${acc}${' '.repeat(marginLeft)}${text}${' '.repeat(marginRight)}`
-    }, '')
-    console.log(stringToPrint)
+      // Split the formatted text into lines
+      const lines = text.split('\n')
+      return lines.map((line) => `${' '.repeat(marginLeft)}${line.trimStart()}${' '.repeat(marginRight)}`)
+    })
+
+    // Find the maximum number of lines in any column
+    const maxLines = Math.max(...columnTexts.map((col) => col.length))
+
+    // Pad all columns to have the same number of lines
+    const paddedColumns = columnTexts.map((col, colIndex) => {
+      const column = columns[colIndex]
+      while (col.length < maxLines) {
+        col.push(' '.repeat(column.width)) // Add empty lines
+      }
+
+      return col
+    })
+
+    // Print each line of the row
+    for (let lineIndex = 0; lineIndex < maxLines; lineIndex++) {
+      const lineToPrint = paddedColumns.map((col) => col[lineIndex]).join('')
+      console.log(lineToPrint)
+    }
   }
 
   console.log()
