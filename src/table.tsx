@@ -470,7 +470,9 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
   const {columns, headings, processedData, title} = setupTable(props)
 
   if (title) console.log(title)
-  const headerString = columns.reduce((acc, column) => {
+
+  // Process header columns the same way as data rows to handle multi-line headers
+  const headerColumnTexts = columns.map((column) => {
     const {horizontalAlignment, overflow, padding, width} = column
     const {marginLeft, marginRight, text} = formatTextWithMargins({
       horizontalAlignment,
@@ -480,10 +482,33 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
       width,
     })
 
-    return `${acc}${' '.repeat(marginLeft)}${text}${' '.repeat(marginRight)}`
-  }, '')
-  console.log(headerString)
-  console.log('-'.repeat(headerString.length))
+    // Split the formatted text into lines
+    const lines = text.split('\n')
+    return lines.map((line) => `${' '.repeat(marginLeft)}${line.trimStart()}${' '.repeat(marginRight)}`)
+  })
+
+  // Find the maximum number of lines in any header column
+  const maxHeaderLines = Math.max(...headerColumnTexts.map((col) => col.length))
+
+  // Pad all header columns to have the same number of lines
+  const paddedHeaderColumns = headerColumnTexts.map((col, colIndex) => {
+    const column = columns[colIndex]
+    while (col.length < maxHeaderLines) {
+      col.push(' '.repeat(column.width)) // Add empty lines
+    }
+
+    return col
+  })
+
+  // Print each line of the header
+  for (let lineIndex = 0; lineIndex < maxHeaderLines; lineIndex++) {
+    const lineToPrint = paddedHeaderColumns.map((col) => col[lineIndex]).join('')
+    console.log(lineToPrint)
+  }
+
+  // Calculate total width for the separator line
+  const totalWidth = columns.reduce((acc, column) => acc + column.width, 0)
+  console.log('-'.repeat(totalWidth))
 
   for (const row of processedData) {
     // Process all columns and get their formatted text
