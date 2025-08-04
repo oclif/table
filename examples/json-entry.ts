@@ -51,5 +51,5 @@ const data = [
 
 ]
 
-const table = makeTable({data, horizontalAlignment:'left', overflow: 'wrap', preserveWhitespace:true})
+const table = makeTable({data, horizontalAlignment:'left',overflow: 'wrap', title: 'Employees', trimWhitespace: false})
 console.log(table);

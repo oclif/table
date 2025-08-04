@@ -203,10 +203,10 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   title?: string
   /**
-   * Whether to preserve whitespace in row content
-   * default: false
+   * Whether or not to trim the whitespace of row content
+   * default: true
    */
-  preserveWhitespace?: boolean
+  trimWhitespace?: boolean
   /**
    * Styling options for the title of the table.
    */

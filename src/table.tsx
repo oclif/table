@@ -481,7 +481,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
       horizontalAlignment,
       overflow,
       padding,
-      trimWhitespace: props.preserveWhitespace ?? false,
+      trimWhitespace: props.trimWhitespace,
       value: headings[column.column] ?? column.column,
       width,
     })
@@ -528,7 +528,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
         horizontalAlignment,
         overflow,
         padding,
-        trimWhitespace: props.preserveWhitespace ?? false,
+        trimWhitespace: props.trimWhitespace,
         value,
         width,
       })
