@@ -126,7 +126,7 @@ export function formatTextWithMargins({
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
       hard: true,
-      trim: true,
+      trim: false,
       wordWrap: true,
     }).replace(/^\n/, '') // remove leading newline (wrapAnsi adds it to emojis)
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))

@@ -582,8 +582,29 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         }),
       ).to.deep.equal({
         marginLeft: 1,
+        marginRight: 1,
+        text: "Lorem ipsum dolor sit amet, consectetur         \n adipi                                           \n scing elit. Sed do eiusmod tempor incididunt ut \n labore et dolore magna aliqua.                  "
+      })
+    })
+
+      it('formats multiline string with tabs', () => {
+      expect(
+        formatTextWithMargins({
+          horizontalAlignment: 'left',
+          overflow: 'wrap',
+          padding: 1,
+          value: `{
+            key: "value",
+            object: {
+                key1: "v1"
+            }
+          }`,
+          width: 20,
+        }),
+      ).to.deep.equal({
+        marginLeft: 1,
         marginRight: 2,
-        text: 'Lorem ipsum dolor sit amet, consectetur        \n adipi                                          \n scing elit. Sed do eiusmod tempor incididunt ut\n labore et dolore magna aliqua.                 ',
+        text: "{                \n             key: \n \"value\",         \n                  \n object: {        \n                  \n key1: \"v1\"       \n             }    \n           }      "
       })
     })
   })
@@ -604,6 +625,27 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         text: 'Foo',
       })
     })
+
+      it('formats multiline string with tabs', () => {
+          expect(
+              formatTextWithMargins({
+                  horizontalAlignment: 'right',
+                  overflow: 'wrap',
+                  padding: 1,
+                  value: `{
+            key: "value",
+            object: {
+                key1: "v1"
+            }
+          }`,
+                  width: 20,
+              }),
+          ).to.deep.equal({
+              marginLeft: 2,
+              marginRight: 1,
+              text: "                {\n              key: \n           \"value\",\n                   \n          object: {\n                   \n         key1: \"v1\"\n                  }\n                  }"
+          })
+      })
 
     it('formats long string', () => {
       expect(
@@ -634,13 +676,35 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         }),
       ).to.deep.equal({
         marginLeft: 1,
-        marginRight: 2,
-        text: '    Lorem ipsum dolor sit amet, consectetur      \n                      adipi                     \n scing elit. Sed do eiusmod tempor incididunt ut\n          labore et dolore magna aliqua.        ',
+        marginRight: 1,
+        text: "    Lorem ipsum dolor sit amet, consectetur      \n                      adipi                      \n scing elit. Sed do eiusmod tempor incididunt ut \n          labore et dolore magna aliqua.         "
       })
     })
   })
 
   describe('wrap + align right', () => {
+
+      it('formats multiline string with tabs', () => {
+          expect(
+              formatTextWithMargins({
+                  horizontalAlignment: 'right',
+                  overflow: 'wrap',
+                  padding: 1,
+                  value: `{
+            key: "value",
+            object: {
+                key1: "v1"
+            }
+          }`,
+                  width: 20,
+              }),
+          ).to.deep.equal({
+              marginLeft: 2,
+              marginRight: 1,
+              text: "                {\n              key: \n           \"value\",\n                   \n          object: {\n                   \n         key1: \"v1\"\n                  }\n                  }"
+          })
+      })
+
     it('formats short string', () => {
       expect(
         formatTextWithMargins({
@@ -685,9 +749,9 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
           width: 50,
         }),
       ).to.deep.equal({
-        marginLeft: 2,
+        marginLeft: 1,
         marginRight: 1,
-        text: '        Lorem ipsum dolor sit amet, consectetur\n                                            adipi\n  scing elit. Sed do eiusmod tempor incididunt ut\n                   labore et dolore magna aliqua.',
+        text:"         Lorem ipsum dolor sit amet, consectetur\n                                            adipi\n scing elit. Sed do eiusmod tempor incididunt ut \n                   labore et dolore magna aliqua.",
       })
     })
   })
