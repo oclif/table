@@ -581,9 +581,9 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
           width: 50,
         }),
       ).to.deep.equal({
-        marginLeft: 1,
-        marginRight: 1,
-        text: "Lorem ipsum dolor sit amet, consectetur         \n adipi                                           \n scing elit. Sed do eiusmod tempor incididunt ut \n labore et dolore magna aliqua.                  "
+          marginLeft: 1,
+          marginRight: 2,
+          text: 'Lorem ipsum dolor sit amet, consectetur        \n adipi                                          \n scing elit. Sed do eiusmod tempor incididunt ut\n labore et dolore magna aliqua.                 ',
       })
     })
 
@@ -592,6 +592,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         formatTextWithMargins({
           horizontalAlignment: 'left',
           overflow: 'wrap',
+          trimWhitespace: false,
           padding: 1,
           value: `{
             key: "value",
@@ -631,6 +632,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
               formatTextWithMargins({
                   horizontalAlignment: 'right',
                   overflow: 'wrap',
+                  trimWhitespace: false,
                   padding: 1,
                   value: `{
             key: "value",
@@ -676,8 +678,8 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
         }),
       ).to.deep.equal({
         marginLeft: 1,
-        marginRight: 1,
-        text: "    Lorem ipsum dolor sit amet, consectetur      \n                      adipi                      \n scing elit. Sed do eiusmod tempor incididunt ut \n          labore et dolore magna aliqua.         "
+        marginRight: 2,
+        text: '    Lorem ipsum dolor sit amet, consectetur      \n                      adipi                     \n scing elit. Sed do eiusmod tempor incididunt ut\n          labore et dolore magna aliqua.        ',
       })
     })
   })
@@ -690,6 +692,7 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
                   horizontalAlignment: 'right',
                   overflow: 'wrap',
                   padding: 1,
+                  trimWhitespace: false,
                   value: `{
             key: "value",
             object: {
@@ -749,9 +752,9 @@ scing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
           width: 50,
         }),
       ).to.deep.equal({
-        marginLeft: 1,
+        marginLeft: 2,
         marginRight: 1,
-        text:"         Lorem ipsum dolor sit amet, consectetur\n                                            adipi\n scing elit. Sed do eiusmod tempor incididunt ut \n                   labore et dolore magna aliqua.",
+        text: '        Lorem ipsum dolor sit amet, consectetur\n                                            adipi\n  scing elit. Sed do eiusmod tempor incididunt ut\n                   labore et dolore magna aliqua.',
       })
     })
   })

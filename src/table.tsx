@@ -69,14 +69,16 @@ export function formatTextWithMargins({
   horizontalAlignment,
   overflow,
   padding,
+  trimWhitespace = true,
   value,
-  width,
+  width
 }: {
   overflow: Overflow
   value: unknown
   width: number
   padding: number
   horizontalAlignment: HorizontalAlignment
+  trimWhitespace?: boolean
 }): {
   text: string
   marginLeft: number
@@ -126,7 +128,7 @@ export function formatTextWithMargins({
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
       hard: true,
-      trim: false,
+      trim: trimWhitespace,
       wordWrap: true,
     }).replace(/^\n/, '') // remove leading newline (wrapAnsi adds it to emojis)
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
@@ -325,7 +327,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
-      const {horizontalAlignment, overflow, padding, verticalAlignment, width} = column
+      const {horizontalAlignment, overflow, padding, verticalAlignment, width, } = column
       const value = props.data[column.column]
 
       if (value === undefined || value === null) {
@@ -343,6 +345,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         horizontalAlignment,
         overflow,
         padding,
+        trimWhitespace : false,
         value,
         width,
       })
@@ -478,6 +481,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
       horizontalAlignment,
       overflow,
       padding,
+      trimWhitespace: props.preserveWhitespace ?? false,
       value: headings[column.column] ?? column.column,
       width,
     })
@@ -524,6 +528,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
         horizontalAlignment,
         overflow,
         padding,
+        trimWhitespace: props.preserveWhitespace ?? false,
         value,
         width,
       })

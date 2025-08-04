@@ -33,6 +33,7 @@ const basic: TableOptions<(typeof data)[number]> = {
     color: '#905de8',
     formatter: 'sentenceCase',
   },
+  preserveWhitespace: true,
   sort: {
     id: 'desc',
   },
