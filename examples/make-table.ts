@@ -36,6 +36,7 @@ const basic: TableOptions<(typeof data)[number]> = {
   sort: {
     id: 'desc',
   },
+  trimWhitespace: true,
   verticalAlignment: 'center',
 }
 

@@ -69,14 +69,16 @@ export function formatTextWithMargins({
   horizontalAlignment,
   overflow,
   padding,
+  trimWhitespace = true,
   value,
-  width,
+  width
 }: {
   overflow: Overflow
   value: unknown
   width: number
   padding: number
   horizontalAlignment: HorizontalAlignment
+  trimWhitespace?: boolean
 }): {
   text: string
   marginLeft: number
@@ -126,7 +128,7 @@ export function formatTextWithMargins({
   if (overflow === 'wrap') {
     const wrappedText = wrapAnsi(valueWithNoZeroWidthChars, spaceForText, {
       hard: true,
-      trim: true,
+      trim: trimWhitespace,
       wordWrap: true,
     }).replace(/^\n/, '') // remove leading newline (wrapAnsi adds it to emojis)
     const {marginLeft, marginRight} = calculateMargins(width - determineWidthOfWrappedText(stripAnsi(wrappedText)))
@@ -183,6 +185,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     padding = 1,
     sort,
     title,
+    trimWhitespace,
     verticalAlignment = 'top',
     width,
   } = props
@@ -204,6 +207,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     maxWidth: tableWidth ?? determineConfiguredWidth(maxWidth),
     overflow,
     padding,
+    trimWhitespace,
     verticalAlignment,
     width: tableWidth,
   }
@@ -221,6 +225,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     borderProps,
     cell: Cell,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
+    trimWhitespace
   })
 
   const footerComponent = row<T>({
@@ -321,7 +326,7 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
  */
 function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
-  const {borderProps, skeleton} = config
+  const {borderProps, skeleton, trimWhitespace} = config
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
@@ -343,6 +348,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         horizontalAlignment,
         overflow,
         padding,
+        trimWhitespace,
         value,
         width,
       })
@@ -478,6 +484,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
       horizontalAlignment,
       overflow,
       padding,
+      trimWhitespace: props.trimWhitespace,
       value: headings[column.column] ?? column.column,
       width,
     })
@@ -524,6 +531,7 @@ function renderPlainTable<T extends Record<string, unknown>>(props: TableOptions
         horizontalAlignment,
         overflow,
         padding,
+        trimWhitespace: props.trimWhitespace,
         value,
         width,
       })
