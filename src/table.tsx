@@ -185,6 +185,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     padding = 1,
     sort,
     title,
+    trimWhitespace,
     verticalAlignment = 'top',
     width,
   } = props
@@ -206,6 +207,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     maxWidth: tableWidth ?? determineConfiguredWidth(maxWidth),
     overflow,
     padding,
+    trimWhitespace,
     verticalAlignment,
     width: tableWidth,
   }
@@ -223,6 +225,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     borderProps,
     cell: Cell,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
+    trimWhitespace
   })
 
   const footerComponent = row<T>({
@@ -323,11 +326,11 @@ export function Table<T extends Record<string, unknown>>(props: TableOptions<T>)
  */
 function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowProps<T>) => React.ReactNode {
   // This is a component builder. We return a function.
-  const {borderProps, skeleton} = config
+  const {borderProps, skeleton, trimWhitespace} = config
 
   return (props) => {
     const data = props.columns.map((column, colI) => {
-      const {horizontalAlignment, overflow, padding, verticalAlignment, width, } = column
+      const {horizontalAlignment, overflow, padding, verticalAlignment, width} = column
       const value = props.data[column.column]
 
       if (value === undefined || value === null) {
@@ -345,7 +348,7 @@ function row<T extends Record<string, unknown>>(config: RowConfig): (props: RowP
         horizontalAlignment,
         overflow,
         padding,
-        trimWhitespace : false,
+        trimWhitespace,
         value,
         width,
       })

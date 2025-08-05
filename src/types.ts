@@ -224,6 +224,7 @@ export type Config<T> = {
   maxWidth: number
   overflow: Overflow
   headerOptions: HeaderOptions
+  trimWhitespace: boolean | undefined
   borderStyle: BorderStyle
   horizontalAlignment: HorizontalAlignment
   verticalAlignment: VerticalAlignment
@@ -250,6 +251,11 @@ export type RowConfig = {
     cross: string
     line: string
   }
+  /**
+   * Whether or not to trim the whitespace of row content
+   * default: true
+   */
+  trimWhitespace?: boolean
   props?: Record<string, unknown>
   borderProps: {
     color: SupportedColor | undefined

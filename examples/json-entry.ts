@@ -1,6 +1,6 @@
 import {ux} from "@oclif/core";
 
-import {makeTable } from '../src/index.js'
+import {makeTable } from '../src'
 
 
 
@@ -50,6 +50,9 @@ const data = [
     }
 
 ]
+
+const trimmedTable = makeTable({data, horizontalAlignment:'left',overflow: 'wrap', title: 'Employees', trimWhitespace: true})
+console.log(trimmedTable);
 
 const table = makeTable({data, horizontalAlignment:'left',overflow: 'wrap', title: 'Employees', trimWhitespace: false})
 console.log(table);
