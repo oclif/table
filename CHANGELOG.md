@@ -1,3 +1,12 @@
+## [0.4.12](https://github.com/oclif/table/compare/0.4.11...0.4.12) (2025-08-05)
+
+
+### Bug Fixes
+
+* don't strip tab whitespaces when wrapping ([cbbac3e](https://github.com/oclif/table/commit/cbbac3e2678572cd80df72010a64b71098630950))
+
+
+
 ## [0.4.11](https://github.com/oclif/table/compare/0.4.10...0.4.11) (2025-08-01)
 
 
