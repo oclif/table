@@ -1,3 +1,12 @@
+## [0.4.13](https://github.com/oclif/table/compare/0.4.12...0.4.13) (2025-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump wrap-ansi from 9.0.0 to 9.0.2 ([3a87894](https://github.com/oclif/table/commit/3a87894c38c992f8d70052a427ebb39e47d62e08))
+
+
+
 ## [0.4.12](https://github.com/oclif/table/compare/0.4.11...0.4.12) (2025-08-05)
 
 
