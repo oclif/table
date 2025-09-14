@@ -1,3 +1,12 @@
+## [0.4.14](https://github.com/oclif/table/compare/0.4.13...0.4.14) (2025-09-14)
+
+
+### Bug Fixes
+
+* **deps:** bump strip-ansi from 7.1.0 to 7.1.2 ([1d637c0](https://github.com/oclif/table/commit/1d637c0a43efd6ad293266261c03bd3e2aaadfad))
+
+
+
 ## [0.4.13](https://github.com/oclif/table/compare/0.4.12...0.4.13) (2025-09-13)
 
 
