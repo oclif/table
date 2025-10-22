@@ -71,7 +71,7 @@ export function formatTextWithMargins({
   padding,
   trimWhitespace = true,
   value,
-  width
+  width,
 }: {
   overflow: Overflow
   value: unknown
@@ -225,7 +225,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     borderProps,
     cell: Cell,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
-    trimWhitespace
+    trimWhitespace,
   })
 
   const footerComponent = row<T>({
@@ -441,7 +441,7 @@ const createStdout = (): FakeStdout => {
   // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
   // This might be a bad idea but it works.
   stdout.rows = 10_000
-  stdout.columns = getColumnWidth()
+  stdout.columns = Infinity
   const frames: string[] = []
 
   stdout.write = (data: string) => {

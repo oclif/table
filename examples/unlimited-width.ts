@@ -26,7 +26,7 @@ const data = [
   },
 ]
 printTable({
-  borderStyle: 'none',
+  borderStyle: 'vertical-with-outline',
   columns: ['id', 'name', 'age', 'description'],
   data,
   headerOptions: {
