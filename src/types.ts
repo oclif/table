@@ -127,6 +127,8 @@ export type TableOptions<T extends Record<string, unknown>> = {
    * If you provide 'none', the table will grow to its natural width, unbound by terminal width. This may render poorly in narrow terminals but
    * it's useful because it will allow all the content to be visible without truncation or wrapping, which allows the user to resize their terminal
    * to see all the content.
+   *
+   * @throws {Error} If you provide 'none' and you are using `printTables`.
    */
   maxWidth?: Percentage | number | 'none'
   /**
