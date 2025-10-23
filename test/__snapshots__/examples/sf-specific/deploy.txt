@@ -1,0 +1,15 @@
+┌─────────┬────────────────────┬──────────────────────┬────────────────────────────────────────────────────────────────┐
+│ State   │ Full Name          │ Type                 │ Path                                                           │
+├─────────┼────────────────────┼──────────────────────┼────────────────────────────────────────────────────────────────┤
+│ Changed │ FileUtilities      │ ApexClass            │ force-app/main/default/classes/FileUtilities.cls               │
+│ Changed │ FileUtilities      │ ApexClass            │ force-app/main/default/classes/FileUtilities.cls-meta.xml      │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ force-app/main/default/aura/pageTemplate_2_7_3/pageTemplate_2_ │
+│         │                    │                      │ 7_3.cmp                                                        │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ force-app/main/default/aura/pageTemplate_2_7_3/pageTemplate_2_ │
+│         │                    │                      │ 7_3.cmp-meta.xml                                               │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ force-app/main/default/aura/pageTemplate_2_7_3/pageTemplate_2_ │
+│         │                    │                      │ 7_3.design                                                     │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ force-app/main/default/aura/pageTemplate_2_7_3/pageTemplate_2_ │
+│         │                    │                      │ 7_3.svg                                                        │
+└─────────┴────────────────────┴──────────────────────┴────────────────────────────────────────────────────────────────┘
+

@@ -1,0 +1,57 @@
+Run #1
+ Model                               Chat                                        Tool Invocations                   
+--------------------------------------------------------------------------------------------------------------------
+ sfdc_ai__DefaultBedrockAnthropicCl  user: My current OS is macos. I am working  Generation 1: No tool invoked      
+ aude4Sonnet                         in a workspace with the following folders:     
+                                     /Users/sf-dev/dreamhouse-lwc My org alias   Generation 2: sf-deploy-metadata   
+                                     is dreamhouse. This is the structure of     - directory:                       
+                                     /Users/sf-dev/dreamhouse-lwc: package.xml   /Users/sf-dev/dreamhouse-lwc       
+                                     force-app/main/default/applications         - sourceDir:                       
+                                     force-app/main/default/aura force-app/main  force-app/main/default/lwc         
+                                     /default/aura/pageTemplate_2_7_3            - usernameOrAlias: dreamhouse      
+                                     force-app/main/default/classes                                                 
+                                     force-app/main/default/contentassets                                           
+                                     force-app/main/default/cspTrustedSites                                         
+                                     force-app/main/default/flexipages                                              
+                                     force-app/main/default/flows                                                   
+                                     force-app/main/default/layouts                                                 
+                                     force-app/main/default/lwc                                                     
+                                     force-app/main/default/messageChannels                                         
+                                     force-app/main/default/objects                                                 
+                                     force-app/main/default/permissionsets                                          
+                                     force-app/main/default/prompts                                                 
+                                     force-app/main/default/remoteSiteSettings                                      
+                                     force-app/main/default/staticresources                                         
+                                     force-app/main/default/tabs                                                    
+                                                                          
+                                     assistant: I can see you're working with a                                     
+                                     Salesforce project in the dreamhouse-lwc                                       
+                                     workspace with the "dreamhouse" org alias.                                     
+                                     This looks like a typical Salesforce DX                                        
+                                     project structure with various metadata                                        
+                                     types including Lightning Web Components,                                      
+                                     Apex classes, flows, and other standard                                        
+                                     Salesforce metadata.                                                           
+                                                                          
+                                     How can I help you with your Salesforce                                        
+                                     development work today? I can assist with                                      
+                                     tasks like:                                                                    
+                                                                          
+                                     - Deploying or retrieving metadata                                             
+                                     - Running Apex tests                                                           
+                                     - Querying your org                                                            
+                                     - Managing permission sets                                                     
+                                     - Suggesting Salesforce CLI commands                                           
+                                     - And more!                                                                    
+                                                                          
+                                     What would you like to do?                                                     
+                                                                          
+                                     user: Deploy the Lightning Web Components                                      
+                                     in force-app/main/default/lwc to the                                           
+                                     dreamhouse org.                                                                
+                                                                          
+                                     assistant: I'll deploy the Lightning Web                                       
+                                     Components from the                                                            
+                                     force-app/main/default/lwc directory to                                        
+                                     your dreamhouse org.                                                           
+

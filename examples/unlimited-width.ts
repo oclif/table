@@ -2,7 +2,7 @@ import {printTable} from '../src/index.js'
 
 const description =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'.repeat(
-    5,
+    2,
   )
 
 const data = [
