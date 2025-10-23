@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {spawnSync} from 'node:child_process'
 import {existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs'
-import {extname, resolve} from 'node:path'
+import {extname, relative, resolve, sep} from 'node:path'
 import {fileURLToPath, pathToFileURL} from 'node:url'
 
 const thisFile = fileURLToPath(import.meta.url)
@@ -70,7 +70,8 @@ import(${JSON.stringify(fileUrl)}).catch(err => {
 
 function readSnapshotPathFor(exampleFile: string): string {
   // Get the relative path from examples dir to preserve subdirectory structure
-  const relativePath = exampleFile.replace(examplesDir + '/', '')
+  // Use relative() for cross-platform compatibility (handles both / and \ separators)
+  const relativePath = relative(examplesDir, exampleFile)
   const snapshotPath = relativePath.replace(/\.ts$/, '.txt')
   const fullSnapshotPath = resolve(snapshotsDir, snapshotPath)
 
@@ -99,7 +100,8 @@ describe('examples snapshots', () => {
       for (const file of exampleFiles) {
         const snapPath = readSnapshotPathFor(file)
         if (!existsSync(snapPath)) {
-          const name = file.replace(examplesDir + '/', '')
+          // Use relative path and normalize to forward slashes for consistent error messages
+          const name = relative(examplesDir, file).replaceAll(sep, '/')
           missingSnapshots.push(name)
         }
       }
@@ -114,8 +116,8 @@ describe('examples snapshots', () => {
 
   for (const file of exampleFiles) {
     const snapPath = readSnapshotPathFor(file)
-    // Use relative path from examples dir for better test names
-    const name = file.replace(examplesDir + '/', '')
+    // Use relative path and normalize to forward slashes for consistent test names across platforms
+    const name = relative(examplesDir, file).replaceAll(sep, '/')
 
     it(`matches snapshot: ${name}`, () => {
       const {status, stderr, stdout} = runExampleTs(file, 120)
