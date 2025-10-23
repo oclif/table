@@ -1,0 +1,8 @@
+Run #1
+ Model                         Expected Tool     Actual Tool Invocations       Count   Expecte  Actual   Status 
+                               Invocation                                              d Confi  Confide         
+                                                                                       dence    nce             
+----------------------------------------------------------------------------------------------------------------
+ sfdc_ai__DefaultBedrockAnthr  sf-deploy-metada  Run 1: sf-deploy-metadata     1/1     50%      100%     PASS   
+ opicClaude4Sonnet             ta                                                                               
+

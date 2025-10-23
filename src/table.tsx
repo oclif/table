@@ -71,7 +71,7 @@ export function formatTextWithMargins({
   padding,
   trimWhitespace = true,
   value,
-  width
+  width,
 }: {
   overflow: Overflow
   value: unknown
@@ -225,7 +225,7 @@ function setupTable<T extends Record<string, unknown>>(props: TableOptions<T>) {
     borderProps,
     cell: Cell,
     skeleton: BORDER_SKELETONS[config.borderStyle].data,
-    trimWhitespace
+    trimWhitespace,
   })
 
   const footerComponent = row<T>({
@@ -432,7 +432,7 @@ type FakeStdout = {
  *
  * Implementation inspired by https://github.com/vadimdemedes/ink/blob/master/test/helpers/create-stdout.ts
  */
-const createStdout = (): FakeStdout => {
+const createStdout = ({columns}: {columns: number}): FakeStdout => {
   // eslint-disable-next-line unicorn/prefer-event-target
   const stdout = new EventEmitter() as unknown as FakeStdout
   // Override the rows so that ink doesn't clear the entire terminal when
@@ -441,7 +441,7 @@ const createStdout = (): FakeStdout => {
   // https://github.com/vadimdemedes/ink/blob/v5.0.1/src/ink.tsx#L174
   // This might be a bad idea but it works.
   stdout.rows = 10_000
-  stdout.columns = getColumnWidth()
+  stdout.columns = columns
   const frames: string[] = []
 
   stdout.write = (data: string) => {
@@ -463,8 +463,8 @@ const createStdout = (): FakeStdout => {
 class Output {
   public stream: FakeStdout
 
-  public constructor() {
-    this.stream = createStdout()
+  public constructor(opts: {columns: number}) {
+    this.stream = createStdout(opts)
   }
 
   public printLastFrame() {
@@ -579,7 +579,7 @@ export function printTable<T extends Record<string, unknown>>(options: TableOpti
     return
   }
 
-  const output = new Output()
+  const output = new Output({columns: options.maxWidth === 'none' ? Infinity : getColumnWidth()})
   const instance = render(<Table {...options} />, {stdout: output.stream})
   instance.unmount()
   output.printLastFrame()
@@ -593,7 +593,7 @@ export function printTable<T extends Record<string, unknown>>(options: TableOpti
  * @returns {string} The rendered table as a string.
  */
 export function makeTable<T extends Record<string, unknown>>(options: TableOptions<T>): string {
-  const output = new Output()
+  const output = new Output({columns: options.maxWidth === 'none' ? Infinity : getColumnWidth()})
   const instance = render(<Table {...options} />, {stdout: output.stream})
   instance.unmount()
   return output.stream.lastFrame() ?? ''
@@ -613,7 +613,8 @@ function Container(props: ContainerProps) {
  * @template T - An array of records where each record represents a table.
  * @param {Object.<keyof T, TableOptions<T[keyof T]>>} tables - An object containing table options for each table.
  * @param {Omit<ContainerProps, 'children'>} [options] - Optional container properties excluding 'children'.
- * @throws {Error} Throws an error if the total number of rows across all tables exceeds 30,000.
+ * @throws {Error} Throws an error if the total number of rows across all tables exceeds 10,000.
+ * @throws {Error} Throws an error if any of the tables have `maxWidth: "none"`.
  */
 export function printTables<T extends Record<string, unknown>[]>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
@@ -623,7 +624,11 @@ export function printTables<T extends Record<string, unknown>[]>(
     throw new Error('The data is too large to print multiple tables. Please use `printTable` instead.')
   }
 
-  const output = new Output()
+  if (tables.some((table) => table.maxWidth === 'none')) {
+    throw new Error('printTables does not support `maxWidth: "none". Please use `printTable` instead.')
+  }
+
+  const output = new Output({columns: getColumnWidth()})
   const leftMargin = options?.marginLeft ?? options?.margin ?? 0
   const rightMargin = options?.marginRight ?? options?.margin ?? 0
   const columns = getColumnWidth() - (leftMargin + rightMargin)

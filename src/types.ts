@@ -112,7 +112,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
    */
   padding?: number
   /**
-   * Maximum width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
+   * Maximum width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%'). Or set to 'none' for unlimited width.
    *
    * By default, the table will only take up as much space as it needs to fit the content. If it extends beyond the maximum width,
    * it will wrap or truncate the content based on the `overflow` option. In other words, this property allows you to set the width
@@ -123,8 +123,14 @@ export type TableOptions<T extends Record<string, unknown>> = {
    * If you provide a number or percentage that is larger than the terminal width, it will default to the terminal width.
    *
    * If you provide a number or percentage that is too small to fit the table, it will default to the minimum width of the table.
+   *
+   * If you provide 'none', the table will grow to its natural width, unbound by terminal width. This may render poorly in narrow terminals but
+   * it's useful because it will allow all the content to be visible without truncation or wrapping, which allows the user to resize their terminal
+   * to see all the content.
+   *
+   * @throws {Error} If you provide 'none' and you are using `printTables`.
    */
-  maxWidth?: Percentage | number
+  maxWidth?: Percentage | number | 'none'
   /**
    * Exact width of the table. Can be a number (e.g. 80) or a percentage (e.g. '80%').
    *

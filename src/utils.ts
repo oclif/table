@@ -78,10 +78,11 @@ export function getColumnWidth(): number {
  * @returns The determined configured width.
  */
 export function determineConfiguredWidth(
-  providedWidth: number | Percentage | undefined,
+  providedWidth: number | Percentage | 'none' | undefined,
   columns = getColumnWidth(),
 ): number {
   if (!providedWidth) return columns
+  if (providedWidth === 'none') return Infinity
 
   const num =
     typeof providedWidth === 'string' && providedWidth.endsWith('%')
@@ -145,6 +146,10 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
     // maxWidth === 0 is likely from a test environment where process.stdout.columns is undefined or 0
     // In that case, we don't want to reduce the column widths and just use the table's natural width.
     if (maxWidth === 0) return
+
+    // The consumer has indicated they want an unbounded table
+    if (maxWidth === Infinity) return
+
     // If the table is too wide, reduce the width of the largest column as little as possible to fit the table.
     // If the table is still too wide, it will reduce the width of the next largest column and so on
     while (tableWidth > maxWidth) {

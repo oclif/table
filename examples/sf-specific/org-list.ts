@@ -1,16 +1,17 @@
 import ansis from 'ansis'
 
-import {printTable} from '../../src'
+import {printTable} from '../../src/index.js'
 
 function addColor(row: (typeof data)[number], key: string) {
-  return row[key]
+  const value = (row as any)[key]
+  return value
     ? row.isSandbox
-      ? ansis.yellowBright(row[key])
+      ? ansis.yellowBright(value)
       : row.isDevHub
-        ? ansis.cyanBright(row[key])
+        ? ansis.cyanBright(value)
         : row.isScratch
-          ? row[key]
-          : ansis.magentaBright(row[key])
+          ? value
+          : ansis.magentaBright(value)
     : null
 }
 

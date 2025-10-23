@@ -1,4 +1,4 @@
-import {printTable} from '../../src'
+import {printTable} from '../../src/index.js'
 
 const versions = [
   {

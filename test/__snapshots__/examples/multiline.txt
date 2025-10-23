@@ -1,0 +1,17 @@
+Multiline Table
+┌───────────────────────────┬───────────────────────┬─────────────────┬────────────────────────────────────────────────┐
+│ model                     │ response              │ tool            │ arguments                                      │
+├───────────────────────────┼───────────────────────┼─────────────────┼────────────────────────────────────────────────┤
+│ OpenAI GPT35Turbo         │                       │ sf-get-username │ defaultDevHub: true                            │
+│                           │                       │                 │ directory: /workspace                          │
+├───────────────────────────┼───────────────────────┼─────────────────┼────────────────────────────────────────────────┤
+│ OpenAI GPT4OmniMini       │                       │ sf-get-username │ defaultDevHub: true                            │
+│                           │                       │                 │ directory: /Users/username/salesforce-projects │
+├───────────────────────────┼───────────────────────┼─────────────────┼────────────────────────────────────────────────┤
+│                           │ I'll help you find    │                 │                                                │
+│                           │ your default dev hub  │                 │ directory: /Users/antml                        │
+│ Anthropic Claude 4 Sonnet │ username. Let me      │ sf-get-username │ defaultDevHub: true                            │
+│                           │ check your Salesforce │                 │                                                │
+│                           │ configuration.        │                 │                                                │
+└───────────────────────────┴───────────────────────┴─────────────────┴────────────────────────────────────────────────┘
+
