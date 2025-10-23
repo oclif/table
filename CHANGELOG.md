@@ -1,3 +1,18 @@
+# [0.5.0](https://github.com/oclif/table/compare/0.4.14...0.5.0) (2025-10-23)
+
+
+### Bug Fixes
+
+* only use Infinity if maxWidth is none ([256fefc](https://github.com/oclif/table/commit/256fefcda2ef074c22fb563a7858015e75642bcf))
+* set columns in FakeStdout to Infinity ([0108b36](https://github.com/oclif/table/commit/0108b367c046d5eb591aa94f8b7f1c7950898c3e))
+
+
+### Features
+
+* support maxWidth none ([f29036f](https://github.com/oclif/table/commit/f29036fd8478dcb132d00ed664f750cbcfc61d0e))
+
+
+
 ## [0.4.14](https://github.com/oclif/table/compare/0.4.13...0.4.14) (2025-09-14)
 
 
