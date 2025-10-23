@@ -1,0 +1,94 @@
+Employees
+┌──────────────────────────────────────┐
+│ data                                 │
+├──────────────────────────────────────┤
+│ {                                    │
+│ "function": {                        │
+│ "input": {                           │
+│ "objectApiName": "Account",          │
+│ "recordName": "Acme"                 │
+│ },                                   │
+│ "name": "Willie",                    │
+│ "output": {                          │
+│ "additionalContext": [               │
+│ {                                    │
+│ "description": "engineer",           │
+│ "id": null,                          │
+│ "name": "Willie",                    │
+│ "schema": null,                      │
+│ "type": "JSON"                       │
+│ }                                    │
+│ ]                                    │
+│ }                                    │
+│ }                                    │
+│ }                                    │
+├──────────────────────────────────────┤
+│ {                                    │
+│ "function": {                        │
+│ "input": {                           │
+│ "objectApiName": "Account",          │
+│ "recordName": "Acme"                 │
+│ },                                   │
+│ "name": "Mike",                      │
+│ "output": {                          │
+│ "additionalContext": [               │
+│ {                                    │
+│ "description": "engineer",           │
+│ "id": null,                          │
+│ "name": "Mike",                      │
+│ "schema": null,                      │
+│ "type": "JSON"                       │
+│ }                                    │
+│ ]                                    │
+│ }                                    │
+│ }                                    │
+│ }                                    │
+└──────────────────────────────────────┘
+
+Employees
+┌──────────────────────────────────────┐
+│ data                                 │
+├──────────────────────────────────────┤
+│ {                                    │
+│   "function": {                      │
+│     "input": {                       │
+│       "objectApiName": "Account",    │
+│       "recordName": "Acme"           │
+│     },                               │
+│     "name": "Willie",                │
+│     "output": {                      │
+│       "additionalContext": [         │
+│         {                            │
+│           "description": "engineer", │
+│           "id": null,                │
+│           "name": "Willie",          │
+│           "schema": null,            │
+│           "type": "JSON"             │
+│         }                            │
+│       ]                              │
+│     }                                │
+│   }                                  │
+│ }                                    │
+├──────────────────────────────────────┤
+│ {                                    │
+│   "function": {                      │
+│     "input": {                       │
+│       "objectApiName": "Account",    │
+│       "recordName": "Acme"           │
+│     },                               │
+│     "name": "Mike",                  │
+│     "output": {                      │
+│       "additionalContext": [         │
+│         {                            │
+│           "description": "engineer", │
+│           "id": null,                │
+│           "name": "Mike",            │
+│           "schema": null,            │
+│           "type": "JSON"             │
+│         }                            │
+│       ]                              │
+│     }                                │
+│   }                                  │
+│ }                                    │
+└──────────────────────────────────────┘
+

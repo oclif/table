@@ -7,10 +7,10 @@ import {fileURLToPath, pathToFileURL} from 'node:url'
 const thisFile = fileURLToPath(import.meta.url)
 const repoRoot = resolve(thisFile, '..', '..')
 const examplesDir = resolve(repoRoot, 'examples')
-const snapshotsDir = resolve(repoRoot, 'test', '__snapshots__', 'examples')
+const snapshotsBaseDir = resolve(repoRoot, 'test', '__snapshots__')
 
-// Ensure snapshot dir exists
-if (!existsSync(snapshotsDir)) mkdirSync(snapshotsDir, {recursive: true})
+// Test at multiple terminal widths
+const TERMINAL_WIDTHS = [50, 80, 120]
 
 // Discover example files recursively (including subdirectories like sf-specific)
 function discoverExampleFiles(dir: string): string[] {
@@ -68,11 +68,12 @@ import(${JSON.stringify(fileUrl)}).catch(err => {
   }
 }
 
-function readSnapshotPathFor(exampleFile: string): string {
+function readSnapshotPath(exampleFile: string, width: number): string {
   // Get the relative path from examples dir to preserve subdirectory structure
   // Use relative() for cross-platform compatibility (handles both / and \ separators)
   const relativePath = relative(examplesDir, exampleFile)
   const snapshotPath = relativePath.replace(/\.ts$/, '.txt')
+  const snapshotsDir = resolve(snapshotsBaseDir, `examples-${width}`)
   const fullSnapshotPath = resolve(snapshotsDir, snapshotPath)
 
   // Ensure the subdirectory exists
@@ -93,16 +94,18 @@ describe('examples snapshots', () => {
     const exampleCount = exampleFiles.length
     expect(exampleCount).to.be.greaterThan(0, 'No example files found')
 
-    // Verify each example file has a corresponding snapshot (when not updating)
+    // Verify each example file has a corresponding snapshot for each width (when not updating)
     if (!process.env.UPDATE_SNAPSHOTS) {
       const missingSnapshots: string[] = []
 
-      for (const file of exampleFiles) {
-        const snapPath = readSnapshotPathFor(file)
-        if (!existsSync(snapPath)) {
-          // Use relative path and normalize to forward slashes for consistent error messages
-          const name = relative(examplesDir, file).replaceAll(sep, '/')
-          missingSnapshots.push(name)
+      for (const width of TERMINAL_WIDTHS) {
+        for (const file of exampleFiles) {
+          const snapPath = readSnapshotPath(file, width)
+          if (!existsSync(snapPath)) {
+            // Use relative path and normalize to forward slashes for consistent error messages
+            const name = relative(examplesDir, file).replaceAll(sep, '/')
+            missingSnapshots.push(`${name} (width: ${width})`)
+          }
         }
       }
 
@@ -114,31 +117,35 @@ describe('examples snapshots', () => {
     }
   })
 
-  for (const file of exampleFiles) {
-    const snapPath = readSnapshotPathFor(file)
-    // Use relative path and normalize to forward slashes for consistent test names across platforms
-    const name = relative(examplesDir, file).replaceAll(sep, '/')
+  for (const width of TERMINAL_WIDTHS) {
+    describe(`width: ${width}`, () => {
+      for (const file of exampleFiles) {
+        const snapPath = readSnapshotPath(file, width)
+        // Use relative path and normalize to forward slashes for consistent test names across platforms
+        const name = relative(examplesDir, file).replaceAll(sep, '/')
 
-    it(`matches snapshot: ${name}`, () => {
-      const {status, stderr, stdout} = runExampleTs(file, 120)
-      if (status !== 0) {
-        // Surface any runtime error from the example for easier debugging
-        throw new Error(`Example failed (${name}): exit ${status}\n${stderr}`)
-      }
+        it(`matches snapshot: ${name}`, () => {
+          const {status, stderr, stdout} = runExampleTs(file, width)
+          if (status !== 0) {
+            // Surface any runtime error from the example for easier debugging
+            throw new Error(`Example failed (${name}): exit ${status}\n${stderr}`)
+          }
 
-      const actual = normalize(stdout)
+          const actual = normalize(stdout)
 
-      if (process.env.UPDATE_SNAPSHOTS) {
-        writeFileSync(snapPath, actual, 'utf8')
-        console.log(`updated snapshot: ${snapPath}`)
-      } else {
-        if (!existsSync(snapPath)) {
-          throw new Error(`Missing snapshot for ${name}. Create it with: UPDATE_SNAPSHOTS=1 yarn test`)
-        }
+          if (process.env.UPDATE_SNAPSHOTS) {
+            writeFileSync(snapPath, actual, 'utf8')
+            console.log(`updated snapshot: ${snapPath}`)
+          } else {
+            if (!existsSync(snapPath)) {
+              throw new Error(`Missing snapshot for ${name}. Create it with: UPDATE_SNAPSHOTS=1 yarn test`)
+            }
 
-        // Normalize the expected snapshot too (in case it has CRLF from git checkout on Windows)
-        const expected = normalize(readFileSync(snapPath, 'utf8'))
-        expect(actual).to.equal(expected)
+            // Normalize the expected snapshot too (in case it has CRLF from git checkout on Windows)
+            const expected = normalize(readFileSync(snapPath, 'utf8'))
+            expect(actual).to.equal(expected)
+          }
+        })
       }
     })
   }

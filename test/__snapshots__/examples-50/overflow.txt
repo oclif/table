@@ -1,0 +1,336 @@
+Truncate (end)
+┌───────┬─────────┬─────┬────────────────────────┐
+│  Id   │  Name   │ Age │      Description       │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 36329 │  Alice  │ 20  │ Lorem ipsum dolor sit… │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 49032 │   Bob   │ 21  │ Lorem ipsum dolor sit… │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 51786 │ Charlie │ 22  │ Lorem ipsum dolor sit… │
+└───────┴─────────┴─────┴────────────────────────┘
+
+Truncate (start)
+┌───────┬─────────┬─────┬────────────────────────┐
+│  Id   │  Name   │ Age │      Description       │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 36329 │  Alice  │ 20  │ … dolore magna aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 49032 │   Bob   │ 21  │ … dolore magna aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 51786 │ Charlie │ 22  │ … dolore magna aliqua. │
+└───────┴─────────┴─────┴────────────────────────┘
+
+Truncate (middle)
+┌───────┬─────────┬─────┬────────────────────────┐
+│  Id   │  Name   │ Age │      Description       │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 36329 │  Alice  │ 20  │ Lorem ipsum…na aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 49032 │   Bob   │ 21  │ Lorem ipsum…na aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 51786 │ Charlie │ 22  │ Lorem ipsum…na aliqua. │
+└───────┴─────────┴─────┴────────────────────────┘
+
+Wrap (aligned center)
+┌───────┬─────────┬─────┬────────────────────────┐
+│  Id   │  Name   │ Age │      Description       │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 36329 │  Alice  │ 20  │ Lorem ipsum dolor sit  │
+│       │         │     │   amet, consectetur    │
+│       │         │     │  adipiscing elit. Sed  │
+│       │         │     │   do eiusmod tempor    │
+│       │         │     │  incididunt ut labore  │
+│       │         │     │    et dolore magna     │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │        aliqua.         │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 49032 │   Bob   │ 21  │ Lorem ipsum dolor sit  │
+│       │         │     │   amet, consectetur    │
+│       │         │     │  adipiscing elit. Sed  │
+│       │         │     │   do eiusmod tempor    │
+│       │         │     │  incididunt ut labore  │
+│       │         │     │    et dolore magna     │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │        aliqua.         │
+├───────┼─────────┼─────┼────────────────────────┤
+│ 51786 │ Charlie │ 22  │ Lorem ipsum dolor sit  │
+│       │         │     │   amet, consectetur    │
+│       │         │     │  adipiscing elit. Sed  │
+│       │         │     │   do eiusmod tempor    │
+│       │         │     │  incididunt ut labore  │
+│       │         │     │    et dolore magna     │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │   aliqua.Lorem ipsum   │
+│       │         │     │    dolor sit amet,     │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │  elit. Sed do eiusmod  │
+│       │         │     │  tempor incididunt ut  │
+│       │         │     │ labore et dolore magna │
+│       │         │     │        aliqua.         │
+└───────┴─────────┴─────┴────────────────────────┘
+
+Wrap (aligned left)
+┌───────┬─────────┬─────┬────────────────────────┐
+│ Id    │ Name    │ Age │ Description            │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │ Lorem ipsum dolor sit  │
+│       │         │     │ amet, consectetur      │
+│       │         │     │ adipiscing elit. Sed   │
+│       │         │     │ do eiusmod tempor      │
+│       │         │     │ incididunt ut labore   │
+│       │         │     │ et dolore magna        │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│ 36329 │ Alice   │ 20  │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.                │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │ Lorem ipsum dolor sit  │
+│       │         │     │ amet, consectetur      │
+│       │         │     │ adipiscing elit. Sed   │
+│       │         │     │ do eiusmod tempor      │
+│       │         │     │ incididunt ut labore   │
+│       │         │     │ et dolore magna        │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│ 49032 │ Bob     │ 21  │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.                │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │ Lorem ipsum dolor sit  │
+│       │         │     │ amet, consectetur      │
+│       │         │     │ adipiscing elit. Sed   │
+│       │         │     │ do eiusmod tempor      │
+│       │         │     │ incididunt ut labore   │
+│       │         │     │ et dolore magna        │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│ 51786 │ Charlie │ 22  │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.Lorem ipsum     │
+│       │         │     │ dolor sit amet,        │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │ elit. Sed do eiusmod   │
+│       │         │     │ tempor incididunt ut   │
+│       │         │     │ labore et dolore magna │
+│       │         │     │ aliqua.                │
+└───────┴─────────┴─────┴────────────────────────┘
+
+Wrap (aligned right)
+┌───────┬─────────┬─────┬────────────────────────┐
+│    Id │    Name │ Age │            Description │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │  Lorem ipsum dolor sit │
+│       │         │     │      amet, consectetur │
+│       │         │     │   adipiscing elit. Sed │
+│       │         │     │      do eiusmod tempor │
+│       │         │     │   incididunt ut labore │
+│       │         │     │        et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│ 36329 │   Alice │  20 │                aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │  Lorem ipsum dolor sit │
+│       │         │     │      amet, consectetur │
+│       │         │     │   adipiscing elit. Sed │
+│       │         │     │      do eiusmod tempor │
+│       │         │     │   incididunt ut labore │
+│       │         │     │        et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│ 49032 │     Bob │  21 │                aliqua. │
+├───────┼─────────┼─────┼────────────────────────┤
+│       │         │     │  Lorem ipsum dolor sit │
+│       │         │     │      amet, consectetur │
+│       │         │     │   adipiscing elit. Sed │
+│       │         │     │      do eiusmod tempor │
+│       │         │     │   incididunt ut labore │
+│       │         │     │        et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│       │         │     │     aliqua.Lorem ipsum │
+│       │         │     │        dolor sit amet, │
+│       │         │     │ consectetur adipiscing │
+│       │         │     │   elit. Sed do eiusmod │
+│       │         │     │   tempor incididunt ut │
+│       │         │     │ labore et dolore magna │
+│ 51786 │ Charlie │  22 │                aliqua. │
+└───────┴─────────┴─────┴────────────────────────┘
+

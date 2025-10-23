@@ -1,0 +1,28 @@
+Multiline Table
+┌───────────────────────────┬──────────┬─────────────────┬─────────────────────┐
+│ model                     │ response │ tool            │ arguments           │
+├───────────────────────────┼──────────┼─────────────────┼─────────────────────┤
+│                           │          │                 │ defaultDevHub: true │
+│ OpenAI GPT35Turbo         │          │ sf-get-username │ directory:          │
+│                           │          │                 │ /workspace          │
+├───────────────────────────┼──────────┼─────────────────┼─────────────────────┤
+│                           │          │                 │ defaultDevHub: true │
+│ OpenAI GPT4OmniMini       │          │ sf-get-username │ directory:          │
+│                           │          │                 │ /Users/username/sal │
+│                           │          │                 │ esforce-projects    │
+├───────────────────────────┼──────────┼─────────────────┼─────────────────────┤
+│                           │ I'll     │                 │                     │
+│                           │ help you │                 │                     │
+│                           │ find     │                 │                     │
+│                           │ your     │                 │                     │
+│                           │ default  │                 │                     │
+│                           │ dev hub  │                 │ directory:          │
+│ Anthropic Claude 4 Sonnet │ username │ sf-get-username │ /Users/antml        │
+│                           │ . Let me │                 │ defaultDevHub: true │
+│                           │ check    │                 │                     │
+│                           │ your Sal │                 │                     │
+│                           │ esforce  │                 │                     │
+│                           │ configur │                 │                     │
+│                           │ ation.   │                 │                     │
+└───────────────────────────┴──────────┴─────────────────┴─────────────────────┘
+

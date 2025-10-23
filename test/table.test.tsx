@@ -787,7 +787,6 @@ describe('printTable compatibility with @oclif/test', () => {
   })
 
   it('prints full table with no set width', async () => {
-    console.log(process.stdout.columns)
     const data = [
       {name: 'Foo', age: '1'.repeat(60)},
       {name: 'Bar', age: '2'.repeat(60)},

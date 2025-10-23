@@ -1,0 +1,19 @@
+Run #1
+ Model    Expec  Actual      C  Ex  Ac  S 
+          ted    Tool Invoc  o  pe  tu  t 
+          Tool   ations      u  ct  al  a 
+          Invoc              n  ed  Co  t 
+          ation              t  Co  nf  u 
+                                nf  id  s 
+                                id  en    
+                                en  ce    
+                                ce        
+------------------------------------------
+ sfdc_ai  sf-de  Run 1:      1  50  10  P 
+ __Defau  ploy-  sf-deploy-  /  %   0%  A 
+ ltBedro  metad  metadata    1          S 
+ ckAnthr  ata                           S 
+ opicCla                                  
+ ude4Son                                  
+ net                                      
+
