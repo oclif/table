@@ -1,0 +1,53 @@
+VERSIONS
+  Version       Channel     Location
+ ──────────────────────────────────────
+  2.55.6        latest      https://de
+                            veloper.sa
+                            lesforce.c
+                            om/media/s
+                            alesforce-
+                            cli/sf/ver
+                            sions/2.55
+                            .6/648ad30
+                            /sf-v2.55.
+                            6-648ad30-
+                            darwin-arm
+                            64.tar.gz
+  2.56.6        latest-rc   https://de
+                            veloper.sa
+                            lesforce.c
+                            om/media/s
+                            alesforce-
+                            cli/sf/ver
+                            sions/2.56
+                            .6/d91d896
+                            /sf-v2.56.
+                            6-d91d896-
+                            darwin-arm
+                            64.tar.gz
+  2.57.0        nightly     https://de
+                            veloper.sa
+                            lesforce.c
+                            om/media/s
+                            alesforce-
+                            cli/sf/ver
+                            sions/2.57
+                            .0/4fefb5b
+                            /sf-v2.57.
+                            0-4fefb5b-
+                            darwin-arm
+                            64.tar.gz
+  2.54.2-qa.0   qa          https://de
+                            veloper.sa
+                            lesforce.c
+                            om/media/s
+                            alesforce-
+                            cli/sf/ver
+                            sions/2.54
+                            .2-qa.0/a6
+                            5e59e/sf-v
+                            2.54.2-qa.
+                            0-a65e59e-
+                            darwin-arm
+                            64.tar.gz
+

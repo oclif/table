@@ -1,0 +1,36 @@
+Multiline Table
+┌───────┬──────────┬───────┬───────────┐
+│ model │ response │ tool  │ arguments │
+├───────┼──────────┼───────┼───────────┤
+│       │          │       │ defaultDe │
+│ OpenA │          │ sf-ge │ vHub:     │
+│ I     │          │ t-use │ true      │
+│ GPT35 │          │ rname │ directory │
+│ Turbo │          │       │ : /worksp │
+│       │          │       │ ace       │
+├───────┼──────────┼───────┼───────────┤
+│       │          │       │ defaultDe │
+│       │          │       │ vHub:     │
+│ OpenA │          │       │ true      │
+│ I GPT │          │ sf-ge │ directory │
+│ 4Omni │          │ t-use │ :         │
+│ Mini  │          │ rname │ /Users/us │
+│       │          │       │ ername/sa │
+│       │          │       │ lesforce- │
+│       │          │       │ projects  │
+├───────┼──────────┼───────┼───────────┤
+│       │ I'll     │       │           │
+│       │ help you │       │           │
+│       │ find     │       │           │
+│       │ your     │       │ directory │
+│ Anthr │ default  │       │ : /Users/ │
+│ opic  │ dev hub  │ sf-ge │ antml     │
+│ Claud │ username │ t-use │ defaultDe │
+│ e 4 S │ . Let me │ rname │ vHub:     │
+│ onnet │ check    │       │ true      │
+│       │ your Sal │       │           │
+│       │ esforce  │       │           │
+│       │ configur │       │           │
+│       │ ation.   │       │           │
+└───────┴──────────┴───────┴───────────┘
+

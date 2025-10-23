@@ -76,8 +76,8 @@
     "prepack": "yarn run build",
     "prepare": "husky",
     "test": "mocha --forbid-only \"test/**/*.test.+(ts|tsx)\" --parallel",
-    "test:examples": "mocha --forbid-only \"test/examples.snapshot.test.ts\"",
-    "test:examples:update": "UPDATE_SNAPSHOTS=1 mocha --forbid-only \"test/examples.snapshot.test.ts\""
+    "test:examples": "mocha --forbid-only \"test/examples/snapshot-*.test.ts\" --parallel",
+    "test:examples:update": "UPDATE_SNAPSHOTS=1 mocha --forbid-only \"test/examples/snapshot-*.test.ts\" --parallel"
   },
   "types": "lib/index.d.ts",
   "type": "module"

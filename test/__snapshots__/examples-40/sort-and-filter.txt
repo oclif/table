@@ -15,8 +15,8 @@ Sort by Age in Descending Order
 │ 10345 │  Bill   │ 10  │
 └───────┴─────────┴─────┘
 
-Sort by Age in Descending Order and Id in
-Descending Order
+Sort by Age in Descending Order and Id
+in Descending Order
 ┌───────┬─────────┬─────┐
 │  Id   │  Name   │ Age │
 ├───────┼─────────┼─────┤

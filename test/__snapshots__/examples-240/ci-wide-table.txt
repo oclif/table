@@ -1,0 +1,6 @@
+Run #1
+ Model                                                             Expected Tool Invocation            Actual Tool Invocations                                     Count           Expected           Actual Confidence  Status         
+                                                                                                                                                                                   Confidence                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ sfdc_ai__DefaultBedrockAnthropicClaude4Sonnet                     sf-deploy-metadata                  Run 1: sf-deploy-metadata                                   1/1             50%                100%               PASS           
+
