@@ -1,0 +1,26 @@
+Run #1
+ Mod  Exp  Act  Cou  Exp  Act  Sta 
+ el   ect  ual  nt   ect  ual  tus 
+      ed   Too       ed   Con      
+      Too  l         Con  fid      
+      l I  Inv       fid  enc      
+      nvo  oca       enc  e        
+      cat  tio       e             
+      ion  ns                      
+-----------------------------------
+ sfd  sf-  Run  1/1  50%  100  PAS 
+ c_a  dep  1:             %    S   
+ i__  loy  sf-                     
+ Def  -me  dep                     
+ aul  tad  loy                     
+ tBe  ata  -me                     
+ dro       tad                     
+ ckA       ata                     
+ nth                               
+ rop                               
+ icC                               
+ lau                               
+ de4                               
+ Son                               
+ net                               
+

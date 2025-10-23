@@ -1,0 +1,26 @@
+process.stdout.columns is 0
+┌───────┬────────┬──────────┬──────────┐
+│ Test  │ Result │ Expected │ Actual   │
+├───────┼────────┼──────────┼──────────┤
+│ Topic │ Passed │ This is  │ This is  │
+│       │        │ a long   │ a string │
+│       │        │ string   │ of the   │
+│       │        │ of the   │ actual   │
+│       │        │ expected │ test     │
+│       │        │ test     │ results. │
+│       │        │ results. │          │
+└───────┴────────┴──────────┴──────────┘
+
+process.stdout.columns is undefined
+┌───────┬────────┬──────────┬──────────┐
+│ Test  │ Result │ Expected │ Actual   │
+├───────┼────────┼──────────┼──────────┤
+│ Topic │ Passed │ This is  │ This is  │
+│       │        │ a long   │ a string │
+│       │        │ string   │ of the   │
+│       │        │ of the   │ actual   │
+│       │        │ expected │ test     │
+│       │        │ test     │ results. │
+│       │        │ results. │          │
+└───────┴────────┴──────────┴──────────┘
+

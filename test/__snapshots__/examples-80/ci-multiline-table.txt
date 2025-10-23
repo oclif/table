@@ -1,0 +1,81 @@
+Run #1
+ Model                   Chat                        Tool Invocations       
+----------------------------------------------------------------------------
+ sfdc_ai__DefaultBedroc  user: My current OS is      Generation 1: No tool  
+ kAnthropicClaude4Sonne  macos. I am working in a    invoked                
+ t                       workspace with the           
+                         following folders: /Users/  Generation 2:          
+                         sf-dev/dreamhouse-lwc My    sf-deploy-metadata     
+                         org alias is dreamhouse.    - directory: /Users/sf 
+                         This is the structure of    -dev/dreamhouse-lwc    
+                         /Users/sf-dev/dreamhouse-l  - sourceDir: force-app 
+                         wc: package.xml force-app/  /main/default/lwc      
+                         main/default/applications   - usernameOrAlias:     
+                         force-app/main/default/aur  dreamhouse             
+                         a force-app/main/default/a                         
+                         ura/pageTemplate_2_7_3                             
+                         force-app/main/default/cla                         
+                         sses force-app/main/defaul                         
+                         t/contentassets                                    
+                         force-app/main/default/csp                         
+                         TrustedSites force-app/mai                         
+                         n/default/flexipages force                         
+                         -app/main/default/flows                            
+                         force-app/main/default/lay                         
+                         outs                                               
+                         force-app/main/default/lwc                         
+                         force-app/main/default/mes                         
+                         sageChannels force-app/mai                         
+                         n/default/objects                                  
+                         force-app/main/default/per                         
+                         missionsets force-app/main                         
+                         /default/prompts                                   
+                         force-app/main/default/rem                         
+                         oteSiteSettings                                    
+                         force-app/main/default/sta                         
+                         ticresources force-app/mai                         
+                         n/default/tabs                                     
+                                                  
+                         assistant: I can see                               
+                         you're working with a                              
+                         Salesforce project in the                          
+                         dreamhouse-lwc workspace                           
+                         with the "dreamhouse" org                          
+                         alias. This looks like a                           
+                         typical Salesforce DX                              
+                         project structure with                             
+                         various metadata types                             
+                         including Lightning Web                            
+                         Components, Apex classes,                          
+                         flows, and other standard                          
+                         Salesforce metadata.                               
+                                                  
+                         How can I help you with                            
+                         your Salesforce                                    
+                         development work today? I                          
+                         can assist with tasks                              
+                         like:                                              
+                                                  
+                         - Deploying or retrieving                          
+                         metadata                                           
+                         - Running Apex tests                               
+                         - Querying your org                                
+                         - Managing permission sets                         
+                         - Suggesting Salesforce                            
+                         CLI commands                                       
+                         - And more!                                        
+                                                  
+                         What would you like to do?                         
+                                                  
+                         user: Deploy the Lightning                         
+                         Web Components in                                  
+                         force-app/main/default/lwc                         
+                         to the dreamhouse org.                             
+                                                  
+                         assistant: I'll deploy the                         
+                         Lightning Web Components                           
+                         from the                                           
+                         force-app/main/default/lwc                         
+                         directory to your                                  
+                         dreamhouse org.                                    
+

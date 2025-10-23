@@ -5,12 +5,9 @@ import {extname, relative, resolve, sep} from 'node:path'
 import {fileURLToPath, pathToFileURL} from 'node:url'
 
 const thisFile = fileURLToPath(import.meta.url)
-const repoRoot = resolve(thisFile, '..', '..')
+const repoRoot = resolve(thisFile, '..', '..', '..')
 const examplesDir = resolve(repoRoot, 'examples')
-const snapshotsDir = resolve(repoRoot, 'test', '__snapshots__', 'examples')
-
-// Ensure snapshot dir exists
-if (!existsSync(snapshotsDir)) mkdirSync(snapshotsDir, {recursive: true})
+const snapshotsBaseDir = resolve(repoRoot, 'test', '__snapshots__')
 
 // Discover example files recursively (including subdirectories like sf-specific)
 function discoverExampleFiles(dir: string): string[] {
@@ -34,7 +31,7 @@ function discoverExampleFiles(dir: string): string[] {
 const exampleFiles = discoverExampleFiles(examplesDir)
 
 // Utility to run an example in a child process with stable env + width
-function runExampleTs(fileAbsPath: string, columns = 120): {stdout: string; stderr: string; status: number} {
+function runExampleTs(fileAbsPath: string, columns: number): {stdout: string; stderr: string; status: number} {
   const fileUrl = pathToFileURL(fileAbsPath).href
 
   // Build an eval script that sets env+columns then imports the example (ESM)
@@ -68,11 +65,12 @@ import(${JSON.stringify(fileUrl)}).catch(err => {
   }
 }
 
-function readSnapshotPathFor(exampleFile: string): string {
+function readSnapshotPath(exampleFile: string, width: number): string {
   // Get the relative path from examples dir to preserve subdirectory structure
   // Use relative() for cross-platform compatibility (handles both / and \ separators)
   const relativePath = relative(examplesDir, exampleFile)
   const snapshotPath = relativePath.replace(/\.ts$/, '.txt')
+  const snapshotsDir = resolve(snapshotsBaseDir, `examples-${width}`)
   const fullSnapshotPath = resolve(snapshotsDir, snapshotPath)
 
   // Ensure the subdirectory exists
@@ -87,59 +85,60 @@ function normalize(out: string): string {
   return out.replaceAll('\r\n', '\n')
 }
 
-describe('examples snapshots', () => {
-  it('ensures all example files have snapshot tests', () => {
-    // This test ensures we don't accidentally skip any examples
-    const exampleCount = exampleFiles.length
-    expect(exampleCount).to.be.greaterThan(0, 'No example files found')
+// Shared test generator function
+// eslint-disable-next-line mocha/no-exports
+export function createSnapshotTests(width: number): void {
+  describe(`examples snapshots (width: ${width})`, () => {
+    // Check for missing snapshots for THIS width only
+    it('ensures all example files have snapshot tests', () => {
+      const exampleCount = exampleFiles.length
+      expect(exampleCount).to.be.greaterThan(0, 'No example files found')
 
-    // Verify each example file has a corresponding snapshot (when not updating)
-    if (!process.env.UPDATE_SNAPSHOTS) {
-      const missingSnapshots: string[] = []
+      if (!process.env.UPDATE_SNAPSHOTS) {
+        const missingSnapshots: string[] = []
 
-      for (const file of exampleFiles) {
-        const snapPath = readSnapshotPathFor(file)
-        if (!existsSync(snapPath)) {
-          // Use relative path and normalize to forward slashes for consistent error messages
-          const name = relative(examplesDir, file).replaceAll(sep, '/')
-          missingSnapshots.push(name)
-        }
-      }
-
-      if (missingSnapshots.length > 0) {
-        throw new Error(
-          `Missing snapshots for ${missingSnapshots.length} example(s):\n  - ${missingSnapshots.join('\n  - ')}\n\nRun: UPDATE_SNAPSHOTS=1 yarn test:examples`,
-        )
-      }
-    }
-  })
-
-  for (const file of exampleFiles) {
-    const snapPath = readSnapshotPathFor(file)
-    // Use relative path and normalize to forward slashes for consistent test names across platforms
-    const name = relative(examplesDir, file).replaceAll(sep, '/')
-
-    it(`matches snapshot: ${name}`, () => {
-      const {status, stderr, stdout} = runExampleTs(file, 120)
-      if (status !== 0) {
-        // Surface any runtime error from the example for easier debugging
-        throw new Error(`Example failed (${name}): exit ${status}\n${stderr}`)
-      }
-
-      const actual = normalize(stdout)
-
-      if (process.env.UPDATE_SNAPSHOTS) {
-        writeFileSync(snapPath, actual, 'utf8')
-        console.log(`updated snapshot: ${snapPath}`)
-      } else {
-        if (!existsSync(snapPath)) {
-          throw new Error(`Missing snapshot for ${name}. Create it with: UPDATE_SNAPSHOTS=1 yarn test`)
+        for (const file of exampleFiles) {
+          const snapPath = readSnapshotPath(file, width)
+          if (!existsSync(snapPath)) {
+            const name = relative(examplesDir, file).replaceAll(sep, '/')
+            missingSnapshots.push(name)
+          }
         }
 
-        // Normalize the expected snapshot too (in case it has CRLF from git checkout on Windows)
-        const expected = normalize(readFileSync(snapPath, 'utf8'))
-        expect(actual).to.equal(expected)
+        if (missingSnapshots.length > 0) {
+          throw new Error(
+            `Missing snapshots for ${missingSnapshots.length} example(s) at width ${width}:\n  - ${missingSnapshots.join('\n  - ')}\n\nRun: UPDATE_SNAPSHOTS=1 yarn test:examples`,
+          )
+        }
       }
     })
-  }
-})
+
+    // Generate tests for each example
+    for (const file of exampleFiles) {
+      const snapPath = readSnapshotPath(file, width)
+      const name = relative(examplesDir, file).replaceAll(sep, '/')
+
+      it(`matches snapshot: ${name}`, () => {
+        const {status, stderr, stdout} = runExampleTs(file, width)
+        if (status !== 0) {
+          throw new Error(`Example failed (${name}): exit ${status}\n${stderr}`)
+        }
+
+        const actual = normalize(stdout)
+
+        if (process.env.UPDATE_SNAPSHOTS) {
+          writeFileSync(snapPath, actual, 'utf8')
+          console.log(`updated snapshot: ${snapPath}`)
+        } else {
+          if (!existsSync(snapPath)) {
+            throw new Error(`Missing snapshot for ${name}. Create it with: UPDATE_SNAPSHOTS=1 yarn test`)
+          }
+
+          // Normalize the expected snapshot too (in case it has CRLF from git checkout on Windows)
+          const expected = normalize(readFileSync(snapPath, 'utf8'))
+          expect(actual).to.equal(expected)
+        }
+      })
+    }
+  })
+}

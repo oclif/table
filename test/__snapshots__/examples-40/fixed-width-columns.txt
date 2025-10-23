@@ -1,0 +1,208 @@
+Fixed-Width Columns
+┌────┬────┬───────────┬────────────────┐
+│ Te │ Re │ Expected  │ Actual         │
+│ st │ su │           │                │
+│    │ lt │           │                │
+├────┼────┼───────────┼────────────────┤
+│ To │ Pa │ This is a │ This is a long │
+│ pi │ ss │ long      │ string of the  │
+│ c  │ ed │ string of │ actual test    │
+│    │    │ the       │ results. This  │
+│    │    │ expected  │ is a long      │
+│    │    │ test      │ string of the  │
+│    │    │ results.  │ actual test    │
+│    │    │ This is a │ results. This  │
+│    │    │ long      │ is a long      │
+│    │    │ string of │ string of the  │
+│    │    │ the       │ actual test    │
+│    │    │ expected  │ results. This  │
+│    │    │ test      │ is a long      │
+│    │    │ results.  │ string of the  │
+│    │    │ This is a │ actual test    │
+│    │    │ long      │ results. This  │
+│    │    │ string of │ is a long      │
+│    │    │ the       │ string of the  │
+│    │    │ expected  │ actual test    │
+│    │    │ test      │ results. This  │
+│    │    │ results.  │ is a long      │
+│    │    │ This is a │ string of the  │
+│    │    │ long      │ actual test    │
+│    │    │ string of │ results. This  │
+│    │    │ the       │ is a long      │
+│    │    │ expected  │ string of the  │
+│    │    │ test      │ actual test    │
+│    │    │ results.  │ results. This  │
+│    │    │ This is a │ is a long      │
+│    │    │ long      │ string of the  │
+│    │    │ string of │ actual test    │
+│    │    │ the       │ results. This  │
+│    │    │ expected  │ is a long      │
+│    │    │ test      │ string of the  │
+│    │    │ results.  │ actual test    │
+│    │    │ This is a │ results. This  │
+│    │    │ long      │ is a long      │
+│    │    │ string of │ string of the  │
+│    │    │ the       │ actual test    │
+│    │    │ expected  │ results. This  │
+│    │    │ test      │ is a long      │
+│    │    │ results.  │ string of the  │
+│    │    │ This is a │ actual test    │
+│    │    │ long      │ results. This  │
+│    │    │ string of │ is a long      │
+│    │    │ the       │ string of the  │
+│    │    │ expected  │ actual test    │
+│    │    │ test      │ results. This  │
+│    │    │ results.  │ is a long      │
+│    │    │ This is a │ string of the  │
+│    │    │ long      │ actual test    │
+│    │    │ string of │ results. This  │
+│    │    │ the       │ is a long      │
+│    │    │ expected  │ string of the  │
+│    │    │ test      │ actual test    │
+│    │    │ results.  │ results. This  │
+│    │    │ This is a │ is a long      │
+│    │    │ long      │ string of the  │
+│    │    │ string of │ actual test    │
+│    │    │ the       │ results. This  │
+│    │    │ expected  │ is a long      │
+│    │    │ test      │ string of the  │
+│    │    │ results.  │ actual test    │
+│    │    │ This is a │ results. This  │
+│    │    │ long      │ is a long      │
+│    │    │ string of │ string of the  │
+│    │    │ the       │ actual test    │
+│    │    │ expected  │ results. This  │
+│    │    │ test      │ is a long      │
+│    │    │ results.  │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results. This  │
+│    │    │           │ is a long      │
+│    │    │           │ string of the  │
+│    │    │           │ actual test    │
+│    │    │           │ results.       │
+└────┴────┴───────────┴────────────────┘
+

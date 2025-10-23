@@ -1,0 +1,27 @@
+┌─────────┬────────────────────┬──────────────────────┬────────────────────────┐
+│ State   │ Full Name          │ Type                 │ Path                   │
+├─────────┼────────────────────┼──────────────────────┼────────────────────────┤
+│         │                    │                      │ force-app/main/default │
+│ Changed │ FileUtilities      │ ApexClass            │ /classes/FileUtilities │
+│         │                    │                      │ .cls                   │
+│         │                    │                      │ force-app/main/default │
+│ Changed │ FileUtilities      │ ApexClass            │ /classes/FileUtilities │
+│         │                    │                      │ .cls-meta.xml          │
+│         │                    │                      │ force-app/main/default │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ /aura/pageTemplate_2_7 │
+│         │                    │                      │ _3/pageTemplate_2_7_3. │
+│         │                    │                      │ cmp                    │
+│         │                    │                      │ force-app/main/default │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ /aura/pageTemplate_2_7 │
+│         │                    │                      │ _3/pageTemplate_2_7_3. │
+│         │                    │                      │ cmp-meta.xml           │
+│         │                    │                      │ force-app/main/default │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ /aura/pageTemplate_2_7 │
+│         │                    │                      │ _3/pageTemplate_2_7_3. │
+│         │                    │                      │ design                 │
+│         │                    │                      │ force-app/main/default │
+│ Changed │ pageTemplate_2_7_3 │ AuraDefinitionBundle │ /aura/pageTemplate_2_7 │
+│         │                    │                      │ _3/pageTemplate_2_7_3. │
+│         │                    │                      │ svg                    │
+└─────────┴────────────────────┴──────────────────────┴────────────────────────┘
+
