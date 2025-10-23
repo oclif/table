@@ -136,7 +136,8 @@ describe('examples snapshots', () => {
           throw new Error(`Missing snapshot for ${name}. Create it with: UPDATE_SNAPSHOTS=1 yarn test`)
         }
 
-        const expected = readFileSync(snapPath, 'utf8')
+        // Normalize the expected snapshot too (in case it has CRLF from git checkout on Windows)
+        const expected = normalize(readFileSync(snapPath, 'utf8'))
         expect(actual).to.equal(expected)
       }
     })
