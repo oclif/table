@@ -1,7 +1,7 @@
 {
   "name": "@oclif/table",
   "description": "Display table in terminal",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/table/issues",
   "dependencies": {
