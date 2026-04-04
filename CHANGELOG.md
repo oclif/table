@@ -1,3 +1,12 @@
+## [0.5.4](https://github.com/oclif/table/compare/0.5.3...0.5.4) (2026-04-04)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash from 4.17.23 to 4.18.1 ([5d0bfc1](https://github.com/oclif/table/commit/5d0bfc1e6a254a6ba5421af9be0ecaa9448d3c6d))
+
+
+
 ## [0.5.3](https://github.com/oclif/table/compare/0.5.2...0.5.3) (2026-03-20)
 
 
