@@ -1,6 +1,7 @@
 import {camelCase, capitalCase, constantCase, kebabCase, pascalCase, sentenceCase, snakeCase} from 'change-case'
 import {orderBy} from 'natural-orderby'
 import {env} from 'node:process'
+import stringWidth from 'string-width'
 import stripAnsi from 'strip-ansi'
 
 import {Column, ColumnProps, Config, Percentage, Sort} from './types.js'
@@ -48,7 +49,7 @@ export function allKeysInCollection<T extends Record<string, unknown>>(data: T[]
 
 export function determineWidthOfWrappedText(text: string): number {
   const lines = text.split('\n')
-  return lines.reduce((max, line) => Math.max(max, line.length), 0)
+  return lines.reduce((max, line) => Math.max(max, stringWidth(line)), 0)
 }
 
 /**
