@@ -6,6 +6,7 @@ import {EventEmitter} from 'node:events'
 import {env} from 'node:process'
 import {sha1} from 'object-hash'
 import React from 'react'
+import stringWidth from 'string-width'
 import stripAnsi from 'strip-ansi'
 import wrapAnsi from 'wrap-ansi'
 
@@ -116,8 +117,8 @@ export function formatTextWithMargins({
   const spaceForText = width - padding * 2
 
   // Handle the simple case where text fits within the available space and doesn't contain any newlines.
-  if (stripAnsi(valueWithNoZeroWidthChars).length <= spaceForText && !valueWithNoZeroWidthChars.includes('\n')) {
-    const spaces = width - stripAnsi(valueWithNoZeroWidthChars).length
+  if (stringWidth(stripAnsi(valueWithNoZeroWidthChars)) <= spaceForText && !valueWithNoZeroWidthChars.includes('\n')) {
+    const spaces = width - stringWidth(stripAnsi(valueWithNoZeroWidthChars))
     return {
       text: valueWithNoZeroWidthChars,
       ...calculateMargins(spaces),
@@ -135,7 +136,7 @@ export function formatTextWithMargins({
 
     const lines = wrappedText.split('\n').map((line, idx) => {
       const {marginLeft: lineSpecificLeftMargin, marginRight: lineSpecificRightMargin} = calculateMargins(
-        width - stripAnsi(line).length,
+        width - stringWidth(stripAnsi(line)),
       )
 
       if (horizontalAlignment === 'left') {
