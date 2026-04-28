@@ -118,7 +118,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
       return determineWidthOfWrappedText(stripAnsi(String(value).replaceAll('​', ' ')))
     })
 
-    const header = String(headings[key]).length
+    const header = stringWidth(String(headings[key]))
     // If a column width is provided, use that. Otherwise, use the width of the largest cell in the column.
     const columnWidth = props.width
       ? determineConfiguredWidth(props.width, width ?? maxWidth)
@@ -168,7 +168,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
   }
 
   // At most, reduce the width to the length of the column's header plus padding.
-  reduceColumnWidths((col) => stripAnsi(String(headings[col.key])).length + col.padding * 2)
+  reduceColumnWidths((col) => stringWidth(stripAnsi(String(headings[col.key]))) + col.padding * 2)
 
   seen.clear()
   // At most, reduce the width to the padding + 3

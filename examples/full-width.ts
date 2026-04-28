@@ -64,7 +64,6 @@ printTable({
   overflow: 'wrap',
 })
 
-
 const data2 = [
   {
     c1: 'first row value',
@@ -88,6 +87,38 @@ printTable({
   borderStyle: 'all',
   columns: ['c1', 'c2'],
   data: data2,
+  headerOptions: {
+    bold: true,
+    color: '#905de8',
+    formatter: 'sentenceCase',
+  },
+  horizontalAlignment: 'left',
+  overflow: 'wrap',
+})
+
+const data3 = [
+  {
+    c1: 'a string with only normal chars',
+    'ワイド': 'b',
+  },
+  {
+    c1: 'a string with Japanese chars: ワイド',
+    'ワイド': 'b',
+  },
+  {
+    c1: 'a string with emoji: 🍁🍁',
+    'ワイド': 'b',
+  },
+  {
+    c1: 'a string with full-width latin: ＡＢＣ.',
+    'ワイド': 'b',
+  },
+]
+
+printTable({
+  borderStyle: 'all',
+  columns: ['c1', 'ワイド'],
+  data: data3,
   headerOptions: {
     bold: true,
     color: '#905de8',
