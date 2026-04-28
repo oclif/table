@@ -1,3 +1,13 @@
+## [0.5.5](https://github.com/oclif/table/compare/0.5.4...0.5.5) (2026-04-28)
+
+
+### Bug Fixes
+
+* correct handling for column headers @W-22163225@ ([4c40fe9](https://github.com/oclif/table/commit/4c40fe9e6979bb1a4616e2b9dcc69e35c75e996f))
+* table handles full-width characters @W-22163225@ ([df2af95](https://github.com/oclif/table/commit/df2af958261527f3a9933829a99861e2b1cf09e4))
+
+
+
 ## [0.5.4](https://github.com/oclif/table/compare/0.5.3...0.5.4) (2026-04-04)
 
 
