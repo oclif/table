@@ -1,3 +1,12 @@
+## [0.5.6](https://github.com/oclif/table/compare/0.5.5...0.5.6) (2026-05-02)
+
+
+### Bug Fixes
+
+* **deps:** bump string-width from 8.2.0 to 8.2.1 ([ac9e693](https://github.com/oclif/table/commit/ac9e69362a555d734a00d4debaf7c4d006d0a4cf))
+
+
+
 ## [0.5.5](https://github.com/oclif/table/compare/0.5.4...0.5.5) (2026-04-28)
 
 
