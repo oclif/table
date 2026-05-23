@@ -1,3 +1,12 @@
+## [0.5.9](https://github.com/oclif/table/compare/0.5.8...0.5.9) (2026-05-23)
+
+
+### Bug Fixes
+
+* **deps:** bump ws from 8.18.0 to 8.21.0 ([b701437](https://github.com/oclif/table/commit/b701437025a404f99b8048af0db635d4799cf8d7))
+
+
+
 ## [0.5.8](https://github.com/oclif/table/compare/0.5.7...0.5.8) (2026-05-15)
 
 
