@@ -1,6 +1,6 @@
-import React from 'react'
+import type React from 'react'
 
-import {BorderStyle} from './skeletons.js'
+import {type BorderStyle} from './skeletons.js'
 
 export type CellProps = React.PropsWithChildren<{readonly column: number}>
 
@@ -106,7 +106,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
   /**
    * Columns that we should display in the table.
    */
-  columns?: (keyof T | AllColumnProps<T>)[]
+  columns?: Array<keyof T | AllColumnProps<T>>
   /**
    * Cell padding.
    */
@@ -224,7 +224,7 @@ export type TableOptions<T extends Record<string, unknown>> = {
 }
 
 export type Config<T> = {
-  columns: (keyof T | AllColumnProps<T>)[]
+  columns: Array<keyof T | AllColumnProps<T>>
   data: T[]
   padding: number
   maxWidth: number
@@ -271,7 +271,7 @@ export type RowConfig = {
 export type RowProps<T extends Record<string, unknown>> = {
   readonly key: string
   readonly data: Partial<T>
-  readonly columns: Column<T>[]
+  readonly columns: Array<Column<T>>
 }
 
 export type Column<T> = {

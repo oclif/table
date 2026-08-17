@@ -12,16 +12,16 @@ import wrapAnsi from 'wrap-ansi'
 
 import {BORDER_SKELETONS} from './skeletons.js'
 import {
-  CellProps,
-  Column,
-  Config,
-  ContainerProps,
-  HeaderOptions,
-  HorizontalAlignment,
-  Overflow,
-  RowConfig,
-  RowProps,
-  TableOptions,
+  type CellProps,
+  type Column,
+  type Config,
+  type ContainerProps,
+  type HeaderOptions,
+  type HorizontalAlignment,
+  type Overflow,
+  type RowConfig,
+  type RowProps,
+  type TableOptions,
 } from './types.js'
 import {
   allKeysInCollection,
@@ -41,7 +41,7 @@ import {
  *
  * This allows us to use the minimum width required to display the table if the configured width is too small.
  */
-function determineWidthToUse<T>(columns: Column<T>[], maxWidth: number, width: number | undefined): number {
+function determineWidthToUse<T>(columns: Array<Column<T>>, maxWidth: number, width: number | undefined): number {
   const tableWidth = columns.map((c) => c.width).reduce((a, b) => a + b, 0) + columns.length + 1
   return width ?? (tableWidth < maxWidth ? maxWidth : tableWidth)
 }
@@ -86,11 +86,12 @@ export function formatTextWithMargins({
   marginRight: number
 } {
   function calculateMargins(spaces: number): {marginLeft: number; marginRight: number} {
-    let marginLeft: number
-    let marginRight: number
     if (spaces <= 0 || Number.isNaN(spaces)) {
       return {marginLeft: 0, marginRight: 0}
     }
+
+    let marginLeft: number
+    let marginRight: number
 
     if (horizontalAlignment === 'left') {
       marginLeft = padding
@@ -617,7 +618,7 @@ function Container(props: ContainerProps) {
  * @throws {Error} Throws an error if the total number of rows across all tables exceeds 10,000.
  * @throws {Error} Throws an error if any of the tables have `maxWidth: "none"`.
  */
-export function printTables<T extends Record<string, unknown>[]>(
+export function printTables<T extends Array<Record<string, unknown>>>(
   tables: {[P in keyof T]: TableOptions<T[P]>},
   options?: Omit<ContainerProps, 'children'>,
 ): void {

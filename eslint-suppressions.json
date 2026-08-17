@@ -1,0 +1,111 @@
+{
+  "eslint.config.js": {
+    "import-x/no-anonymous-default-export": {
+      "count": 1
+    }
+  },
+  "examples/sf-specific/org-list.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "examples/sf-specific/versions.ts": {
+    "require-unicode-regexp": {
+      "count": 1
+    }
+  },
+  "src/table.tsx": {
+    "@eslint-community/eslint-comments/require-description": {
+      "count": 1
+    },
+    "@typescript-eslint/no-shadow": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    },
+    "n/prefer-global/process": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 1
+    },
+    "require-unicode-regexp": {
+      "count": 1
+    },
+    "unicorn/prefer-number-coercion": {
+      "count": 1
+    }
+  },
+  "src/utils.ts": {
+    "@typescript-eslint/no-for-in-array": {
+      "count": 1
+    },
+    "@typescript-eslint/no-shadow": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-conversion": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "@typescript-eslint/switch-exhaustiveness-check": {
+      "count": 1
+    },
+    "n/prefer-global/process": {
+      "count": 1
+    },
+    "unicorn/consistent-boolean-name": {
+      "count": 1
+    },
+    "unicorn/no-array-sort": {
+      "count": 1
+    },
+    "unicorn/no-computed-property-existence-check": {
+      "count": 2
+    },
+    "unicorn/prefer-number-coercion": {
+      "count": 3
+    }
+  },
+  "test/examples/snapshot-runner.ts": {
+    "require-unicode-regexp": {
+      "count": 1
+    },
+    "unicorn/import-style": {
+      "count": 1
+    }
+  },
+  "test/table.test.tsx": {
+    "@eslint-community/eslint-comments/require-description": {
+      "count": 1
+    }
+  },
+  "test/util.test.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 3
+    }
+  }
+}

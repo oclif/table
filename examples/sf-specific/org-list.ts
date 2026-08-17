@@ -162,9 +162,9 @@ printTable({
       Status: row.connectedStatus,
       Type: row.type,
       Username: row.username,
-      ...('devHubOrgId' in row ? {'Dev Hub ID': row.devHubOrgId} : {}),
-      ...('createdDate' in row ? {Created: row.createdDate} : {}),
-      ...('expirationDate' in row ? {Expires: row.expirationDate} : {}),
+      ...(('devHubOrgId' in row) && {'Dev Hub ID': row.devHubOrgId}),
+      ...(('createdDate' in row) && {Created: row.createdDate}),
+      ...(('expirationDate' in row) && {Expires: row.expirationDate}),
     })),
   headerOptions: {
     formatter: 'capitalCase',

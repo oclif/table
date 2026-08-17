@@ -4,7 +4,7 @@ import {env} from 'node:process'
 import stringWidth from 'string-width'
 import stripAnsi from 'strip-ansi'
 
-import {Column, ColumnProps, Config, Percentage, Sort} from './types.js'
+import {type Column, type ColumnProps, type Config, type Percentage, type Sort} from './types.js'
 
 /**
  * Intersperses a list of elements with another element.
@@ -14,29 +14,26 @@ import {Column, ColumnProps, Config, Percentage, Sort} from './types.js'
  * intersperse(() => 'foo', [1, 2, 3]) // => [1, 'foo', 2, 'foo', 3]
  * ```
  */
-export function intersperse<T, I>(intersperser: (index: number) => I, elements: T[]): (T | I)[] {
+export function intersperse<T, I>(intersperser: (index: number) => I, elements: T[]): Array<T | I> {
   // Intersperse by reducing from left.
-  const interspersed: (T | I)[] = elements.reduce(
-    (acc, element, index) => {
-      // Only add element if it's the first one.
-      if (acc.length === 0) return [element]
-      // Add the intersperser as well otherwise.
-      return [...acc, intersperser(index), element]
-    },
-    [] as (T | I)[],
-  )
+  const interspersed: Array<T | I> = elements.reduce<Array<T | I>>((acc, element, index) => {
+    // Only add element if it's the first one.
+    if (acc.length === 0) return [element]
+    // Add the intersperser as well otherwise.
+    return [...acc, intersperser(index), element]
+  }, [])
 
   return interspersed
 }
 
-export function sortData<T extends Record<string, unknown>>(data: T[], sort?: Sort<T> | undefined): T[] {
+export function sortData<T extends Record<string, unknown>>(data: T[], sort?: Sort<T>): T[] {
   if (!sort) return data
   const identifiers = Object.keys(sort)
   const orders = Object.values(sort)
   return orderBy(data, identifiers, orders)
 }
 
-export function allKeysInCollection<T extends Record<string, unknown>>(data: T[]): (keyof T)[] {
+export function allKeysInCollection<T extends Record<string, unknown>>(data: T[]): Array<keyof T> {
   const keys = new Set<keyof T>()
   for (const row of data) {
     for (const key in row) {
@@ -99,10 +96,13 @@ export function determineConfiguredWidth(
   return num
 }
 
-export function getColumns<T extends Record<string, unknown>>(config: Config<T>, headings: Partial<T>): Column<T>[] {
+export function getColumns<T extends Record<string, unknown>>(
+  config: Config<T>,
+  headings: Partial<T>,
+): Array<Column<T>> {
   const {columns, horizontalAlignment, maxWidth, overflow, verticalAlignment, width} = config
 
-  const widths: Column<T>[] = columns.map((propsOrKey) => {
+  const widths: Array<Column<T>> = columns.map((propsOrKey) => {
     const props: ColumnProps<keyof T> = typeof propsOrKey === 'object' ? propsOrKey : {key: propsOrKey}
     const {key} = props
     const padding = props.padding ?? config.padding
@@ -137,7 +137,7 @@ export function getColumns<T extends Record<string, unknown>>(config: Config<T>,
 
   const numberOfBorders = widths.length + 1
 
-  const calculateTableWidth = (widths: Column<T>[]) =>
+  const calculateTableWidth = (widths: Array<Column<T>>) =>
     widths.map((w) => w.width).reduce((a, b) => a + b, 0) + numberOfBorders
 
   let tableWidth = calculateTableWidth(widths)
@@ -246,19 +246,21 @@ export function getHeadings<T extends Record<string, unknown>>(config: Config<T>
   ) as Partial<T>
 }
 
-export function maybeStripAnsi<T extends Record<string, unknown>[]>(data: T, noStyle: boolean): T {
+export function maybeStripAnsi<T extends Array<Record<string, unknown>>>(data: T, noStyle: boolean): T {
   if (!noStyle) return data
 
   const newData = []
 
   for (const row in data) {
-    if (row in data) {
-      const newRow = Object.fromEntries(
-        Object.entries(data[row]).map(([key, value]) => [key, typeof value === 'string' ? stripAnsi(value) : value]),
-      )
-
-      newData.push(newRow)
+    if (!(row in data)) {
+      continue
     }
+
+    const newRow = Object.fromEntries(
+      Object.entries(data[row]).map(([key, value]) => [key, typeof value === 'string' ? stripAnsi(value) : value]),
+    )
+
+    newData.push(newRow)
   }
 
   return newData as T
@@ -280,10 +282,8 @@ function isTruthy(value: string | undefined): boolean {
 export function shouldUsePlainTable(): boolean {
   if (env.OCLIF_TABLE_SKIP_CI_CHECK && isTruthy(env.OCLIF_TABLE_SKIP_CI_CHECK)) return false
   // Inspired by https://github.com/sindresorhus/is-in-ci
-  if (
+  return Boolean(
     isTruthy(env.CI) &&
-    ('CI' in env || 'CONTINUOUS_INTEGRATION' in env || Object.keys(env).some((key) => key.startsWith('CI_')))
+    ('CI' in env || 'CONTINUOUS_INTEGRATION' in env || Object.keys(env).some((key) => key.startsWith('CI_'))),
   )
-    return true
-  return false
 }
