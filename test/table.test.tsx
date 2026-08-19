@@ -204,7 +204,7 @@ describe('Table', () => {
           {skeleton('│')}
           {cell(' Foo  ')}
           {skeleton('│')}
-          {cell('     ')}
+          {cell(' '.repeat(5))}
           {skeleton('│')}
         </Box>
         <Box>
@@ -467,21 +467,21 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiii       ')}
           {skeleton('│')}
@@ -502,21 +502,21 @@ describe('Table', () => {
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiiiiiiiii ')}
           {skeleton('│')}
         </Box>
         <Box>
           {skeleton('│')}
-          {cell('      ')}
+          {cell(' '.repeat(6))}
           {skeleton('│')}
           {cell(' iiiiiiiiiiiii       ')}
           {skeleton('│')}
@@ -778,10 +778,10 @@ describe('printTable compatibility with @oclif/test', () => {
 `
 
     const {stdout} = await captureOutput(async () =>
-      printTable({
+      { printTable({
         data,
         columns: ['name', 'age'],
-      }),
+      }); },
     )
     expect(stdout).to.equal(expected)
   })
@@ -803,10 +803,10 @@ describe('printTable compatibility with @oclif/test', () => {
 `
 
     const {stdout} = await captureOutput(async () =>
-      printTable({
+      { printTable({
         data,
         columns: ['name', 'age'],
-      }),
+      }); },
     )
     expect(stdout).to.equal(expected)
   })
@@ -820,10 +820,10 @@ describe('printTable compatibility with @oclif/test', () => {
     ]
 
     const {stdout} = await captureOutput(async () =>
-      printTable({
+      { printTable({
         data,
         columns: ['name', 'age'],
-      }),
+      }); },
     )
     expect(stdout.length).to.equal(785)
 
@@ -850,10 +850,10 @@ describe('printTable compatibility with @oclif/test', () => {
 `
 
     const {stdout} = await captureOutput(async () =>
-      printTable({
+      { printTable({
         data,
         columns: ['name', 'age'],
-      }),
+      }); },
     )
     expect(stdout).to.equal(expected)
 

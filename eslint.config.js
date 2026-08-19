@@ -1,7 +1,6 @@
 import {includeIgnoreFile} from '@eslint/compat'
 import oclif from 'eslint-config-oclif'
 import prettier from 'eslint-config-prettier'
-import xoReactSpace from 'eslint-config-xo-react/space'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
@@ -11,7 +10,6 @@ export default [
   includeIgnoreFile(gitignorePath),
   ...oclif,
   prettier,
-  ...xoReactSpace,
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',

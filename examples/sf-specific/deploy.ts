@@ -1,4 +1,4 @@
-import {printTable, TableOptions} from '../../src/index.js'
+import {printTable, type TableOptions} from '../../src/index.js'
 
 const deployResult = [
   {
