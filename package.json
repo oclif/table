@@ -42,7 +42,7 @@
     "sinon": "^18",
     "terminal-link": "^3.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "engines": {
     "node": ">=18.0.0"
