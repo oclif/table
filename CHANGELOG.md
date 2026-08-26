@@ -1,3 +1,18 @@
+# [0.6.0](https://github.com/oclif/table/compare/0.5.9...0.6.0) (2026-08-26)
+
+
+### Bug Fixes
+
+* resolving tsconfig issue (W-22515355) ([aaec91e](https://github.com/oclif/table/commit/aaec91e5980b0d0ca5359b3002110c7f4bd3522b))
+
+
+### Features
+
+* bump eslint to v10 (W-23473845) ([f459d0e](https://github.com/oclif/table/commit/f459d0ed043d0302b28be50d22674dba9783c07f))
+* bumping ts to v6 (W-22515355) ([2687b6d](https://github.com/oclif/table/commit/2687b6d2975ace99469a6c30e435eb4a52170874))
+
+
+
 ## [0.5.9](https://github.com/oclif/table/compare/0.5.8...0.5.9) (2026-05-23)
 
 
