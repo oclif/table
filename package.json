@@ -19,7 +19,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19",
     "@eslint/compat": "^1.4.1",
-    "@oclif/core": "^4",
+    "@oclif/core": "^5.0.0",
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^4.1.18",
     "@types/chai": "^4.3.16",
@@ -45,7 +45,7 @@
     "typescript": "^6"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "/lib"
