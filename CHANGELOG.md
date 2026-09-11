@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/oclif/table/compare/1.0.0...1.0.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* **deps:** bump ink to v7 and react to v19 @W-17608377@ ([759abeb](https://github.com/oclif/table/commit/759abeb7abd721d6f97f48b77c91c13a77320559))
+
+
+
 # [1.0.0](https://github.com/oclif/table/compare/0.6.0...1.0.0) (2026-08-31)
 
 
