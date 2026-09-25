@@ -21,7 +21,7 @@
     "@eslint/compat": "^1.4.1",
     "@oclif/core": "^5.0.0",
     "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^4.1.18",
+    "@oclif/test": "^4.2.0",
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "^18",
