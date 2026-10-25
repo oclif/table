@@ -1,3 +1,12 @@
+## [1.0.8](https://github.com/oclif/table/compare/1.0.7...1.0.8) (2026-10-25)
+
+
+### Bug Fixes
+
+* **deps:** bump react from 19.3.0 to 19.3.1 ([886e3e9](https://github.com/oclif/table/commit/886e3e9e05fce2940f7a828cec79cca39dc1f816))
+
+
+
 ## [1.0.7](https://github.com/oclif/table/compare/1.0.6...1.0.7) (2026-10-24)
 
 
