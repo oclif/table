@@ -20,7 +20,7 @@
     "@commitlint/config-conventional": "^19",
     "@eslint/compat": "^1.4.1",
     "@oclif/core": "^5.1.9",
-    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/prettier-config": "^0.2.2",
     "@oclif/test": "^4.2.0",
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.10",
